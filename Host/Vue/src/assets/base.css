@@ -23,6 +23,8 @@
 
 /* semantic color variables for this project */
 :root {
+  --color-header: hsla(160, 100%, 37%, 1);
+  --color-header-darker: hsla(160, 100%, 37%, 0.2);
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
