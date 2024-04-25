@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import Login from '../views/Login.vue'
+import LoginView from '../views/LoginView.vue'
 
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'login',
-    component: Login
+    component: LoginView
   }
 ]
 
