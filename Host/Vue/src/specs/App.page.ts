@@ -1,4 +1,4 @@
-﻿import { mount, flushPromises } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { vi, beforeEach } from 'vitest'
 import App from '../App.vue'
 import { createRouter, createWebHistory, type Router } from 'vue-router'
@@ -27,9 +27,7 @@ export async function renderLanding() {
 
 export async function renderNotes() {
   const app = mountApp()
-  await router.isReady()
   await router.push('/notes')
-  await flushPromises()
   return app
 }
 

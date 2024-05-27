@@ -1,12 +1,11 @@
-﻿import { mount } from '@vue/test-utils'
-import { beforeEach } from 'vitest'
+﻿import { mount, VueWrapper } from '@vue/test-utils'
 import Notes from '../Notes.vue'
 
-beforeEach(() => {})
-
 export async function renderNotes() {
-  const notes = mountNotes()
-  return notes
+  return mountNotes()
+}
+export async function clickAddFirstNote(component: VueWrapper) {
+  await component.find('#add-first-note').trigger('click')
 }
 
 function mountNotes() {
