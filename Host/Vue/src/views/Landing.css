@@ -1,23 +1,23 @@
 ﻿main {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
 }
 div {
-    height: 100%;
-    padding: 0;
-    margin: auto auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  height: 100%;
+  padding: 0;
+  margin: auto auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 h1 {
-    font-size: 3em;
-    font-weight: 900;
-    background: -webkit-linear-gradient(var(--color-header), var(--color-background-mute));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  font-size: 3em;
+  font-weight: 900;
+  background: -webkit-linear-gradient(var(--color-header), var(--color-background-mute));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

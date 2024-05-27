@@ -6,7 +6,7 @@ import { RouterLink } from 'vue-router'
   <header>
     <h1>Rule of three</h1>
     <nav>
-      <RouterLink to="/notes">Login</RouterLink>
+      <RouterLink to="/notes">Notes</RouterLink>
     </nav>
   </header>
 </template>

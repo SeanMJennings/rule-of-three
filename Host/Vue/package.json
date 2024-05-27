@@ -15,9 +15,12 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@xstate/store": "^0.0.4",
+    "@xstate/vue": "^3.1.2",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "xstate": "^5.13.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.42.1",

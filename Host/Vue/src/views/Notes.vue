@@ -1,8 +1,14 @@
-﻿<script setup lang="ts"></script>
+﻿<script setup lang="ts">
+import { notesStore } from '@/stores/notes-store'
+</script>
 
 <template>
   <main>
-    <div></div>
+    <div class="container">
+      <div class="addFirstNote" v-if="notesStore.getSnapshot().context.notes.length === 0">
+        Add your first note
+      </div>
+    </div>
   </main>
 </template>
 
