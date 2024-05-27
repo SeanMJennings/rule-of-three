@@ -1,6 +1,7 @@
 ﻿import { describe, it } from 'vitest'
-import { renders_login_page } from '@/specs/App.steps'
+import { renders_landing_page, render_notes_page } from '@/specs/App.steps'
 
 describe('App', () => {
-  it('renders login page', renders_login_page)
+  it('renders landing page', renders_landing_page)
+  it('renders notes page', render_notes_page)
 })
