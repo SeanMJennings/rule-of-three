@@ -1,5 +1,4 @@
 ﻿<script setup lang="ts">
-import { defineProps } from 'vue'
 import { type Note } from '@/types/types'
 const props = defineProps<{
   note: Note
@@ -7,7 +6,10 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div>{{ props.note.content }}</div>
+  <div>
+    <span>></span>
+    <span class="note" id="props.note.id">{{ props.note.content }}</span>
+  </div>
 </template>
 
 <style src="@/components/Note.css" scoped></style>

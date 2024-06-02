@@ -12,6 +12,7 @@ afterEach(() => {
 })
 
 export async function adds_a_note() {
-  notes.send({ type: 'add', note: { id: 1, content: 'Note content' } })
+  notes.send({ type: 'readyToAddFirstNote' })
+  notes.send({ type: 'add', content: 'Note content' })
   expect(notes.getSnapshot().context.notes).toEqual([{ id: 1, content: 'Note content' }])
 }

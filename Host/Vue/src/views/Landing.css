@@ -1,11 +1,4 @@
-﻿main {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-}
-div {
+﻿div {
   height: 100%;
   padding: 0;
   margin: auto auto;

@@ -3,8 +3,33 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  height: 100vh;
-  width: calc(100vw - 40px);
+  height: 100%;
   padding-top: 20px;
+  > div {
+    text-align: center;
+    width: calc(100% - 40px);
+  }
 }
-.addFirstNote {}
+
+.addNote {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+}
+
+input {
+  width: 90%;
+  margin-right: 10px;
+}
+
+.addNoteIcon {
+  font-size: 21px;
+  margin-right: 10px;
+}
+
+.characterCount {
+  font-size: 16px;
+  text-align: left;
+  line-height: 25px;
+}
+

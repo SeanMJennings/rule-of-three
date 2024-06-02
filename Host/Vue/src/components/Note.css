@@ -1,1 +1,9 @@
-﻿
+﻿div {
+    display: flex;
+}
+.note {
+    margin-left: 10px;
+    align-self: stretch;
+    text-align: start;
+    word-break: break-word;
+}

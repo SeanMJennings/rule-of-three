@@ -1,7 +1,21 @@
 ﻿import { describe, it } from 'vitest'
-import { lets_user_add_first_note, renders_notes } from '@/views/specs/Notes.steps'
+import {
+  adds_and_lists_a_note,
+  character_count_limit_hidden_when_input_is_empty,
+  displays_character_count_limit,
+  limits_note_length_to_150_characters,
+  removes_add_first_note_placeholder_on_click,
+  renders_notes
+} from '@/views/specs/Notes.steps'
 
 describe('Notes', () => {
   it('renders notes', renders_notes)
-  it('lets user add first note', lets_user_add_first_note)
+  it('removes add first note placeholder on click', removes_add_first_note_placeholder_on_click)
+  it('adds and lists a note', adds_and_lists_a_note)
+  it('limits note length to 150 characters', limits_note_length_to_150_characters)
+  it('displays character count limit', displays_character_count_limit)
+  it(
+    'character count limit hidden when input is empty',
+    character_count_limit_hidden_when_input_is_empty
+  )
 })
