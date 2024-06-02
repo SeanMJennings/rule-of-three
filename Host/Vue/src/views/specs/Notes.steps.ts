@@ -27,6 +27,13 @@ export async function removes_add_first_note_placeholder_on_click() {
   expect(addNoteVisible(notes)).toBe(true)
 }
 
+export async function disables_add_note_button_when_input_is_empty() {
+  const notes = await renderNotes()
+  await clickAddFirstNote(notes)
+  await addNote(notes)
+  expect(addNoteVisible(notes)).toBe(true)
+}
+
 export async function adds_and_lists_a_note() {
   const notes = await renderNotes()
   await clickAddFirstNote(notes)

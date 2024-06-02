@@ -8,7 +8,7 @@ const props = defineProps<{
 <template>
   <div>
     <span>></span>
-    <span class="note" id="props.note.id">{{ props.note.content }}</span>
+    <span class="note" :id="`note-${props.note.id}`">{{ props.note.content }}</span>
   </div>
 </template>
 

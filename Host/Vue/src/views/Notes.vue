@@ -12,6 +12,11 @@ const model: Model = reactive({ noteText: '' })
 watch(model, (newValue: Model, oldValue: Model) => {
   newValue.noteText = oldValue.noteText.slice(0, 150)
 })
+const disabled = () => model.noteText.length === 0
+const submit = () => {
+  if (disabled()) return
+  send({ type: 'add', content: model.noteText })
+}
 </script>
 
 <template>
@@ -27,21 +32,18 @@ watch(model, (newValue: Model, oldValue: Model) => {
       <div class="addNote" id="add-note" v-if="snapshot.value === 'addingFirstNote'">
         <input id="add-note-input" type="text" v-model="model.noteText" />
         <FontAwesomeIcon
-          class="addNoteIcon"
+          :class="disabled() ? 'addNoteIcon disabled' : 'addNoteIcon'"
           :icon="faPlusSquare"
           id="add-note-submit"
-          v-on:click="send({ type: 'add', content: model.noteText })"
+          v-on:click="submit()"
         />
         <span class="characterCount" id="character-count">{{
           model.noteText.length > 0 ? model.noteText.length + '/150' : ''
         }}</span>
       </div>
-      <Note
-        v-for="note in snapshot.context.notes"
-        :key="note.id"
-        :note="note"
-        :id="`note-${note.id}`"
-      />
+      <div class="noteList">
+        <Note v-for="note in snapshot.context.notes" :key="note.id" :note="note" />
+      </div>
     </div>
   </main>
 </template>

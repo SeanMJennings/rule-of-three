@@ -5,9 +5,11 @@
   justify-content: flex-start;
   height: 100%;
   padding-top: 20px;
+  padding-bottom: 60px;
   > div {
     text-align: center;
-    width: calc(100% - 40px);
+    width: 100%;
+    padding: 0 20px;
   }
 }
 
@@ -27,9 +29,18 @@ input {
   margin-right: 10px;
 }
 
+.disabled {
+  color: var(--vt-c-divider-dark-1);
+}
+
 .characterCount {
   font-size: 16px;
   text-align: left;
   line-height: 25px;
 }
 
+.noteList {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vt-c-divider-dark-1) var(--vt-c-black);
+}
