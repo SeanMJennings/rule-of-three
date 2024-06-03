@@ -1,8 +1,12 @@
 ﻿div {
     display: flex;
 }
+.marker {
+    text-align: start;
+   width: 5%;
+}
 .note {
-    margin-left: 10px;
+    width: 85%;
     align-self: stretch;
     text-align: start;
     word-break: break-word;

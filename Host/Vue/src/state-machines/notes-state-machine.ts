@@ -1,5 +1,5 @@
 ﻿import { assign, createMachine } from 'xstate'
-import type { Notes } from '@/types/types'
+import type { Note, Notes } from '@/types/types'
 
 const getNextNoteId = function (notes: Notes) {
   let maxValue = 0
@@ -11,32 +11,92 @@ const getNextNoteId = function (notes: Notes) {
   return maxValue === 0 ? 1 : maxValue + 1
 }
 
-export const notesMachine = createMachine({
-  context: { notes: [] as Notes },
-  initial: 'empty',
-  states: {
-    empty: {
-      on: {
-        readyToAddFirstNote: {
-          target: 'addingFirstNote'
+const notesAreFull = function (context: { notes: Notes }) {
+  return context.notes.length >= 22
+}
+
+const notesHaveBeenCarried = function (context: { notes: Notes }): boolean {
+  return context.notes.filter((n) => !n.carried).length === 0
+}
+
+export const notesMachine = createMachine(
+  {
+    context: { notes: [] as Notes },
+    initial: 'empty',
+    states: {
+      empty: {
+        on: {
+          readyToAddFirstNote: {
+            target: 'addingNotes'
+          }
         }
-      }
-    },
-    addingFirstNote: {
-      on: {
-        add: {
-          actions: assign({
-            notes: ({ context, event }) =>
-              context.notes.concat({
-                id: getNextNoteId(context.notes),
-                content: event.content
-              })
-          })
+      },
+      addingNotes: {
+        on: {
+          add: {
+            actions: assign({
+              notes: ({ context, event }) =>
+                context.notes.concat({
+                  id: getNextNoteId(context.notes),
+                  content: event.content,
+                  carried: false,
+                  page: 0
+                })
+            })
+          }
+        },
+        always: {
+          guard: 'notesAreFull',
+          target: 'choosingNotesToCarry'
         }
+      },
+      choosingNotesToCarry: {
+        on: {
+          carry: {
+            actions: assign({
+              notes: ({ context, event }) => {
+                const note = context.notes.find((note) => note.id === event.id) ?? ({} as Note)
+                note.carried = true
+                note.page += 1
+                return context.notes
+              }
+            })
+          },
+          remove: {
+            actions: assign({
+              notes: ({ context, event }) => {
+                context.notes = context.notes.filter((note) => note.id !== event.id)
+                return context.notes
+              }
+            })
+          }
+        },
+        always: {
+          guard: 'notesHaveAllBeenCarried',
+          target: 'addingNotes'
+        },
+        exit: [
+          (context) => {
+            context.context.notes = context.context.notes.map((note) => {
+              note.carried = false
+              return note
+            })
+          }
+        ]
+      },
+      success: {
+        always: 'addingNotes'
       }
-    },
-    success: {
-      always: 'addingFirstNote'
+    }
+  },
+  {
+    guards: {
+      notesHaveAllBeenCarried: ({ context }) => {
+        return notesHaveBeenCarried(context)
+      },
+      notesAreFull: ({ context }) => {
+        return notesAreFull(context)
+      }
     }
   }
-})
+)

@@ -35,6 +35,14 @@ export function characterCountHidden(component: VueWrapper) {
   return component.find('#character-count').text() === ''
 }
 
+export async function carryNote(component: VueWrapper, noteId: string | number) {
+  return component.find(`#note-${noteId}-carry`).trigger('click')
+}
+
+export function carryNoteHidden(component: VueWrapper, noteId: string | number) {
+  return !component.find(`#note-${noteId}-carry`).exists()
+}
+
 function mountNotes() {
   return mount(Notes, {})
 }

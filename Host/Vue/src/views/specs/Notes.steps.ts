@@ -3,6 +3,8 @@ import {
   addFirstNoteHidden,
   addNote,
   addNoteVisible,
+  carryNote,
+  carryNoteHidden,
   characterCount,
   characterCountHidden,
   clickAddFirstNote,
@@ -63,4 +65,17 @@ export async function character_count_limit_hidden_when_input_is_empty() {
   const notes = await renderNotes()
   await clickAddFirstNote(notes)
   expect(characterCountHidden(notes)).toBe(true)
+}
+
+export async function lets_user_carry_notes() {
+  const notes = await renderNotes()
+  await clickAddFirstNote(notes)
+  await typeNote(notes, testNoteTextMoreThan150Chars)
+  for (let i = 0; i < 22; i++) {
+    await addNote(notes)
+  }
+  for (let i = 0; i < 22; i++) {
+    await carryNote(notes, i + 1)
+    expect(carryNoteHidden(notes, i + 1)).toBe(i != 21)
+  }
 }

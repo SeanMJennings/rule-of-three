@@ -17,6 +17,10 @@ const submit = () => {
   if (disabled()) return
   send({ type: 'add', content: model.noteText })
 }
+
+const carry = (id: string | number) => {
+  send({ type: 'carry', id: id })
+}
 </script>
 
 <template>
@@ -29,7 +33,7 @@ const submit = () => {
       >
         Add your first note
       </div>
-      <div class="addNote" id="add-note" v-if="snapshot.value === 'addingFirstNote'">
+      <div class="addNote" id="add-note" v-if="snapshot.value === 'addingNotes'">
         <input id="add-note-input" type="text" v-model="model.noteText" />
         <FontAwesomeIcon
           :class="disabled() ? 'addNoteIcon disabled' : 'addNoteIcon'"
@@ -42,7 +46,17 @@ const submit = () => {
         }}</span>
       </div>
       <div class="noteList">
-        <Note v-for="note in snapshot.context.notes" :key="note.id" :note="note" />
+        <Note
+          v-for="note in snapshot.context.notes"
+          :key="note.id"
+          :note="note"
+          :carry="carry"
+          :show-actions="
+            snapshot.value === 'choosingNotesToCarry' &&
+            snapshot.context.notes.find((n) => n.id === note.id && n.carried === false) !==
+              undefined
+          "
+        />
       </div>
     </div>
   </main>

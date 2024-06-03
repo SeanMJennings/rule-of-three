@@ -4,6 +4,7 @@ import {
   character_count_limit_hidden_when_input_is_empty,
   disables_add_note_button_when_input_is_empty,
   displays_character_count_limit,
+  lets_user_carry_notes,
   limits_note_length_to_150_characters,
   removes_add_first_note_placeholder_on_click,
   renders_notes
@@ -20,4 +21,5 @@ describe('Notes', () => {
     'character count limit hidden when input is empty',
     character_count_limit_hidden_when_input_is_empty
   )
+  it('lets user carry notes', lets_user_carry_notes)
 })
