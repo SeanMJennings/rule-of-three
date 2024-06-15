@@ -55,3 +55,18 @@ export function lets_user_remove_notes() {
   expect(notes.getSnapshot().context.notes.length).toEqual(0)
   expect(notes.getSnapshot().value).toEqual('addingNotes')
 }
+
+export function lets_user_carry_notes_maximum_twice() {
+  notes.send({ type: 'readyToAddFirstNote' })
+  for (let i = 0; i < 22; i++) {
+    notes.send({ type: 'add', content: 'Note content' })
+  }
+  for (let j = 0; j < 3; j++) {
+    for (let i = 0; i < 22; i++) {
+      notes.send({ type: 'carry', id: i + 1 })
+    }
+  }
+  expect(notes.getSnapshot().context.notes.filter((n) => n.page === 2).length).toEqual(22)
+  expect(notes.getSnapshot().context.notes.filter((n) => n.carried === false).length).toEqual(22)
+  expect(notes.getSnapshot().value).toEqual('choosingNotesToCarry')
+}

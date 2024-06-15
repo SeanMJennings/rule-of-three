@@ -56,8 +56,10 @@ export const notesMachine = createMachine(
             actions: assign({
               notes: ({ context, event }) => {
                 const note = context.notes.find((note) => note.id === event.id) ?? ({} as Note)
-                note.carried = true
-                note.page += 1
+                if (note.page <= 1) {
+                  note.carried = true
+                  note.page += 1
+                }
                 return context.notes
               }
             })

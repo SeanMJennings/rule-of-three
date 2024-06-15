@@ -27,6 +27,7 @@ input {
 .addNoteIcon {
   font-size: 21px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .disabled {

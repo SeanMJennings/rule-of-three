@@ -9,6 +9,8 @@ import {
   characterCountHidden,
   clickAddFirstNote,
   noteVisible,
+  removeNote,
+  removeNoteHidden,
   renderNotes,
   typeNote
 } from './Notes.page'
@@ -77,5 +79,18 @@ export async function lets_user_carry_notes() {
   for (let i = 0; i < 22; i++) {
     await carryNote(notes, i + 1)
     expect(carryNoteHidden(notes, i + 1)).toBe(i != 21)
+  }
+}
+
+export async function lets_user_remove_notes() {
+  const notes = await renderNotes()
+  await clickAddFirstNote(notes)
+  await typeNote(notes, testNoteTextMoreThan150Chars)
+  for (let i = 0; i < 22; i++) {
+    await addNote(notes)
+  }
+  for (let i = 0; i < 22; i++) {
+    await removeNote(notes, i + 1)
+    expect(removeNoteHidden(notes, i + 1)).toBe(true)
   }
 }

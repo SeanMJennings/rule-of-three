@@ -17,9 +17,11 @@ const submit = () => {
   if (disabled()) return
   send({ type: 'add', content: model.noteText })
 }
-
 const carry = (id: string | number) => {
   send({ type: 'carry', id: id })
+}
+const remove = (id: string | number) => {
+  send({ type: 'remove', id: id })
 }
 </script>
 
@@ -51,6 +53,7 @@ const carry = (id: string | number) => {
           :key="note.id"
           :note="note"
           :carry="carry"
+          :remove="remove"
           :show-actions="
             snapshot.value === 'choosingNotesToCarry' &&
             snapshot.context.notes.find((n) => n.id === note.id && n.carried === false) !==

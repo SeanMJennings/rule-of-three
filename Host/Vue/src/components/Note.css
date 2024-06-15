@@ -11,3 +11,10 @@
     text-align: start;
     word-break: break-word;
 }
+.keepNoteIcon {
+    cursor: pointer;
+}
+.removeNoteIcon {
+    cursor: pointer;
+    margin-left: 10px;
+}
