@@ -11,12 +11,18 @@ const getNextNoteId = function (notes: Notes) {
   return maxValue === 0 ? 1 : maxValue + 1
 }
 
+const itemLimit = 4
+
 const notesAreFull = function (context: { notes: Notes }) {
-  return context.notes.length >= 22
+  return context.notes.length >= itemLimit
 }
 
 const notesHaveBeenCarried = function (context: { notes: Notes }): boolean {
   return context.notes.filter((n) => !n.carried).length === 0
+}
+
+export const canCarryNote = function (note: Note): boolean {
+  return note.page <= 1
 }
 
 export const notesMachine = createMachine(
@@ -56,9 +62,9 @@ export const notesMachine = createMachine(
             actions: assign({
               notes: ({ context, event }) => {
                 const note = context.notes.find((note) => note.id === event.id) ?? ({} as Note)
-                if (note.page <= 1) {
-                  note.carried = true
+                if (canCarryNote(note)) {
                   note.page += 1
+                  note.carried = true
                 }
                 return context.notes
               }

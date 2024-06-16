@@ -1,5 +1,6 @@
 ﻿div {
     display: flex;
+    align-items: center;
 }
 .marker {
     text-align: start;
@@ -10,6 +11,9 @@
     align-self: stretch;
     text-align: start;
     word-break: break-word;
+}
+.page {
+    margin-right: 10px;
 }
 .keepNoteIcon {
     cursor: pointer;

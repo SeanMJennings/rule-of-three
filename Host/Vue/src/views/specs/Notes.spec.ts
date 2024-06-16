@@ -4,9 +4,11 @@ import {
   character_count_limit_hidden_when_input_is_empty,
   disables_add_note_button_when_input_is_empty,
   displays_character_count_limit,
+  displays_page_number_of_notes,
   lets_user_carry_notes,
   lets_user_remove_notes,
   limits_note_length_to_150_characters,
+  only_shows_remove_notes_for_notes_carried_twice,
   removes_add_first_note_placeholder_on_click,
   renders_notes
 } from '@/views/specs/Notes.steps'
@@ -24,4 +26,9 @@ describe('Notes', () => {
   )
   it('lets user carry notes', lets_user_carry_notes)
   it('lets user remove notes', lets_user_remove_notes)
+  it('displays page number of notes', displays_page_number_of_notes)
+  it(
+    'only shows remove notes for notes carried twice',
+    only_shows_remove_notes_for_notes_carried_twice
+  )
 })

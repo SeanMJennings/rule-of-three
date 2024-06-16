@@ -47,8 +47,12 @@ export function carryNoteHidden(component: VueWrapper, noteId: string | number) 
   return !component.find(`#note-${noteId}-carry`).exists()
 }
 
+export function notePageNumber(component: VueWrapper, noteId: string | number) {
+  return component.find(`#note-${noteId}-page`).text()
+}
+
 export function removeNoteHidden(component: VueWrapper, noteId: string | number) {
-  return !component.find(`#note-${noteId}-carry`).exists()
+  return !component.find(`#note-${noteId}-remove`).exists()
 }
 
 function mountNotes() {

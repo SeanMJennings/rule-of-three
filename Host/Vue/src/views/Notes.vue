@@ -1,12 +1,12 @@
 ﻿<script setup lang="ts">
-import { useActor } from '@xstate/vue'
-import { notesMachine } from '@/state-machines/notes-state-machine'
+import { useMachine } from '@xstate/vue'
+import { canCarryNote, notesMachine } from '@/state-machines/notes-state-machine'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons'
 import Note from '@/components/Note.vue'
 import { reactive, watch } from 'vue'
 
-const { snapshot, send } = useActor(notesMachine)
+const { snapshot, send } = useMachine(notesMachine)
 type Model = { noteText: string }
 const model: Model = reactive({ noteText: '' })
 watch(model, (newValue: Model, oldValue: Model) => {
@@ -54,7 +54,13 @@ const remove = (id: string | number) => {
           :note="note"
           :carry="carry"
           :remove="remove"
-          :show-actions="
+          :show-carry-action="
+            snapshot.value === 'choosingNotesToCarry' &&
+            snapshot.context.notes.find(
+              (n) => n.id === note.id && n.carried === false && canCarryNote(n)
+            ) !== undefined
+          "
+          :show-remove-action="
             snapshot.value === 'choosingNotesToCarry' &&
             snapshot.context.notes.find((n) => n.id === note.id && n.carried === false) !==
               undefined

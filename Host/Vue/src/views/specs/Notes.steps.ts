@@ -8,6 +8,7 @@ import {
   characterCount,
   characterCountHidden,
   clickAddFirstNote,
+  notePageNumber,
   noteVisible,
   removeNote,
   removeNoteHidden,
@@ -92,5 +93,39 @@ export async function lets_user_remove_notes() {
   for (let i = 0; i < 22; i++) {
     await removeNote(notes, i + 1)
     expect(removeNoteHidden(notes, i + 1)).toBe(true)
+  }
+}
+
+export async function displays_page_number_of_notes() {
+  const notes = await renderNotes()
+  await clickAddFirstNote(notes)
+  await typeNote(notes, testNoteTextMoreThan150Chars)
+  for (let i = 0; i < 22; i++) {
+    await addNote(notes)
+  }
+  for (let j = 0; j < 2; j++) {
+    for (let i = 0; i < 22; i++) {
+      expect(notePageNumber(notes, i + 1)).toBe(j.toString())
+      await carryNote(notes, i + 1)
+      expect(notePageNumber(notes, i + 1)).toBe((j + 1).toString())
+    }
+  }
+}
+
+export async function only_shows_remove_notes_for_notes_carried_twice() {
+  const notes = await renderNotes()
+  await clickAddFirstNote(notes)
+  await typeNote(notes, testNoteTextMoreThan150Chars)
+  for (let i = 0; i < 22; i++) {
+    await addNote(notes)
+  }
+  for (let j = 0; j < 2; j++) {
+    for (let i = 0; i < 22; i++) {
+      await carryNote(notes, i + 1)
+    }
+  }
+  for (let i = 0; i < 22; i++) {
+    expect(carryNoteHidden(notes, i + 1)).toBe(true)
+    expect(removeNoteHidden(notes, i + 1)).toBe(false)
   }
 }
