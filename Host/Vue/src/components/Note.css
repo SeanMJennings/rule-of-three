@@ -11,6 +11,8 @@
     align-self: stretch;
     text-align: start;
     word-break: break-word;
+    padding-right: 10px;
+    margin-right: 15px;
 }
 .page {
     margin-right: 10px;
@@ -20,5 +22,11 @@
 }
 .removeNoteIcon {
     cursor: pointer;
+
+}
+.carryActionHidden {
+    margin-left: 23.5px;
+}
+.carryActionShown {
     margin-left: 10px;
 }

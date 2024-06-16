@@ -24,7 +24,9 @@ const props = defineProps<{
       v-on:click="carry(note.id)"
     />
     <FontAwesomeIcon
-      class="removeNoteIcon"
+      :class="
+        showCarryAction ? 'removeNoteIcon carryActionShown' : 'removeNoteIcon carryActionHidden'
+      "
       :icon="faX"
       :id="`note-${note.id}-remove`"
       v-if="showRemoveAction"
