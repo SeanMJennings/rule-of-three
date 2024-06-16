@@ -11,7 +11,7 @@ const getNextNoteId = function (notes: Notes) {
   return maxValue === 0 ? 1 : maxValue + 1
 }
 
-const itemLimit = 4
+const itemLimit = 22
 
 const notesAreFull = function (context: { notes: Notes }) {
   return context.notes.length >= itemLimit

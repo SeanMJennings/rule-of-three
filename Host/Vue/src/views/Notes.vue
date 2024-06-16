@@ -50,7 +50,7 @@ const remove = (id: string | number) => {
       <div class="noteList">
         <Note
           v-for="note in snapshot.context.notes"
-          :key="note.id"
+          :key="note.id + '.' + note.page"
           :note="note"
           :carry="carry"
           :remove="remove"
