@@ -1,60 +1,97 @@
 ﻿import { mount, VueWrapper } from '@vue/test-utils'
 import Notes from '../Notes.vue'
 
-export async function renderNotes() {
-  return mountNotes()
-}
-export async function clickAddFirstNote(component: VueWrapper) {
-  await component.find('#add-first-note').trigger('click')
+let page: VueWrapper
+
+export function renderNotes() {
+  page = mountNotes()
 }
 
-export function addFirstNoteHidden(component: VueWrapper) {
-  return !component.find('#add-first-note').exists()
+export function pageText() {
+  return page.text()
 }
 
-export function addNoteVisible(component: VueWrapper) {
-  return component.find('#add-note').exists()
+export async function clickAddFirstNote() {
+  await elements.addFirstNote.trigger('click')
 }
 
-export function typeNote(component: VueWrapper, note: string) {
-  return component.find('#add-note-input').setValue(note)
-}
-export function addNote(component: VueWrapper) {
-  return component.find('#add-note-submit').trigger('click')
+export function addFirstNoteHidden() {
+  return !elements.addFirstNote.exists()
 }
 
-export function noteVisible(component: VueWrapper, noteId: string | number, note: string) {
-  return component.find(`#note-${noteId}`).text() === note
+export function addNoteVisible() {
+  return elements.addNote.exists()
 }
 
-export function characterCount(component: VueWrapper) {
-  return component.find('#character-count').text()
+export function typeNote(note: string) {
+  return elements.addNoteInput.setValue(note)
+}
+export function addNote() {
+  return elements.addNoteSubmit.trigger('click')
 }
 
-export function characterCountHidden(component: VueWrapper) {
-  return component.find('#character-count').text() === ''
+export function noteVisible(noteId: string | number, note: string) {
+  return elements.noteId(noteId).text() === note
 }
 
-export async function carryNote(component: VueWrapper, noteId: string | number) {
-  return component.find(`#note-${noteId}-carry`).trigger('click')
+export function characterCount() {
+  return elements.characterCount.text()
 }
 
-export async function removeNote(component: VueWrapper, noteId: string | number) {
-  return component.find(`#note-${noteId}-remove`).trigger('click')
+export function characterCountHidden() {
+  return elements.characterCount.text() === ''
 }
 
-export function carryNoteHidden(component: VueWrapper, noteId: string | number) {
-  return !component.find(`#note-${noteId}-carry`).exists()
+export async function carryNote(noteId: string | number) {
+  return elements.noteCarry(noteId).trigger('click')
 }
 
-export function notePageNumber(component: VueWrapper, noteId: string | number) {
-  return component.find(`#note-${noteId}-page`).text()
+export async function removeNote(noteId: string | number) {
+  return elements.noteRemove(noteId).trigger('click')
 }
 
-export function removeNoteHidden(component: VueWrapper, noteId: string | number) {
-  return !component.find(`#note-${noteId}-remove`).exists()
+export function carryNoteHidden(noteId: string | number) {
+  return !elements.noteCarry(noteId).exists()
+}
+
+export function notePageNumber(noteId: string | number) {
+  return elements.notePage(noteId).text()
+}
+
+export function removeNoteHidden(noteId: string | number) {
+  return !elements.noteRemove(noteId).exists()
 }
 
 function mountNotes() {
   return mount(Notes, {})
+}
+
+const elements = {
+  get addFirstNote() {
+    return page.find('#add-first-note')
+  },
+  get addNote() {
+    return page.find('#add-note')
+  },
+  get addNoteInput() {
+    return page.find('#add-note-input')
+  },
+  get addNoteSubmit() {
+    return page.find('#add-note-submit')
+  },
+  get characterCount() {
+    return page.find('#character-count')
+  },
+  noteId(noteId: string | number) {
+    return page.find(`#note-${noteId}`)
+  },
+  noteCarry(noteId: string | number) {
+    return page.find(`#note-${noteId}-carry`)
+  },
+  noteRemove(noteId: string | number) {
+    return page.find(`#note-${noteId}-remove`)
+  },
+  notePage(noteId: string | number) {
+    return page.find(`#note-${noteId}-page`)
+  }
 }

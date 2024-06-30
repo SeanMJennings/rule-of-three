@@ -10,6 +10,7 @@ import {
   clickAddFirstNote,
   notePageNumber,
   noteVisible,
+  pageText,
   removeNote,
   removeNoteHidden,
   renderNotes,
@@ -21,111 +22,111 @@ const testNoteTextMoreThan150Chars =
   'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa'
 
 export async function renders_notes() {
-  const notes = await renderNotes()
-  expect(notes.text()).toContain('Add your first note')
+  renderNotes()
+  expect(pageText()).toContain('Add your first note')
 }
 
 export async function removes_add_first_note_placeholder_on_click() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  expect(addFirstNoteHidden(notes)).toBe(true)
-  expect(addNoteVisible(notes)).toBe(true)
+  renderNotes()
+  await clickAddFirstNote()
+  expect(addFirstNoteHidden()).toBe(true)
+  expect(addNoteVisible()).toBe(true)
 }
 
 export async function disables_add_note_button_when_input_is_empty() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await addNote(notes)
-  expect(addNoteVisible(notes)).toBe(true)
+  renderNotes()
+  await clickAddFirstNote()
+  await addNote()
+  expect(addNoteVisible()).toBe(true)
 }
 
 export async function adds_and_lists_a_note() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await typeNote(notes, testNoteText)
-  await addNote(notes)
-  expect(addNoteVisible(notes)).toBe(true)
-  expect(noteVisible(notes, 1, testNoteText)).toBe(true)
+  renderNotes()
+  await clickAddFirstNote()
+  await typeNote(testNoteText)
+  await addNote()
+  expect(addNoteVisible()).toBe(true)
+  expect(noteVisible(1, testNoteText)).toBe(true)
 }
 
 export async function limits_note_length_to_150_characters() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await typeNote(notes, testNoteTextMoreThan150Chars)
-  await addNote(notes)
-  expect(addNoteVisible(notes)).toBe(true)
-  expect(noteVisible(notes, 1, testNoteTextMoreThan150Chars.slice(0, 150))).toBe(true)
+  renderNotes()
+  await clickAddFirstNote()
+  await typeNote(testNoteTextMoreThan150Chars)
+  await addNote()
+  expect(addNoteVisible()).toBe(true)
+  expect(noteVisible(1, testNoteTextMoreThan150Chars.slice(0, 150))).toBe(true)
 }
 
 export async function displays_character_count_limit() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await typeNote(notes, testNoteTextMoreThan150Chars)
-  expect(characterCount(notes)).toBe('150/150')
+  renderNotes()
+  await clickAddFirstNote()
+  await typeNote(testNoteTextMoreThan150Chars)
+  expect(characterCount()).toBe('150/150')
 }
 
 export async function character_count_limit_hidden_when_input_is_empty() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  expect(characterCountHidden(notes)).toBe(true)
+  renderNotes()
+  await clickAddFirstNote()
+  expect(characterCountHidden()).toBe(true)
 }
 
 export async function lets_user_carry_notes() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await typeNote(notes, testNoteTextMoreThan150Chars)
+  renderNotes()
+  await clickAddFirstNote()
+  await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {
-    await addNote(notes)
+    await addNote()
   }
   for (let i = 0; i < 22; i++) {
-    await carryNote(notes, i + 1)
-    expect(carryNoteHidden(notes, i + 1)).toBe(i != 21)
+    await carryNote(i + 1)
+    expect(carryNoteHidden(i + 1)).toBe(i != 21)
   }
 }
 
 export async function lets_user_remove_notes() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await typeNote(notes, testNoteTextMoreThan150Chars)
+  renderNotes()
+  await clickAddFirstNote()
+  await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {
-    await addNote(notes)
+    await addNote()
   }
   for (let i = 0; i < 22; i++) {
-    await removeNote(notes, i + 1)
-    expect(removeNoteHidden(notes, i + 1)).toBe(true)
+    await removeNote(i + 1)
+    expect(removeNoteHidden(i + 1)).toBe(true)
   }
 }
 
 export async function displays_page_number_of_notes() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await typeNote(notes, testNoteTextMoreThan150Chars)
+  renderNotes()
+  await clickAddFirstNote()
+  await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {
-    await addNote(notes)
+    await addNote()
   }
   for (let j = 0; j < 2; j++) {
     for (let i = 0; i < 22; i++) {
-      expect(notePageNumber(notes, i + 1)).toBe(j.toString())
-      await carryNote(notes, i + 1)
-      expect(notePageNumber(notes, i + 1)).toBe((j + 1).toString())
+      expect(notePageNumber(i + 1)).toBe(j.toString())
+      await carryNote(i + 1)
+      expect(notePageNumber(i + 1)).toBe((j + 1).toString())
     }
   }
 }
 
 export async function only_shows_remove_notes_for_notes_carried_twice() {
-  const notes = await renderNotes()
-  await clickAddFirstNote(notes)
-  await typeNote(notes, testNoteTextMoreThan150Chars)
+  renderNotes()
+  await clickAddFirstNote()
+  await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {
-    await addNote(notes)
+    await addNote()
   }
   for (let j = 0; j < 2; j++) {
     for (let i = 0; i < 22; i++) {
-      await carryNote(notes, i + 1)
+      await carryNote(i + 1)
     }
   }
   for (let i = 0; i < 22; i++) {
-    expect(carryNoteHidden(notes, i + 1)).toBe(true)
-    expect(removeNoteHidden(notes, i + 1)).toBe(false)
+    expect(carryNoteHidden(i + 1)).toBe(true)
+    expect(removeNoteHidden(i + 1)).toBe(false)
   }
 }
