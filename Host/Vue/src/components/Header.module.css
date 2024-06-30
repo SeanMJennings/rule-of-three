@@ -1,4 +1,4 @@
-﻿header {
+﻿.header {
   background: var(--color-header-darker);
   display: flex;
   align-items: center;
@@ -8,7 +8,7 @@
   }
 }
 
-nav {
+.nav {
   color: var(--color-text);
   display: flex;
   flex-grow: 1;
