@@ -19,6 +19,14 @@ export function addFirstNoteHidden() {
   return !elements.addFirstNote.exists()
 }
 
+export function noteCountHidden() {
+  return !elements.noteCount.exists()
+}
+
+export function noteCount() {
+  return elements.noteCount.text()
+}
+
 export function addNoteVisible() {
   return elements.addNote.exists()
 }
@@ -69,6 +77,9 @@ function mountNotes() {
 const elements = {
   get addFirstNote() {
     return page.find('#add-first-note')
+  },
+  get noteCount() {
+    return page.find('#note-count')
   },
   get addNote() {
     return page.find('#add-note')

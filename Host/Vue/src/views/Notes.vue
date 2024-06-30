@@ -1,11 +1,12 @@
 ﻿<script setup lang="ts">
 import { useMachine } from '@xstate/vue'
-import { canCarryNote, notesMachine } from '@/state-machines/notes-state-machine'
+import { canCarryNote, itemLimit, notesMachine } from '@/state-machines/notes-state-machine'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons'
 import Note from '@/components/Note.vue'
 import { reactive, watch } from 'vue'
 import styles from './Notes.module.css'
+import NoteCounter from '@/components/NoteCounter.vue'
 
 const { snapshot, send } = useMachine(notesMachine)
 type Model = { noteText: string }
@@ -29,9 +30,7 @@ const remove = (id: string | number) => {
 <template>
   <main>
     <div :class=styles.container>
-      <div>
-        
-      </div>
+      <NoteCounter :note-count=snapshot.context.notes.length :max-notes=itemLimit />
       <div
         id="add-first-note"
         v-if="snapshot.value === 'empty'"
@@ -42,7 +41,7 @@ const remove = (id: string | number) => {
       <div :class=styles.addNote id="add-note" v-if="snapshot.value === 'addingNotes'">
         <input id="add-note-input" type="text" v-model="model.noteText" />
         <FontAwesomeIcon
-          :class="disabled() ? styles.addNoteIcon + styles.disabled : styles.addNoteIcon"
+          :class="`${disabled() ? styles.disabled : ''} ${styles.addNoteIcon}`"
           :icon="faPlusSquare"
           id="add-note-submit"
           v-on:click="submit()"

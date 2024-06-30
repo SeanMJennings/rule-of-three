@@ -10,7 +10,7 @@ import {
   limits_note_length_to_150_characters,
   only_shows_remove_notes_for_notes_carried_twice,
   removes_add_first_note_placeholder_on_click,
-  renders_notes
+  renders_notes, shows_note_count_if_there_are_notes
 } from '@/views/specs/Notes.steps'
 
 describe('Notes', () => {
@@ -18,6 +18,7 @@ describe('Notes', () => {
   it('removes add first note placeholder on click', removes_add_first_note_placeholder_on_click)
   it('disables add note button when input is empty', disables_add_note_button_when_input_is_empty)
   it('adds and lists a note', adds_and_lists_a_note)
+  it('shows note count if there are notes', shows_note_count_if_there_are_notes)
   it('limits note length to 150 characters', limits_note_length_to_150_characters)
   it('displays character count limit', displays_character_count_limit)
   it(

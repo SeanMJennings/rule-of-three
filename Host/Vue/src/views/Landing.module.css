@@ -1,4 +1,4 @@
-﻿div {
+﻿.container {
   height: 100%;
   padding: 0;
   margin: auto auto;
@@ -6,11 +6,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  > h1 {
+    font-size: 3em;
+    font-weight: 900;
+    background: -webkit-linear-gradient(var(--color-header), var(--color-background-mute));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
-h1 {
-  font-size: 3em;
-  font-weight: 900;
-  background: -webkit-linear-gradient(var(--color-header), var(--color-background-mute));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+

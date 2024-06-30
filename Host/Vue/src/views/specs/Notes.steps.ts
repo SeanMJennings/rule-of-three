@@ -7,7 +7,7 @@ import {
   carryNoteHidden,
   characterCount,
   characterCountHidden,
-  clickAddFirstNote,
+  clickAddFirstNote, noteCount, noteCountHidden,
   notePageNumber,
   noteVisible,
   pageText,
@@ -31,6 +31,15 @@ export async function removes_add_first_note_placeholder_on_click() {
   await clickAddFirstNote()
   expect(addFirstNoteHidden()).toBe(true)
   expect(addNoteVisible()).toBe(true)
+}
+
+export async function shows_note_count_if_there_are_notes() {
+  renderNotes()
+  await clickAddFirstNote()
+  expect(noteCountHidden()).toBe(true)
+  await typeNote(testNoteText)
+  await addNote()
+  expect(noteCount()).toBe('1/22 notes')
 }
 
 export async function disables_add_note_button_when_input_is_empty() {

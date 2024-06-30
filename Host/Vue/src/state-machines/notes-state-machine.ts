@@ -11,7 +11,7 @@ const getNextNoteId = function (notes: Notes) {
   return maxValue === 0 ? 1 : maxValue + 1
 }
 
-const itemLimit = 22
+export const itemLimit = 22
 
 const notesAreFull = function (context: { notes: Notes }) {
   return context.notes.length >= itemLimit
@@ -27,7 +27,10 @@ export const canCarryNote = function (note: Note): boolean {
 
 export const notesMachine = createMachine(
   {
-    context: { notes: [] as Notes },
+    types: {} as {
+      context: { notes: Notes }
+    },
+    context: { notes: [] },
     initial: 'empty',
     states: {
       empty: {
