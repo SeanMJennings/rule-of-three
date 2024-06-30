@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons'
 import Note from '@/components/Note.vue'
 import { reactive, watch } from 'vue'
+import styles from './Notes.module.css'
 
 const { snapshot, send } = useMachine(notesMachine)
 type Model = { noteText: string }
@@ -27,7 +28,10 @@ const remove = (id: string | number) => {
 
 <template>
   <main>
-    <div class="container">
+    <div :class=styles.container>
+      <div>
+        
+      </div>
       <div
         id="add-first-note"
         v-if="snapshot.value === 'empty'"
@@ -35,19 +39,19 @@ const remove = (id: string | number) => {
       >
         Add your first note
       </div>
-      <div class="addNote" id="add-note" v-if="snapshot.value === 'addingNotes'">
+      <div :class=styles.addNote id="add-note" v-if="snapshot.value === 'addingNotes'">
         <input id="add-note-input" type="text" v-model="model.noteText" />
         <FontAwesomeIcon
-          :class="disabled() ? 'addNoteIcon disabled' : 'addNoteIcon'"
+          :class="disabled() ? styles.addNoteIcon + styles.disabled : styles.addNoteIcon"
           :icon="faPlusSquare"
           id="add-note-submit"
           v-on:click="submit()"
         />
-        <span class="characterCount" id="character-count">{{
+        <span :class=styles.characterCount id="character-count">{{
           model.noteText.length > 0 ? model.noteText.length + '/150' : ''
         }}</span>
       </div>
-      <div class="noteList">
+      <div :class=styles.noteList>
         <Note
           v-for="note in snapshot.context.notes"
           :key="note.id + '.' + note.page"
@@ -70,5 +74,3 @@ const remove = (id: string | number) => {
     </div>
   </main>
 </template>
-
-<style src="@/Views/Notes.css" scoped></style>

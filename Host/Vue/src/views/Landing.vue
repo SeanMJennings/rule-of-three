@@ -12,4 +12,4 @@
   </main>
 </template>
 
-<style src="@/Views/Landing.css" scoped></style>
+<style src="@/Views/Landing.module.css" scoped></style>
