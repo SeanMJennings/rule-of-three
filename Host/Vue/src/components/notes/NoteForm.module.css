@@ -1,0 +1,32 @@
+﻿.addNote {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+}
+
+input {
+    width: 90%;
+    margin-right: 10px;
+}
+
+.addNoteIcon {
+    font-size: 21px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.disabled {
+    color: var(--vt-c-divider-dark-1);
+}
+
+.characterCount {
+    font-size: 16px;
+    text-align: left;
+    line-height: 25px;
+}
+
+.noteList {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--vt-c-divider-dark-1) var(--vt-c-black);
+}

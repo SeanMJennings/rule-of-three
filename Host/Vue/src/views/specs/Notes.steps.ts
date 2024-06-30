@@ -13,7 +13,7 @@ import {
   pageText,
   removeNote,
   removeNoteHidden,
-  renderNotes,
+  renderNotesView,
   typeNote
 } from './Notes.page'
 
@@ -22,19 +22,25 @@ const testNoteTextMoreThan150Chars =
   'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa'
 
 export async function renders_notes() {
-  renderNotes()
+  renderNotesView()
   expect(pageText()).toContain('Add your first note')
 }
 
+export async function asks_user_to_create_first_note_list() {
+  renderNotesView()
+  expect(pageText()).toContain('Create your first note list')
+  expect(pageText()).not.toContain('Create your first note list')
+}
+
 export async function removes_add_first_note_placeholder_on_click() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   expect(addFirstNoteHidden()).toBe(true)
   expect(addNoteVisible()).toBe(true)
 }
 
 export async function shows_note_count_if_there_are_notes() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   expect(noteCountHidden()).toBe(true)
   await typeNote(testNoteText)
@@ -43,14 +49,14 @@ export async function shows_note_count_if_there_are_notes() {
 }
 
 export async function disables_add_note_button_when_input_is_empty() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await addNote()
   expect(addNoteVisible()).toBe(true)
 }
 
 export async function adds_and_lists_a_note() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await typeNote(testNoteText)
   await addNote()
@@ -59,7 +65,7 @@ export async function adds_and_lists_a_note() {
 }
 
 export async function limits_note_length_to_150_characters() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await typeNote(testNoteTextMoreThan150Chars)
   await addNote()
@@ -68,20 +74,20 @@ export async function limits_note_length_to_150_characters() {
 }
 
 export async function displays_character_count_limit() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await typeNote(testNoteTextMoreThan150Chars)
   expect(characterCount()).toBe('150/150')
 }
 
 export async function character_count_limit_hidden_when_input_is_empty() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   expect(characterCountHidden()).toBe(true)
 }
 
 export async function lets_user_carry_notes() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {
@@ -94,7 +100,7 @@ export async function lets_user_carry_notes() {
 }
 
 export async function lets_user_remove_notes() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {
@@ -107,7 +113,7 @@ export async function lets_user_remove_notes() {
 }
 
 export async function displays_page_number_of_notes() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {
@@ -123,7 +129,7 @@ export async function displays_page_number_of_notes() {
 }
 
 export async function only_shows_remove_notes_for_notes_carried_twice() {
-  renderNotes()
+  renderNotesView()
   await clickAddFirstNote()
   await typeNote(testNoteTextMoreThan150Chars)
   for (let i = 0; i < 22; i++) {

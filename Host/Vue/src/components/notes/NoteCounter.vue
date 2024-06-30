@@ -12,5 +12,3 @@ const props = defineProps<{
     <div id="note-count" v-if="props.noteCount !==0">{{ props.noteCount }}/{{ props.maxNotes }} notes</div>
   </div>
 </template>
-
-<style src="@/components/Note.module.css" scoped></style>

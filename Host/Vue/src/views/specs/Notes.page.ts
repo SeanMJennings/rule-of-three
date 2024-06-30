@@ -3,8 +3,8 @@ import Notes from '../Notes.vue'
 
 let page: VueWrapper
 
-export function renderNotes() {
-  page = mountNotes()
+export function renderNotesView() {
+  page = mountNotesView()
 }
 
 export function pageText() {
@@ -70,7 +70,7 @@ export function removeNoteHidden(noteId: string | number) {
   return !elements.noteRemove(noteId).exists()
 }
 
-function mountNotes() {
+function mountNotesView() {
   return mount(Notes, {})
 }
 

@@ -33,5 +33,3 @@ const props = defineProps<{
     />
   </div>
 </template>
-
-<style src="@/components/Note.module.css" scoped></style>
