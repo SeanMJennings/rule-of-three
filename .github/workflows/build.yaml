@@ -1,0 +1,14 @@
+﻿name: Build and test
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          npm run build
+          npm run test:unit
+          npm run lint
