@@ -19,6 +19,7 @@ module.exports = {
       ]
     }
   ],
+  "ignorePatterns": ["node_modules/**/*", "dist/**/*", ],
   parserOptions: {
     ecmaVersion: 'latest'
   },
