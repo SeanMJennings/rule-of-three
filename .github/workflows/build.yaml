@@ -15,6 +15,7 @@ jobs:
       - name: Build and test
         run: |
           cd ./Vue
+          yarn install
           yarn build-only
           yarn test:unit
           yarn lint
