@@ -9,6 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
+          cd ./Vue
           npm run build
           npm run test:unit
           npm run lint
