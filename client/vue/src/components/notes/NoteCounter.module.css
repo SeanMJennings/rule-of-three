@@ -1,0 +1,9 @@
+﻿.noteCountContainer {
+  height: 20px;
+  min-height: 20px;
+  margin-bottom: 10px;
+}
+
+.maxNoteCount {
+  color: var(--color-warning-text);
+}
