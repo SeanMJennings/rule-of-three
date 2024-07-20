@@ -15,7 +15,7 @@ coverage
 *.local
 .vs/
 .idea/
-
+__pycache__/
 /cypress/videos/
 /cypress/screenshots/
 

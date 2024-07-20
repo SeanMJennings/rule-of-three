@@ -1,8 +1,10 @@
 [flake8]
-ignore = E501, W503, F403, F405
+ignore = E501, W503, F403, F405, F811
 exclude =
-    .devcontainer,
-    .github,
-    .pytest_cache,
-    .venv,
-    .vscode,
+    .pytest_cache
+    .venv
+    __pycache__
+    poetry.lock
+    poetry.toml
+    pyproject.toml
+    setupMyProject.ps1
