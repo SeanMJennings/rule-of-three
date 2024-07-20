@@ -19,7 +19,7 @@ jobs:
           cd ./client/vue
           yarn
           yarn build-only
-          yarn test:unit
+          yarn test
           yarn lint
       - name: Publish website output
         uses: actions/upload-artifact@v4
