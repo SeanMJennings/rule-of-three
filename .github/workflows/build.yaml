@@ -1,6 +1,6 @@
 ﻿name: Build and deploy
 env:
-  OUTPUT_FOLDER: client/vue/dist
+  OUTPUT_FOLDER: client/dist
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ jobs:
           node-version: 'latest'
       - name: Build and test
         run: |
-          cd ./client/vue
+          cd ./client
           yarn
           yarn build-only
           yarn test
