@@ -42,9 +42,8 @@ jobs:
           cd ./server
           poetry install
       - name: Lint using Flake8
-        uses: py-actions/flake8@v2
-        with:
-          working_directory: "server"
+        run: |
+          flake8 .
       - name: Test with pytest
         run: |
           poetry run pytest
