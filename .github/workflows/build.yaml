@@ -43,9 +43,11 @@ jobs:
           poetry install
       - name: Lint using Flake8
         run: |
+          cd ./server
           poetry run flake8
       - name: Test with pytest
         run: |
+          cd ./server
           poetry run pytest
   provision_azure:
     runs-on: ubuntu-latest
