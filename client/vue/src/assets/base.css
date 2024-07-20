@@ -10,6 +10,7 @@
   --vt-c-indigo: #2c3e50;
   --vt-c-yellow: #ffff00;
   --vt-c-red: #ff0000;
+  --vt-c-success: #00ff00;
 
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
@@ -36,6 +37,7 @@
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-light-1);
   --color-warning-text: var(--vt-c-red);
+  --color-success-text: var(--vt-c-success);
 
   --section-gap: 160px;
 }
@@ -52,6 +54,7 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-1);
     --color-warning-text: var(--vt-c-yellow);
+    --color-success-text: var(--vt-c-success);
   }
 }
 

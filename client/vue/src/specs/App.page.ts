@@ -1,9 +1,10 @@
-﻿import { mount } from "@vue/test-utils";
-import { vi, beforeEach } from "vitest";
+﻿import { mount, VueWrapper } from '@vue/test-utils'
+import { vi, beforeEach, afterEach } from 'vitest'
 import App from "../App.vue";
 import { createRouter, createWebHistory, type Router } from "vue-router";
 import { routes } from "@/router";
 let router: Router = {} as Router;
+let app: VueWrapper;
 
 vi.mock("../views/Landing.vue", () => {
   return { default: { template: "<div>I am a fake landing!</div>" } };
@@ -19,14 +20,18 @@ beforeEach(() => {
   });
 });
 
+afterEach(() => {
+  app.unmount();
+});
+
 export async function renderLanding() {
-  const app = mountApp();
+  app = mountApp();
   await router.push("/");
   return app;
 }
 
 export async function renderNotes() {
-  const app = mountApp();
+  app = mountApp();
   await router.push("/notes");
   return app;
 }

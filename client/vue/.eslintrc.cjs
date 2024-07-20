@@ -12,13 +12,15 @@ module.exports = {
   overrides: [
     {
       files: [
-        'e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'
+        'e2e/**/*.{test,spec}.{js,ts,jsx,tsx}',
+        'src/**/*.{*}.{js,ts,jsx,tsx}'
       ],
       'extends': [
         'plugin:playwright/recommended'
       ]
     }
   ],
+  "ignorePatterns": ["node_modules/**/*", "dist/**/*", ],
   parserOptions: {
     ecmaVersion: 'latest'
   },
