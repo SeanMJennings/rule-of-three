@@ -13,3 +13,9 @@ def test_can_add_note_to_notes_list():
     And(creating_a_notes_list)
     When(adding_a_note_to_notes_list("My Note"))
     Then(the_notes_list_contains_a_note_with_text("My Note"))
+
+
+def test_can_add_maximum_of_22_notes():
+    Given(a_notes_list_with_22_notes)
+    When(validating(adding_a_note_to_notes_list, "My Note"))
+    Then(informs("Notes list is full"))

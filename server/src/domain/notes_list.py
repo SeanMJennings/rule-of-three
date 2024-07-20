@@ -8,4 +8,6 @@ class NotesList:
         self.notes = []
 
     def add(self, note: str):
+        if len(self.notes) == 22:
+            raise Exception("Notes list is full")
         self.notes.append(Note(note))

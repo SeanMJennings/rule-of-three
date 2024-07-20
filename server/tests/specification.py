@@ -47,3 +47,15 @@ def And(action, *args):
 def And(action):
     if callable(action):
         action()
+
+
+def validating(action, *args):
+    if callable(action):
+        try:
+            action(*args)
+        except Exception as e:
+            context["exception"] = e
+
+
+def informs(message):
+    assert context["exception"].args[0] == message

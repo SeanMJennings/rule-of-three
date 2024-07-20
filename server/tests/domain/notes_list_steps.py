@@ -1,3 +1,4 @@
+from src.domain.note import Note
 from src.domain.notes_list import NotesList
 from tests.validations import validate_uuid4
 
@@ -11,6 +12,12 @@ def a_notes_list_name():
 def creating_a_notes_list():
     global notes_list
     notes_list = NotesList(a_notes_list_name())
+
+
+def a_notes_list_with_22_notes():
+    global notes_list
+    notes_list = NotesList("My Notes List")
+    notes_list.notes = [Note("wibble")] * 22
 
 
 def the_notes_list_is_empty():
