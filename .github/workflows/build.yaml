@@ -44,7 +44,7 @@ jobs:
       - name: Lint using Flake8
         uses: py-actions/flake8@v2
         with:
-          path: 'server'
+          working_directory: "server"
       - name: Test with pytest
         run: |
           poetry run pytest
