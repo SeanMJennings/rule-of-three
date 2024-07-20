@@ -1,5 +1,5 @@
 [flake8]
-ignore = E501, W503, F403, F405
+ignore = E501, W503, F403, F405, F811
 exclude =
     .pytest_cache
     .venv
