@@ -1,5 +1,10 @@
 [flake8]
 ignore = E501, W503, F403, F405
 exclude =
-    .pytest_cache,
+    .pytest_cache
     .venv
+    __pycache__
+    poetry.lock
+    poetry.toml
+    pyproject.toml
+    setupMyProject.ps1
