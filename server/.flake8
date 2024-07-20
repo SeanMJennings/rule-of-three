@@ -1,0 +1,8 @@
+[flake8]
+ignore = E501, W503, F403, F405
+exclude =
+    .devcontainer,
+    .github,
+    .pytest_cache,
+    .venv,
+    .vscode,

@@ -1,0 +1,44 @@
+﻿.div {
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+}
+.marker {
+  text-align: start;
+  width: 5%;
+}
+.note {
+  width: 90%;
+  align-self: stretch;
+  text-align: start;
+  word-break: break-word;
+  padding-right: 10px;
+  margin-right: 15px;
+}
+.noteTicked {
+  text-decoration: line-through;
+  color: var(--color-success-text);
+}
+
+.noteKept {
+  color: var(--color-success-text);
+}
+.page {
+  margin-right: 10px;
+}
+.spacer {
+  margin-right: 14.5px;
+}
+.largeSpacer {
+  margin-right: 38.5px;
+}
+.icon {
+  cursor: pointer;
+  width: 15px;
+}
+.carryActionHidden {
+  margin-left: 23.5px;
+}
+.carryActionShown {
+  margin-left: 10px;
+}
