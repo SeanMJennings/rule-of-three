@@ -14,9 +14,19 @@ def Given(action, *args):
         action(context, *args)
 
 
+def Given(action):
+    if callable(action):
+        action()
+
+
 def When(action, *args):
     if callable(action):
         action(context, *args)
+
+
+def When(action):
+    if callable(action):
+        action()
 
 
 def Then(action, *args):
@@ -24,6 +34,16 @@ def Then(action, *args):
         action(context, *args)
 
 
+def Then(action):
+    if callable(action):
+        action()
+
+
 def And(action, *args):
     if callable(action):
         action(context, *args)
+
+
+def And(action):
+    if callable(action):
+        action()
