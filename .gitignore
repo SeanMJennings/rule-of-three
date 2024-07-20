@@ -15,7 +15,6 @@ coverage
 *.local
 .vs/
 .idea/
-.venv/
 
 /cypress/videos/
 /cypress/screenshots/

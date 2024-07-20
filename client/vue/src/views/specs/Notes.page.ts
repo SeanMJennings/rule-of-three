@@ -1,23 +1,10 @@
 ﻿import { mount, VueWrapper } from "@vue/test-utils";
 import Notes from "../Notes.vue";
-import { useMachine } from '@xstate/vue'
-import { notesMachine } from '@/state-machines/notes.state-machine'
 
 let page: VueWrapper;
-const { snapshot, send, actorRef } = useMachine(notesMachine);
-actorRef.start();
 
 export function renderNotesView() {
   page = mountNotesView();
-}
-
-export function unmountNotesView() {
-  page.unmount();
-  send({ type: "reset" });
-}
-
-export function stopActor() {
-  actorRef.stop();
 }
 
 export function pageText() {
@@ -26,14 +13,6 @@ export function pageText() {
 
 export function clickAddNoteListPlaceholder() {
   return elements.addNoteListPlaceholder.trigger("click");
-}
-
-export function clickNotesListCaret() {
-  return elements.notesListCaret.trigger("click");
-}
-
-export function clickNotesListSingleSelectCaret() {
-  return elements.notesListSelectCaret.trigger("click");
 }
 
 export function typeNoteListName(value: string) {
@@ -60,45 +39,6 @@ export async function clickAddFirstNote() {
   await elements.addFirstNote.trigger("click");
 }
 
-export async function addANoteList() {
-  await clickAddNoteListPlaceholder();
-  await typeNoteListName("Test Note List");
-  await addNoteListSubmit();
-}
-
-export async function toggleNotesListInput() {
-  await clickNotesListCaret();
-}
-
-export async function toggleNotesListSingleSelect() {
-  await clickNotesListSingleSelectCaret();
-}
-
-export async function addAnotherNoteList() {
-  await typeNoteListName("Test Note List 2");
-  await addNoteListSubmit();
-}
-
-export function notesListInputCollapsed() {
-  return !elements.addNoteListInput.exists();
-}
-
-export function notesListSingleSelectCollapsed() {
-  return !elements.queryNoteListSingleSelect().exists();
-}
-
-export function notesListSingleSelectCaretPointsDown() {
-  return !elements.notesListSelectCaret.classes().includes("fa-rotate-180");
-}
-
-export function notesListInputCaretPointsDown() {
-  return !elements.notesListCaret.classes().includes("fa-rotate-180");
-}
-
-export function notesListInputCaretPointsUp() {
-  return !notesListInputCaretPointsDown();
-}
-
 export function addFirstNoteHidden() {
   return !elements.addFirstNote.exists();
 }
@@ -122,24 +62,12 @@ export function addNote() {
   return elements.addNoteSubmit.trigger("click");
 }
 
-export function noteListVisible(name: string) {
-  return elements.addNoteListInput.text() === name;
-}
-
 export function noteVisible(noteId: string | number, note: string) {
   return elements.noteId(noteId).text() === note;
 }
 
-export function noteListCharacterCount() {
-  return elements.noteListCharacterCount.text();
-}
-
 export function characterCount() {
   return elements.characterCount.text();
-}
-
-export function noteListCharacterCountHidden() {
-  return elements.noteListCharacterCount.text() === "";
 }
 
 export function characterCountHidden() {
@@ -150,16 +78,8 @@ export async function carryNote(noteId: string | number) {
   return elements.noteCarry(noteId).trigger("click");
 }
 
-export async function tickNote(noteId: string | number) {
-  return elements.noteTick(noteId).trigger("click");
-}
-
 export async function removeNote(noteId: string | number) {
   return elements.noteRemove(noteId).trigger("click");
-}
-
-export function tickNoteHidden(noteId: string | number) {
-  return !elements.noteTick(noteId).exists();
 }
 
 export function carryNoteHidden(noteId: string | number) {
@@ -175,24 +95,12 @@ export function removeNoteHidden(noteId: string | number) {
 }
 
 function mountNotesView() {
-  return mount(Notes, {
-    props: {
-      notesMachineProvider: () => {
-        return { snapshot: snapshot as any, send, actorRef };
-      }
-    }
-  });
+  return mount(Notes, {});
 }
 
 const elements = {
   get addNoteListPlaceholder() {
     return page.find("#add-note-list-placeholder");
-  },
-  get notesListCaret() {
-    return page.find("#notes-list-input-caret");
-  },
-  get notesListSelectCaret() {
-    return page.find("#notes-list-select-caret");
   },
   get addNoteListInput() {
     return page.find("#add-note-list-input");
@@ -221,18 +129,12 @@ const elements = {
   get addNoteSubmit() {
     return page.find("#add-note-submit");
   },
-  get noteListCharacterCount() {
-    return page.find("#notes-list-character-count");
-  },  
   get characterCount() {
     return page.find("#character-count");
   },
   noteId(noteId: string | number) {
     return page.find(`#note-${noteId}`);
   },
-  noteTick(noteId: string | number) {
-    return page.find(`#note-${noteId}-tick`);
-  },  
   noteCarry(noteId: string | number) {
     return page.find(`#note-${noteId}-carry`);
   },
