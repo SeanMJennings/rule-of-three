@@ -1,10 +1,7 @@
-import uuid
-
-from src.domain.note import Note
 from src.domain.notes_list import NotesList
 from tests.validations import validate_uuid4
 
-notes_list: NotesList = None
+notes_list: NotesList = NotesList("My Notes List")
 
 
 def a_notes_list_name():
@@ -43,7 +40,7 @@ def adding_a_note_to_notes_list(note_text):
 def ticking_a_note():
     global notes_list
     if len(notes_list.notes) == 0:
-        notes_list.tick(uuid.uuid4())
+        notes_list.tick("wibble")
     else:
         notes_list.tick(notes_list.notes[0].id)
 
@@ -137,4 +134,4 @@ def the_next_eleven_notes_are_removed():
 
 def the_ticked_note_is_removed():
     assert len(notes_list.notes) == 21
-    assert all([note.is_ticked == False for note in notes_list.notes])
+    assert all([note.is_ticked is False for note in notes_list.notes])

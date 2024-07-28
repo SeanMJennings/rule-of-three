@@ -55,7 +55,7 @@ class NotesList:
             ]
         ):
             self.notes = list(
-                filter(lambda n: n.is_removed == False and not n.is_ticked, self.notes)
+                filter(lambda n: n.is_removed is False and not n.is_ticked, self.notes)
             )
             for note in self.notes:
                 note.carried()
