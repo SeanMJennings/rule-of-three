@@ -4,7 +4,7 @@ from src.domain.note import Note
 from src.domain.notes_list import NotesList
 from tests.validations import validate_uuid4
 
-notes_list = None
+notes_list: NotesList = None
 
 
 def a_notes_list_name():
@@ -28,6 +28,13 @@ def a_notes_list_with_22_notes():
         notes_list.add("wibble")
 
 
+def a_notes_list_with_20_notes():
+    global notes_list
+    notes_list = NotesList("My Notes List")
+    for _ in range(20):
+        notes_list.add("wibble")
+
+
 def adding_a_note_to_notes_list(note_text):
     global notes_list
     notes_list.add(note_text)
@@ -41,6 +48,17 @@ def ticking_a_note():
         notes_list.tick(notes_list.notes[0].id)
 
 
+def ticking_the_first_note():
+    global notes_list
+    notes_list.tick(notes_list.notes[0].id)
+
+
+def adding_two_notes():
+    global notes_list
+    notes_list.add("wibble")
+    notes_list.add("wobble")
+
+
 def carrying_the_first_note():
     global notes_list
     notes_list.carry(notes_list.notes[0].id)
@@ -49,6 +67,11 @@ def carrying_the_first_note():
 def removing_the_first_note():
     global notes_list
     notes_list.remove(notes_list.notes[0].id)
+
+
+def carrying_all_notes_except_the_ticked_one():
+    for note in notes_list.notes[1:]:
+        notes_list.carry(note.id)
 
 
 def the_note_is_ticked():
@@ -84,9 +107,23 @@ def removing_the_next_eleven_notes():
         notes_list.remove(note.id)
 
 
+def notes_have_been_carried_twice():
+    global notes_list
+    for note in notes_list.notes:
+        notes_list.carry(note.id)
+    for note in notes_list.notes:
+        notes_list.carry(note.id)
+
+
+def removing_all_notes():
+    global notes_list
+    for note in notes_list.notes:
+        notes_list.remove(note.id)
+
+
 def the_first_eleven_notes_are_carried():
     for note in notes_list.notes[:11]:
-        assert note.is_carried is True
+        assert note.page_count == 1
 
 
 def the_first_eleven_notes_have_a_page_count_of_1():
@@ -96,3 +133,8 @@ def the_first_eleven_notes_have_a_page_count_of_1():
 
 def the_next_eleven_notes_are_removed():
     assert len(notes_list.notes) == 11
+
+
+def the_ticked_note_is_removed():
+    assert len(notes_list.notes) == 21
+    assert all([note.is_ticked == False for note in notes_list.notes])

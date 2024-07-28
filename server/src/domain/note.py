@@ -35,3 +35,6 @@ class Note:
 
     def remove(self):
         self.is_removed = True
+
+    def carried(self):
+        self.is_carried = False

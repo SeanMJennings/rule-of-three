@@ -34,6 +34,18 @@ def test_have_to_decide_to_carry_or_remove_each_note_once_list_is_full():
     Then(informs("Notes list holds 22 notes. Each note must be carried or removed"))
 
 
+def test_cannot_carry_a_note_until_list_is_full():
+    Given(a_notes_list_with_20_notes)
+    When(validating(carrying_the_first_note))
+    Then(informs("Notes list is not yet full"))
+
+
+def test_cannot_remove_a_note_until_list_is_full():
+    Given(a_notes_list_with_20_notes)
+    When(validating(removing_the_first_note))
+    Then(informs("Notes list is not yet full"))
+
+
 def test_can_carry_note_once_list_is_full():
     Given(a_notes_list_with_22_notes)
     When(carrying_the_first_note)
@@ -55,8 +67,46 @@ def test_can_carry_some_notes_and_remove_others():
     And(the_next_eleven_notes_are_removed)
 
 
+def test_ticked_notes_cannot_be_marked_for_carrying():
+    Given(a_notes_list_with_20_notes)
+    And(ticking_the_first_note)
+    And(adding_two_notes)
+    When(validating(carrying_the_first_note))
+    Then(informs("Ticked notes cannot be carried"))
+
+
+def test_ticked_notes_cannot_be_marked_for_removal():
+    Given(a_notes_list_with_20_notes)
+    And(ticking_the_first_note)
+    And(adding_two_notes)
+    When(validating(removing_the_first_note))
+    Then(informs("Ticked notes cannot be marked for removal"))
+
+
+def test_ticked_notes_are_removed_when_a_list_is_carried():
+    Given(a_notes_list_with_20_notes)
+    And(ticking_the_first_note)
+    And(adding_two_notes)
+    When(carrying_all_notes_except_the_ticked_one)
+    Then(the_ticked_note_is_removed)
+
+
 def test_cannot_add_note_until_finished_carrying_or_removing_notes():
     Given(a_notes_list_with_22_notes)
     When(carrying_the_first_eleven_notes)
     When(validating(adding_a_note_to_notes_list, "My Note"))
     Then(informs("Notes list holds 22 notes. Each note must be carried or removed"))
+
+
+def test_can_only_carry_notes_twice():
+    Given(a_notes_list_with_22_notes)
+    And(notes_have_been_carried_twice)
+    When(validating(carrying_the_first_note))
+    Then(informs("Note has been carried twice and must be removed"))
+
+
+def test_must_remove_note_that_has_been_carried_twice():
+    Given(a_notes_list_with_22_notes)
+    And(notes_have_been_carried_twice)
+    When(removing_all_notes)
+    Then(the_notes_list_is_empty)
