@@ -9,6 +9,9 @@ authors = ["Sean Jennings"]
 python = ">=3.11,<4.0"
 flask = "^3.0.3"
 flask-cors = "^4.0.1"
+alembic = "^1.13.2"
+pyodbc = "^5.1.0"
+sqlalchemy-utils = "^0.41.2"
 
 [tool.poetry.dev-dependencies]
 colorama = "^0.4.6"
