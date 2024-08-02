@@ -1,6 +1,8 @@
 ﻿from src.domain.note import Note
+from dataclasses import dataclass
 
 
+@dataclass
 class NotesList:
 
     def __init__(self, name: str):
