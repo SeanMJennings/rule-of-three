@@ -15,22 +15,22 @@ class NotesList:
         self.notes.append(Note(note))
 
     def tick(self, note_id: str):
-        for note in self.notes:
+        for index, note in enumerate(self.notes):
             if note.id == note_id:
-                note.tick()
+                self.notes[index] = note.tick()
                 return
         raise Exception("Note not found")
 
     def carry(self, note_id: str):
         if not self.__list_is_full():
             raise Exception("Notes list is not yet full")
-        for note in self.notes:
+        for index, note in enumerate(self.notes):
             if note.id == note_id:
                 if note.page_count == 2:
                     raise Exception("Note has been carried twice and must be removed")
                 if note.is_ticked:
                     raise Exception("Ticked notes cannot be carried")
-                note.carry()
+                self.notes[index] = note.carry()
                 self.last_note_carried_or_removed()
                 return
         raise Exception("Note not found")
@@ -38,11 +38,11 @@ class NotesList:
     def remove(self, note_id: str):
         if not self.__list_is_full():
             raise Exception("Notes list is not yet full")
-        for note in self.notes:
+        for index, note in enumerate(self.notes):
             if note.id == note_id:
                 if note.is_ticked:
                     raise Exception("Ticked notes cannot be marked for removal")
-                note.remove()
+                self.notes[index] = note.remove()
                 self.last_note_carried_or_removed()
                 return
         raise Exception("Note not found")
@@ -57,8 +57,8 @@ class NotesList:
             self.notes = list(
                 filter(lambda n: n.is_removed is False and not n.is_ticked, self.notes)
             )
-            for note in self.notes:
-                note.carried()
+            for index, note in enumerate(self.notes):
+                self.notes[index] = note.carried()
 
     def __list_is_full(self):
         return len(self.notes) == 22
