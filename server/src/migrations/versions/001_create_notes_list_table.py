@@ -1,7 +1,7 @@
 """create notes list table
 
 Revision ID: 001
-Revises: 
+Revises:
 Create Date: 2024-08-02 20:22:32.405948
 
 """
