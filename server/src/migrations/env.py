@@ -2,7 +2,7 @@ from logging.config import fileConfig
 from sqlalchemy import create_engine, exc
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy_utils import create_database
 import re
 from alembic import context
 
@@ -33,11 +33,10 @@ def create_db_if_not_exists():
     database = re.search(r"^(?P<dbname>[^?]+)", db_uri.split("/")[-1]).group("dbname")
     try:
         engine = create_engine(db_uri)
-        with engine.connect() as conn:
+        with engine.connect():
             print(f"Database {database} already exists.")
     except exc.InterfaceError:
         print(f"Database {database} does not exist. Creating now.")
-        engine = create_engine(db_uri.replace(database, "master"))
         create_database(db_uri)
 
 
