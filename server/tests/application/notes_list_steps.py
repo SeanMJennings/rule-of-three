@@ -23,9 +23,11 @@ def a_notes_list_name():
 
 
 def creating_a_notes_list():
+    global notes_list_service
     notes_list_service.add(a_notes_list_name())
 
 
 def the_notes_list_can_be_retrieved():
+    global notes_list_service
     notes_list = notes_list_service.get(a_notes_list_name())
     assert notes_list.name == "My Notes List"
