@@ -26,7 +26,7 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.execute(
         sa.text(
-            f"GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA :: dbo TO {secret_config['user']}"
+            f"GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA :: dbo TO {secret_config['app_user']}"
         )
     )
     op.create_table(

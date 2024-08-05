@@ -37,21 +37,60 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'poetry'
+      - name: Install dependencies
+        run: python -m pip install pyyaml
       - name: Install project dependencies
         run: |
           cd ./server
           poetry install
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'server/secret_config.yaml'
+          propertyPath: 'migration_user'
+          value: ${{ secrets.PIPELINE_SQL_MIGRATION_USER }}
+          commitChange: false      
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'server/secret_config.yaml'
+          propertyPath: 'migration_user_password'
+          value: ${{ secrets.PIPELINE_SQL_MIGRATION_USER_PASSWORD }}
+          commitChange: false      
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'server/secret_config.yaml'
+          propertyPath: 'migration_user_password_encoded'
+          value: ${{ secrets.PIPELINE_SQL_MIGRATION_USER_PASSWORD_ENCODED }}
+          commitChange: false      
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'server/secret_config.yaml'
+          propertyPath: 'app_user'
+          value: ${{ secrets.PIPELINE_SQL_APP_USER }}
+          commitChange: false      
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'server/secret_config.yaml'
+          propertyPath: 'app_user_password'
+          value: ${{ secrets.PIPELINE_SQL_APP_USER_PASSWORD }}
+          commitChange: false
       - name: Lint using Flake8
         run: |
           cd ./server
           poetry run flake8
+      - name: Alter migration settings
+        run: cd ./server && python alter_configs.py
       - name: Install SQL
-        run: docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=fake_source_control_value" -e "MSSQL_COLLATION=SQL_Latin1_General_CP1_CI_AS" --name sql -p 1433:1433 --memory="5g" -d "mcr.microsoft.com/mssql/server:2019-latest"
+        run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=${{ secrets.PIPELINE_SQL_MIGRATION_USER_PASSWORD }}" -e "MSSQL_COLLATION=SQL_Latin1_General_CP1_CI_AS" -p 1433:1433 --memory="5g" -d "mcr.microsoft.com/mssql/server:2022-latest"
       - name: Run migration
-        shell: pwsh
         run: |
           cd ./server
-          ./migrate.ps1
+          . .venv/bin/activate
+          alembic upgrade head
       - name: Test with pytest
         run: |
           cd ./server
@@ -70,16 +109,16 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az group create -g ${{ vars.RESOURCE_GROUP }} -l ${{ vars.RESOURCE_GROUP_LOCATION }}
+            az group create -g ${{ secrets.RESOURCE_GROUP }} -l ${{ secrets.RESOURCE_GROUP_LOCATION }}
       - name: Create a static web app
         uses: azure/cli@v2
         with:
           azcliversion: latest
           inlineScript: |
             az staticwebapp create \
-                --name ${{ vars.STATIC_WEB_APP_NAME }} \
-                --resource-group ${{ vars.RESOURCE_GROUP }} \
-                --location ${{ vars.STATIC_WEB_APP_LOCATION }} \
+                --name ${{ secrets.STATIC_WEB_APP_NAME }} \
+                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                --location ${{ secrets.STATIC_WEB_APP_LOCATION }} \
                 --sku free
   deploy_static_web_app:
     needs: [ provision_azure ]
@@ -95,7 +134,7 @@ jobs:
         id: swa-token
         with:
           inlineScript: |
-            SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ vars.STATIC_WEB_APP_NAME }} -o tsv --query properties.apiKey)
+            SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ secrets.STATIC_WEB_APP_NAME }} -o tsv --query properties.apiKey)
             echo "::add-mask::$SWA_DEPLOYMENT_TOKEN"
             echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
       - name: Download website

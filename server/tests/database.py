@@ -1,5 +1,7 @@
 ﻿from sqlalchemy import create_engine, text
+from sqlalchemy.engine import URL
 from pathlib import Path
+import pymssql
 import yaml
 
 path = Path(__file__).parent / "config.yaml"
@@ -10,16 +12,22 @@ secret_config = yaml.safe_load(open(secret_config_path))
 
 
 def get_sqlalchemy_db_connection():
-    return create_engine(config["sqlalchemy_dburi"])
+    db_uri = config["sqlalchemy_decoded_url"]
+    db_connection_url = URL.create("mssql+pyodbc", query={"odbc_connect": db_uri})
+    return create_engine(db_connection_url)
 
 
 def get_pydapper_db_connection():
     import pydapper
 
-    return pydapper.connect(
-        f"mssql://{secret_config['user']}:{secret_config['password']}@{config['server']}:{config['port']}/{config['database']}",
-        autocommit=True,
+    conn = pymssql.connect(
+        config["server"],
+        secret_config["app_user"],
+        secret_config["app_user_password"],
+        config["database"],
     )
+
+    return pydapper.using(conn)
 
 
 def clear_db():
