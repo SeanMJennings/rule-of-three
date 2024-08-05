@@ -1,10 +1,15 @@
 from logging.config import fileConfig
 from sqlalchemy import create_engine, exc
 from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import pool, text
 from sqlalchemy_utils import create_database
 import re
 from alembic import context
+from pathlib import Path
+import yaml
+
+path = Path(__file__).parent / "../../secret_config.yaml"
+secret_config = yaml.safe_load(open(path))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -38,6 +43,26 @@ def create_db_if_not_exists():
     except exc.InterfaceError:
         print(f"Database {database} does not exist. Creating now.")
         create_database(db_uri)
+        engine = create_engine(db_uri.replace(database, "master"))
+        with engine.connect().execution_options(
+            isolation_level="AUTOCOMMIT"
+        ) as connection:
+            connection.execute(
+                text("sp_configure 'contained database authentication', 1; ")
+            )
+            connection.execute(text("RECONFIGURE;"))
+            connection.execute(
+                text(f"ALTER DATABASE [{database}] SET CONTAINMENT = PARTIAL")
+            )
+        engine = create_engine(db_uri)
+        with engine.connect().execution_options(
+            isolation_level="AUTOCOMMIT"
+        ) as connection:
+            connection.execute(
+                text(
+                    f"CREATE USER {secret_config['user']} with PASSWORD = '{secret_config['password']}';"
+                )
+            )
 
 
 def run_migrations_offline() -> None:

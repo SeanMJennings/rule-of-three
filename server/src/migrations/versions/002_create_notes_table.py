@@ -23,6 +23,7 @@ def upgrade() -> None:
     op.create_table(
         "Notes",
         sa.Column("id", sa.Uuid, primary_key=True),
+        sa.Column("notes_list_id", sa.Uuid, nullable=False),
         sa.Column("content", sa.String(150), nullable=False),
         sa.Column("is_ticked", sa.Boolean, nullable=False),
         sa.Column("is_carried", sa.Boolean, nullable=False),
