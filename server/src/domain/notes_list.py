@@ -1,4 +1,6 @@
-﻿from src.domain.note import Note
+﻿import uuid
+
+from src.domain.note import Note
 from dataclasses import dataclass
 
 
@@ -6,6 +8,12 @@ from dataclasses import dataclass
 class NotesList:
 
     def __init__(self, name: str):
+        self.id = uuid.uuid4()
+        self.name = name
+        self.notes = []
+
+    def __init__(self, the_id: uuid, name: str):
+        self.id = the_id
         self.name = name
         self.notes = []
 

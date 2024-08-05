@@ -8,8 +8,8 @@ from alembic import context
 from pathlib import Path
 import yaml
 
-path = Path(__file__).parent / "../../secret_config.yaml"
-secret_config = yaml.safe_load(open(path))
+secret_config_path = Path(__file__).parent / "../../secret_config.yaml"
+secret_config = yaml.safe_load(open(secret_config_path))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -33,7 +33,6 @@ target_metadata = None
 
 
 def create_db_if_not_exists():
-    # create database if not exists
     db_uri = config.get_section(config.config_ini_section, {})["sqlalchemy.url"]
     database = re.search(r"^(?P<dbname>[^?]+)", db_uri.split("/")[-1]).group("dbname")
     try:
