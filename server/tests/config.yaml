@@ -1,3 +1,4 @@
 sqlalchemy_dburi: mssql+pyodbc://localhost/ruleofthree?trusted_connection=yes&driver=ODBC Driver 17 for SQL Server
 server: localhost
 database: ruleofthree
+port: 1433

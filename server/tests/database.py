@@ -1,5 +1,4 @@
-﻿import pymssql
-from sqlalchemy import create_engine, text
+﻿from sqlalchemy import create_engine, text
 from pathlib import Path
 import yaml
 
@@ -11,25 +10,23 @@ secret_config = yaml.safe_load(open(secret_config_path))
 
 
 def get_sqlalchemy_db_connection():
-    global config
     return create_engine(config["sqlalchemy_dburi"])
 
 
 def get_pydapper_db_connection():
-    global config
     import pydapper
 
-    return pydapper.using(
-        pymssql.connect(
-            config["server"],
-            secret_config["user"],
-            secret_config["password"],
-            config["database"],
-        )
+    return pydapper.connect(
+        f"mssql://{secret_config['user']}:{secret_config['password']}@{config['server']}:{config['port']}/{config['database']}",
+        autocommit=True,
     )
 
 
 def clear_db():
     db = get_sqlalchemy_db_connection()
-    with db.connect() as conn:
-        conn.execute(text("EXEC sp_MSforeachtable 'TRUNCATE TABLE ?'"))
+    with db.connect().execution_options(isolation_level="AUTOCOMMIT") as conn:
+        conn.execute(
+            text(
+                """EXEC sp_MSforeachtable 'if ("?" NOT IN ("[dbo].[alembic_version]")) TRUNCATE TABLE ?'"""
+            )
+        )

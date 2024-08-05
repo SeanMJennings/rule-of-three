@@ -1,10 +1,20 @@
+import pytest
+
 from src.application.notes_list_service import NotesListService
 from tests.database import clear_db, get_pydapper_db_connection
+from pydapper import commands
 
-notes_list_service = NotesListService(get_pydapper_db_connection())
+db: commands
+notes_list_service: NotesListService
 
 
-def teardown_module():
+@pytest.fixture(autouse=True)
+def setup_and_teardown():
+    global db, notes_list_service
+    db = get_pydapper_db_connection()
+    notes_list_service = NotesListService(db)
+    yield
+    db.connection.close()
     clear_db()
 
 

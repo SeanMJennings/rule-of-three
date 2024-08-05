@@ -1,7 +1,7 @@
 from src.domain.notes_list import NotesList
 from tests.validations import validate_uuid4
 
-notes_list: NotesList = NotesList("My Notes List")
+notes_list: NotesList = NotesList(name="My Notes List")
 
 
 def a_notes_list_name():
