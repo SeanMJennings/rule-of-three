@@ -10,7 +10,6 @@ config = yaml.safe_load(open(path))
 urllib3.disable_warnings()
 
 
-
 client = CosmosClient(
     url=config["url"],
     credential=(config["accountKey"]),
