@@ -27,16 +27,10 @@ jobs:
           name: website
           path: ${{ github.workspace }}/${{ env.OUTPUT_FOLDER }}
   build_server:
-    name: Build and test server
     runs-on: windows-latest # required for Cosmos DB emulator, would much prefer ubuntu-latest
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
-      - name: Start Azure Cosmos DB emulator
-        run: |
-          Write-Host "Launching Cosmos DB Emulator"
-          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
-          Start-CosmosDbEmulator
       - name: Install poetry
         uses: abatilo/actions-poetry@v2
       - name: Install Python
@@ -50,6 +44,10 @@ jobs:
         run: |
           cd ./server
           poetry install
+      - name: Lint using Flake8
+        run: |
+          cd ./server
+          poetry run flake8
       - name: Update values.yaml
         uses: fjogeleit/yaml-update-action@main
         with:
@@ -71,11 +69,12 @@ jobs:
           propertyPath: 'database'
           value: ${{ secrets.PIPELINE_COSMOS_DATABASE }}
           commitChange: false
-      - name: Lint using Flake8
+      - name: Start Azure Cosmos DB emulator
         run: |
-          cd ./server
-          poetry run flake8
-      - name: Alter migration settings
+          Write-Host "Launching Cosmos DB Emulator"
+          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
+          Start-CosmosDbEmulator
+      - name: Populate config settings
         run: cd ./server && python populate_configs.py
       - name: Test with pytest
         run: |

@@ -14,8 +14,9 @@ class NotesListService:
 
     def get(self, name: str):
         items = self.db.query_items(
-                query='SELECT * FROM c WHERE c.name = @name',
-                parameters=[dict(name="@name", value=name)],
-                enable_cross_partition_query=True)
+            query="SELECT * FROM c WHERE c.name = @name",
+            parameters=[dict(name="@name", value=name)],
+            enable_cross_partition_query=True,
+        )
         data = json.dumps(next(iter(items)), indent=True)
         return json.loads(data, object_hook=lambda d: NotesList(**d))
