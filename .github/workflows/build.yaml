@@ -27,9 +27,16 @@ jobs:
           name: website
           path: ${{ github.workspace }}/${{ env.OUTPUT_FOLDER }}
   build_server:
-    runs-on: ubuntu-latest
+    name: Build and test server
+    runs-on: windows-latest # required for Cosmos DB emulator, would much prefer ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v4
+      - name: Start Azure Cosmos DB emulator
+        run: |
+          Write-Host "Launching Cosmos DB Emulator"
+          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
+          Start-CosmosDbEmulator
       - name: Install poetry
         uses: abatilo/actions-poetry@v2
       - name: Install Python
@@ -47,50 +54,29 @@ jobs:
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'server/secret_config.yaml'
-          propertyPath: 'migration_user'
-          value: ${{ secrets.PIPELINE_SQL_MIGRATION_USER }}
-          commitChange: false      
+          propertyPath: 'URL'
+          value: ${{ secrets.PIPELINE_COSMOS_URL }}
+          commitChange: false
       - name: Update values.yaml
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'server/secret_config.yaml'
-          propertyPath: 'migration_user_password'
-          value: ${{ secrets.PIPELINE_SQL_MIGRATION_USER_PASSWORD }}
-          commitChange: false      
+          propertyPath: 'accountKey'
+          value: ${{ secrets.PIPELINE_COSMOS_ACCOUNT_KEY }}
+          commitChange: false
       - name: Update values.yaml
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'server/secret_config.yaml'
-          propertyPath: 'migration_user_password_encoded'
-          value: ${{ secrets.PIPELINE_SQL_MIGRATION_USER_PASSWORD_ENCODED }}
-          commitChange: false      
-      - name: Update values.yaml
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          valueFile: 'server/secret_config.yaml'
-          propertyPath: 'app_user'
-          value: ${{ secrets.PIPELINE_SQL_APP_USER }}
-          commitChange: false      
-      - name: Update values.yaml
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          valueFile: 'server/secret_config.yaml'
-          propertyPath: 'app_user_password'
-          value: ${{ secrets.PIPELINE_SQL_APP_USER_PASSWORD }}
+          propertyPath: 'database'
+          value: ${{ secrets.PIPELINE_COSMOS_DATABASE }}
           commitChange: false
       - name: Lint using Flake8
         run: |
           cd ./server
           poetry run flake8
       - name: Alter migration settings
-        run: cd ./server && python alter_configs.py
-      - name: Install SQL
-        run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=${{ secrets.PIPELINE_SQL_MIGRATION_USER_PASSWORD }}" -e "MSSQL_COLLATION=SQL_Latin1_General_CP1_CI_AS" -p 1433:1433 --memory="5g" -d "mcr.microsoft.com/mssql/server:2022-latest"
-      - name: Run migration
-        run: |
-          cd ./server
-          . .venv/bin/activate
-          alembic upgrade head
+        run: cd ./server && python populate_configs.py
       - name: Test with pytest
         run: |
           cd ./server
