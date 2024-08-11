@@ -1,21 +1,21 @@
-﻿from pydapper import commands
-
+﻿from azure.cosmos import ContainerProxy
 from src.domain.notes_list import NotesList
+import json
 
 
 class NotesListService:
 
-    def __init__(self, db: commands.Commands):
+    def __init__(self, db: ContainerProxy):
         self.db = db
 
     def add(self, name: str):
-        self.db.execute(
-            "INSERT INTO dbo.NotesLists (name) values (?name?)", param={"name": name}
-        )
+        notes_list = NotesList(name)
+        self.db.upsert_item(notes_list.__dict__)
 
     def get(self, name: str):
-        return self.db.query_first(
-            "SELECT id, name FROM dbo.NotesLists where name = ?name?",
-            param={"name": name},
-            model=NotesList,
-        )
+        items = self.db.query_items(
+                query='SELECT * FROM c WHERE c.name = @name',
+                parameters=[dict(name="@name", value=name)],
+                enable_cross_partition_query=True)
+        data = json.dumps(next(iter(items)), indent=True)
+        return json.loads(data, object_hook=lambda d: NotesList(**d))

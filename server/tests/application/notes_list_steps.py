@@ -1,20 +1,19 @@
 import pytest
-
+from azure.cosmos import ContainerProxy
 from src.application.notes_list_service import NotesListService
-from tests.database import clear_db, get_pydapper_db_connection
-from pydapper import commands
+from tests.database import setup_db, get_db_connection, clear_db
 
-db: commands
+db: ContainerProxy
 notes_list_service: NotesListService
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
     global db, notes_list_service
-    db = get_pydapper_db_connection()
+    setup_db()
+    db = get_db_connection()
     notes_list_service = NotesListService(db)
     yield
-    db.connection.close()
     clear_db()
 
 

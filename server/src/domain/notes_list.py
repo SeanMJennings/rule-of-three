@@ -1,18 +1,15 @@
 ﻿import uuid
 
 from src.domain.note import Note
-from dataclasses import dataclass
 
 
-# noinspection PyRedeclaration
-@dataclass
 class NotesList:
 
-    def __init__(self, name: str, id: uuid = None):
+    def __init__(self, name: str, id: uuid = None, **kwargs):
         if id is None:
-            id = uuid.uuid4()
+            self.id = str(uuid.uuid4())
         else:
-            self.id = id
+            self.id = str(id)
         self.name = name
         self.notes = []
 
