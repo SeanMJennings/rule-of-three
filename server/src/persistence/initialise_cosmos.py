@@ -1,4 +1,5 @@
 ﻿from azure.cosmos import CosmosClient, PartitionKey
+from constants import CONTAINER_ID, PARTITIONKEYPATH
 import urllib3
 from pathlib import Path
 import yaml
@@ -8,8 +9,7 @@ config = yaml.safe_load(open(path))
 
 urllib3.disable_warnings()
 
-CONTAINER_ID = "notes_lists"
-PARTITIONKEYPATH = "/id"
+
 
 client = CosmosClient(
     url=config["url"],

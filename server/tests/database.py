@@ -2,7 +2,7 @@
 import urllib3
 from pathlib import Path
 import yaml
-from src.persistence.initialise_cosmos import CONTAINER_ID, PARTITIONKEYPATH
+from src.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
 
 urllib3.disable_warnings()
 path = Path(__file__).parent / "config.yaml"
