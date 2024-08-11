@@ -123,6 +123,7 @@ jobs:
                 --account-name ${{ secrets.COSMOS_NAME }} \
                 --database-name ${{ secrets.COSMOS_DATABASE }} \
                 --name ${{ secrets.COSMOS_CONTAINER }} \
+                --resource-group ${{ secrets.RESOURCE_GROUP }} \
                 --partition-key-path ${{ secrets.COSMOS_PARTITION_KEY_PATH }}
 #  deploy_static_web_app:
 #    needs: [ provision_azure ]
