@@ -3,17 +3,38 @@ from dataclasses import dataclass, field
 
 
 def get_new_uuid() -> uuid:
-    return uuid.uuid4()
+    return str(uuid.uuid4())
 
 
 @dataclass(frozen=True)
 class Note:
     content: str
-    id: uuid.UUID = field(default_factory=get_new_uuid)
+    id: str = field(default_factory=get_new_uuid)
     is_ticked: bool = False
     is_carried: bool = False
     is_removed: bool = False
     page_count: int = 0
+
+    def to_dict(self):
+        return {
+            "content": self.content,
+            "id": self.id,
+            "is_ticked": self.is_ticked,
+            "is_carried": self.is_carried,
+            "is_removed": self.is_removed,
+            "page_count": self.page_count,
+        }
+
+    @staticmethod
+    def from_dict(dictionary):
+        return Note(
+            dictionary["content"],
+            dictionary["id"],
+            dictionary["is_ticked"],
+            dictionary["is_carried"],
+            dictionary["is_removed"],
+            dictionary["page_count"],
+        )
 
     def tick(self):
         return Note(

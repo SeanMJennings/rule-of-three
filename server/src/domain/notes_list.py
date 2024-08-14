@@ -1,17 +1,34 @@
 ﻿import uuid
-
 from src.domain.note import Note
 
 
 class NotesList:
 
-    def __init__(self, name: str, id: uuid = None, **kwargs):
+    def __init__(self, name: str, notes: list[Note] = None, id: str = None):
+        self.name = name
         if id is None:
             self.id = str(uuid.uuid4())
         else:
-            self.id = str(id)
-        self.name = name
-        self.notes = []
+            self.id = id
+        if notes is not None:
+            self.notes = notes
+        else:
+            self.notes = []
+
+    @staticmethod
+    def from_dict(dictionary):
+        return NotesList(
+            dictionary["name"],
+            [Note.from_dict(note) for note in dictionary["notes"]],
+            dictionary["id"],
+        )
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "notes": [note.to_dict() for note in self.notes],
+            "id": self.id,
+        }
 
     def add(self, note: str):
         if len(self.notes) == 22:
