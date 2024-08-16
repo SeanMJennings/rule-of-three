@@ -12,3 +12,9 @@ def test_add_a_note_to_notes_list():
     Given(an_existing_notes_list)
     When(adding_a_note)
     Then(the_note_is_added_to_the_notes_list)
+
+
+def test_remove_a_note_from_notes_list():
+    Given(an_existing_notes_list_with_a_note)
+    When(removing_a_note)
+    Then(the_note_is_removed_from_the_notes_list)

@@ -1,8 +1,7 @@
 ﻿from azure.cosmos import ContainerProxy
 from src.domain.notes_list import NotesList
-from typing import TypeVar
 
-T = TypeVar("T")
+from src.persistence.converters import convert_to_domain
 
 
 class NotesListService:
@@ -20,7 +19,7 @@ class NotesListService:
             parameters=[dict(name="@name", value=name)],
             enable_cross_partition_query=True,
         )
-        return self.__convert_to_domain(NotesList, items)
+        return convert_to_domain(NotesList, items)
 
     def get_by_id(self, id: str) -> NotesList:
         items = self.db.query_items(
@@ -28,13 +27,14 @@ class NotesListService:
             parameters=[dict(name="@id", value=id)],
             enable_cross_partition_query=True,
         )
-        return self.__convert_to_domain(NotesList, items)
+        return convert_to_domain(NotesList, items)
 
     def add_note(self, notes_list_id: str, note: str):
         notes_list = self.get_by_id(notes_list_id)
         notes_list.add(note)
         self.db.upsert_item(notes_list.to_dict())
 
-    @staticmethod
-    def __convert_to_domain(_type: T, items):
-        return _type.from_dict(next(iter(items)))
+    def remove_note(self, notes_list_id: str, note_id: str):
+        notes_list = self.get_by_id(notes_list_id)
+        notes_list.remove(note_id)
+        self.db.upsert_item(notes_list.to_dict())
