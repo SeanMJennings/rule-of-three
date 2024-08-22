@@ -2,6 +2,9 @@
 import urllib3
 from pathlib import Path
 import yaml
+import os
+from tests.run_windows_cosmos import start_and_wait_for_cosmos
+
 from src.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
 
 urllib3.disable_warnings()
@@ -11,10 +14,17 @@ config = yaml.safe_load(open(path))
 secret_config_path = Path(__file__).parent / "../secret_config.yaml"
 secret_config = yaml.safe_load(open(secret_config_path))
 
-client = CosmosClient(
-    url=config["url"],
-    credential=(config["accountKey"]),
-)
+url = config["url"]
+credential = (config["accountKey"])
+
+client = None
+if os.name == "nt":
+    client = start_and_wait_for_cosmos(url, credential)
+else:
+    client = CosmosClient(
+        url=url,
+        credential=credential,
+    )
 
 
 def setup_db():
