@@ -1,5 +1,7 @@
 ﻿from azure.cosmos import ContainerProxy
 from src.domain.notes_list import NotesList
+from azure.cosmos import PartitionKey
+from src.persistence.constants import PARTITIONKEYPATH
 
 from src.persistence.converters import convert_to_domain
 
@@ -13,7 +15,14 @@ class NotesListService:
         notes_list = NotesList(name)
         self.db.upsert_item(notes_list.to_dict())
 
-    def get(self, name: str) -> NotesList:
+    def delete(self, name: str):
+        notes_list = self.get(name)
+        self.db.delete_item(
+            notes_list.id,
+            notes_list.id,
+        )
+
+    def get(self, name: str) -> NotesList | None:
         items = self.db.query_items(
             query="SELECT * FROM c WHERE c.name = @name",
             parameters=[dict(name="@name", value=name)],
@@ -21,7 +30,7 @@ class NotesListService:
         )
         return convert_to_domain(NotesList, items)
 
-    def get_by_id(self, id: str) -> NotesList:
+    def get_by_id(self, id: str) -> NotesList | None:
         items = self.db.query_items(
             query="SELECT * FROM c WHERE c.id = @id",
             parameters=[dict(name="@id", value=id)],

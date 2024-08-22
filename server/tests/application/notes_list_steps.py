@@ -28,6 +28,11 @@ def creating_a_notes_list():
     notes_list_service.add(a_notes_list_name())
 
 
+def deleting_a_notes_list():
+    global notes_list_service
+    notes_list_service.delete(a_notes_list_name())
+
+
 def an_existing_notes_list():
     creating_a_notes_list()
     global notes_list_service, notes_list
@@ -73,6 +78,11 @@ def the_notes_list_can_be_retrieved():
     global notes_list_service, notes_list
     notes_list = notes_list_service.get(a_notes_list_name())
     assert notes_list.name == "My Notes List"
+
+
+def the_notes_list_is_deleted():
+    global notes_list_service
+    assert notes_list_service.get(a_notes_list_name()) is None
 
 
 def the_note_is_added_to_the_notes_list():
