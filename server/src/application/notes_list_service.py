@@ -38,3 +38,13 @@ class NotesListService:
         notes_list = self.get_by_id(notes_list_id)
         notes_list.tick(note_id)
         self.db.upsert_item(notes_list.to_dict())
+
+    def remove_note(self, notes_list_id: str, note_id: str):
+        notes_list = self.get_by_id(notes_list_id)
+        notes_list.remove(note_id)
+        self.db.upsert_item(notes_list.to_dict())
+
+    def carry_note(self, notes_list_id: str, note_id: str):
+        notes_list = self.get_by_id(notes_list_id)
+        notes_list.carry(note_id)
+        self.db.upsert_item(notes_list.to_dict())
