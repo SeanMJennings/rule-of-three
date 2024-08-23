@@ -7,6 +7,7 @@ from tests.database import setup_db, get_db_connection, clear_db
 db: ContainerProxy
 notes_list_service: NotesListService
 notes_list: NotesList
+another_notes_list: NotesList
 
 
 @pytest.fixture(autouse=True)
@@ -23,9 +24,28 @@ def a_notes_list_name():
     return "My Notes List"
 
 
+def another_notes_list_name():
+    return "Another Notes List"
+
+
 def creating_a_notes_list():
     global notes_list_service
     notes_list_service.add(a_notes_list_name())
+
+
+def creating_another_notes_list():
+    global notes_list_service
+    notes_list_service.add(another_notes_list_name())
+
+
+def renaming_a_notes_list():
+    global notes_list_service
+    notes_list_service.update(a_notes_list_name(), "My Renamed Notes List")
+
+
+def renaming_a_notes_list_to_existing_name():
+    global notes_list_service
+    notes_list_service.update(a_notes_list_name(), another_notes_list_name())
 
 
 def deleting_a_notes_list():
@@ -37,6 +57,12 @@ def an_existing_notes_list():
     creating_a_notes_list()
     global notes_list_service, notes_list
     notes_list = notes_list_service.get(a_notes_list_name())
+
+
+def another_existing_notes_list():
+    creating_another_notes_list()
+    global notes_list_service, another_notes_list
+    another_notes_list = notes_list_service.get(a_notes_list_name())
 
 
 def adding_a_note():
@@ -78,6 +104,12 @@ def the_notes_list_can_be_retrieved():
     global notes_list_service, notes_list
     notes_list = notes_list_service.get(a_notes_list_name())
     assert notes_list.name == "My Notes List"
+
+
+def the_notes_list_is_renamed():
+    global notes_list_service, notes_list
+    notes_list = notes_list_service.get("My Renamed Notes List")
+    assert notes_list.name == "My Renamed Notes List"
 
 
 def the_notes_list_is_deleted():

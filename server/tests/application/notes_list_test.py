@@ -8,6 +8,19 @@ def test_create_empty_notes_list():
     Then(the_notes_list_can_be_retrieved)
 
 
+def test_rename_notes_list():
+    Given(an_existing_notes_list)
+    When(renaming_a_notes_list)
+    Then(the_notes_list_is_renamed)
+
+
+def test_cannot_rename_notes_list_to_existing_name():
+    Given(an_existing_notes_list)
+    And(another_existing_notes_list)
+    When(validating(renaming_a_notes_list_to_existing_name))
+    Then(informs("Notes list with name already exists"))
+
+
 def test_delete_notes_list():
     Given(an_existing_notes_list)
     When(deleting_a_notes_list)

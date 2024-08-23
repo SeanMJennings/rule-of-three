@@ -1,8 +1,5 @@
 ﻿from azure.cosmos import ContainerProxy
 from src.domain.notes_list import NotesList
-from azure.cosmos import PartitionKey
-from src.persistence.constants import PARTITIONKEYPATH
-
 from src.persistence.converters import convert_to_domain
 
 
@@ -13,6 +10,13 @@ class NotesListService:
 
     def add(self, name: str):
         notes_list = NotesList(name)
+        self.db.upsert_item(notes_list.to_dict())
+
+    def update(self, name: str, new_name: str):
+        notes_list = self.get(name)
+        if self.get(new_name) is not None:
+            raise ValueError("Notes list with name already exists")
+        notes_list.name = new_name
         self.db.upsert_item(notes_list.to_dict())
 
     def delete(self, name: str):
