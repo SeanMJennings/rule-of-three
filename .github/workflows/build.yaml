@@ -119,11 +119,6 @@ jobs:
                 --account-name ${{ secrets.COSMOS_NAME }} \
                 --resource-group ${{ secrets.RESOURCE_GROUP }} \
                 --name ${{ secrets.COSMOS_DATABASE }}
-            az cosmosdb sql database throughput update \
-                --account-name ${{ secrets.COSMOS_NAME }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --name ${{ secrets.COSMOS_DATABASE }} \
-                --throughput 400 
             az cosmosdb sql container create \
                 --account-name ${{ secrets.COSMOS_NAME }} \
                 --database-name ${{ secrets.COSMOS_DATABASE }} \
