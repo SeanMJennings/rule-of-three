@@ -1,5 +1,5 @@
 ﻿from azure.cosmos import CosmosClient, PartitionKey
-from constants import CONTAINER_ID, PARTITIONKEYPATH
+from src.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
 import urllib3
 from pathlib import Path
 import yaml

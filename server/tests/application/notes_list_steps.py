@@ -8,6 +8,7 @@ db: ContainerProxy
 notes_list_service: NotesListService
 notes_list: NotesList
 another_notes_list: NotesList
+notes_list_id: str
 
 
 @pytest.fixture(autouse=True)
@@ -29,8 +30,8 @@ def another_notes_list_name():
 
 
 def creating_a_notes_list():
-    global notes_list_service
-    notes_list_service.add(a_notes_list_name())
+    global notes_list_service, notes_list_id
+    notes_list_id = notes_list_service.add(a_notes_list_name())
 
 
 def creating_another_notes_list():
@@ -103,6 +104,7 @@ def carrying_a_note():
 def the_notes_list_can_be_retrieved():
     global notes_list_service, notes_list
     notes_list = notes_list_service.get(a_notes_list_name())
+    assert notes_list.id == notes_list_id
     assert notes_list.name == "My Notes List"
 
 
