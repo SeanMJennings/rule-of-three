@@ -16,11 +16,16 @@ try {
 }
 catch {
     write-host "`Installing Python: " -fore yellow
-    choco install python
+    choco install pyenv-win
+    refreshenv
+    pyenv install 3.10.0
+    write-host "`Go to location of python installer and run" -fore yellow
 }
 
  
 try {
+    $Path = "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.10.0\python.exe"
+    poetry env use $Path
     poetry --version
     write-host "`Found Poetry: " -fore yellow
 }
