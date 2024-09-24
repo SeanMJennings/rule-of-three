@@ -11,28 +11,22 @@ urllib3.disable_warnings()
 path = Path(__file__).parent / "config.yaml"
 config = yaml.safe_load(open(path))
 
-secret_config_path = Path(__file__).parent / "../secret_config.yaml"
-secret_config = yaml.safe_load(open(secret_config_path))
-
-url = config["url"]
-credential = (config["accountKey"])
+connection_string = config["connection_string"]
 
 client = None
 if os.name == "nt":
-    client = start_and_wait_for_cosmos(url, credential)
+    client = start_and_wait_for_cosmos(connection_string)
 else:
-    client = CosmosClient(
-        url=url,
-        credential=credential,
-    )
+    client = CosmosClient.from_connection_string(connection_string)
 
 
 def setup_db():
     client.create_database_if_not_exists(config["database"])
     client.get_database_client(config["database"]).create_container_if_not_exists(
-        id=CONTAINER_ID, partition_key=PartitionKey(
+        id=CONTAINER_ID,
+        partition_key=PartitionKey(
             path=PARTITIONKEYPATH,
-        )
+        ),
     )
 
 

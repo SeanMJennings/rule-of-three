@@ -13,16 +13,13 @@ retry_on_service_request_error = partial(
 )()
 
 
-def start_and_wait_for_cosmos(url, credential):
+def start_and_wait_for_cosmos(connection_string):
     programs = str(subprocess.check_output("tasklist"))
     if "Microsoft.Azure.Cosmos" not in programs:
         subprocess.run("start /B Microsoft.Azure.Cosmos.Emulator.exe", shell=True)
-    return __connect_to_cosmos(url, credential)
+    return __connect_to_cosmos(connection_string)
 
 
 @retry_on_service_request_error
-def __connect_to_cosmos(url, credential):
-    return CosmosClient(
-        url=url,
-        credential=credential,
-    )
+def __connect_to_cosmos(connection_string):
+    return CosmosClient.from_connection_string(connection_string)

@@ -1,0 +1,99 @@
+﻿name: Provision Azure
+env:
+  CLIENT_OUTPUT_FOLDER: client/dist
+  SERVER_OUTPUT_FOLDER: server
+on: [ workflow_dispatch ]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  provision_azure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Create a resource group
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az group create -g ${{ secrets.RESOURCE_GROUP }} -l ${{ secrets.RESOURCE_GROUP_LOCATION }}
+      - name: Create a static web app 
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az staticwebapp create \
+                --name ${{ secrets.STATIC_WEB_APP_NAME }} \
+                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                --location ${{ secrets.STATIC_WEB_APP_LOCATION }} \
+                --sku standard
+#      - name: Create a storage account for function app #azure has a bug where this fails if no storage accounts exist
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az storage account create \
+#            --name ${{ secrets.STORAGE_ACCOUNT_NAME }} \
+#            --location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
+#            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#            --sku "Standard_LRS" \
+#            --kind "StorageV2" \
+#            --https-only true \
+#            --min-tls-version "TLS1_2"   
+      - name: Create a function app
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az functionapp create \
+            --name ${{ secrets.FUNCTION_APP_NAME }} \
+            --storage-account ${{ secrets.STORAGE_ACCOUNT_NAME }} \
+            --consumption-plan-location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --os-type "Linux" \
+            --runtime "python" \
+            --runtime-version "3.11" \
+            --functions-version "4" \
+            --disable-app-insights
+      - name: Add cors for Azure portal to function app
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az functionapp cors add \
+            --name ${{ secrets.FUNCTION_APP_NAME }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --allowed-origins https://portal.azure.com
+#      - name: Link static web app to function app #this produces an error but works in azure UI?
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az staticwebapp backends link \
+#            --backend-resource-id "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.RESOURCE_GROUP }}/providers/Microsoft.Web/sites/${{ secrets.FUNCTION_APP_NAME }}" \
+#            --name ${{ secrets.STATIC_WEB_APP_NAME }} \
+#            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+      - name: Create Cosmos DB
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az cosmosdb create \
+                --name ${{ secrets.COSMOS_NAME }} \
+                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                --kind GlobalDocumentDB \
+                --enable-free-tier true            
+            az cosmosdb sql database create \
+                --account-name ${{ secrets.COSMOS_NAME }} \
+                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                --name ${{ secrets.COSMOS_DATABASE }}
+            az cosmosdb sql container create \
+                --account-name ${{ secrets.COSMOS_NAME }} \
+                --database-name ${{ secrets.COSMOS_DATABASE }} \
+                --name ${{ secrets.COSMOS_CONTAINER }} \
+                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                --partition-key-path ${{ secrets.COSMOS_PARTITION_KEY_PATH }}
