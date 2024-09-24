@@ -1,8 +1,11 @@
 ﻿import pytest
 import json
+
+from src.application.notes_list_service import NotesListService
 from tests.handlers.routing import notes_url
-from src.main import create_app
+from src.app import create_app
 from tests.handlers.routing import notes_url_with_id
+from tests.database import setup_db, get_db_connection, clear_db
 
 response = None
 client = None
@@ -11,9 +14,11 @@ client = None
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
     global client
-    client = create_app().test_client()
+    setup_db()
+    client = create_app(NotesListService(get_db_connection())).test_client()
     yield
     client.__exit__(None, None, None)
+    clear_db()
 
 
 def a_notes_list_name():
