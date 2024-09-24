@@ -1,0 +1,8 @@
+﻿.venv
+tests
+.flake8
+poetry.lock
+poetry.toml
+populate_configs.py
+pyproject.toml
+setup_my_project.ps1

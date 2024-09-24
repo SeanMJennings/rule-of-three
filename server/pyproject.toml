@@ -13,6 +13,7 @@ azure-identity = "^1.17.1"
 dataclass-wizard = "^0.22.3"
 tenacity = "^9.0.0"
 flask = "^3.0.3"
+azure-functions = "^1.20.0"
 
 [tool.poetry.dev-dependencies]
 colorama = "^0.4.6"

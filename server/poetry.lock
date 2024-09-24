@@ -35,6 +35,20 @@ azure-core = ">=1.25.1"
 typing-extensions = ">=4.6.0"
 
 [[package]]
+name = "azure-functions"
+version = "1.20.0"
+description = "Azure Functions for Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "azure-functions-1.20.0.tar.gz", hash = "sha256:437e8889d7a75379159b457589cb74f6f966d3576067ae6649fafcd9058102e1"},
+    {file = "azure_functions-1.20.0-py3-none-any.whl", hash = "sha256:1d4ad15b10768b78046154d1da392e99634b64b4821dd091d5b9fe3600c49573"},
+]
+
+[package.extras]
+dev = ["azure-functions-durable", "coverage", "flake8 (>=4.0.1,<4.1.0)", "flake8-logging-format", "mypy", "pytest", "pytest-cov", "requests (==2.*)"]
+
+[[package]]
 name = "azure-identity"
 version = "1.17.1"
 description = "Microsoft Azure Identity Library for Python"
@@ -941,4 +955,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.13"
-content-hash = "7ece7dee954cbb0ddac6e0cdca9f64d61f858c3291c720a3eea638895a7d68cd"
+content-hash = "d59eacc954a456376fd6468f58a69b549ed44451c4d0a60d1a0405a9fa29975a"

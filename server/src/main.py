@@ -5,6 +5,7 @@ from src.handlers.notes_list_handler import (
 )
 from src.persistence.initialise_cosmos import container
 from flask import Flask
+import azure.functions as func
 
 
 def create_app():
@@ -25,5 +26,4 @@ def create_app():
     return app
 
 
-if __name__ == "__main__":
-    create_app().run()
+main = func.WsgiMiddleware(create_app()).main
