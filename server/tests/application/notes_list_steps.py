@@ -102,7 +102,7 @@ def carrying_a_note():
 
 
 def the_notes_list_can_be_retrieved():
-    global notes_list_service, notes_list
+    global notes_list_service, notes_list, notes_list_id
     notes_list = notes_list_service.get(a_notes_list_name())
     assert notes_list.id == notes_list_id
     assert notes_list.name == "My Notes List"
