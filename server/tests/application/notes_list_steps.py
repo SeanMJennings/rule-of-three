@@ -41,23 +41,27 @@ def creating_another_notes_list():
 
 def renaming_a_notes_list():
     global notes_list_service
-    notes_list_service.update(a_notes_list_name(), "My Renamed Notes List")
+    notes_list_service.update(notes_list_id, "My Renamed Notes List")
 
 
 def renaming_a_notes_list_to_existing_name():
     global notes_list_service
-    notes_list_service.update(a_notes_list_name(), another_notes_list_name())
+    notes_list_service.update(notes_list_id, another_notes_list_name())
 
 
 def deleting_a_notes_list():
     global notes_list_service
-    notes_list_service.delete(a_notes_list_name())
+    notes_list_service.delete(notes_list_id)
 
 
 def an_existing_notes_list():
     creating_a_notes_list()
     global notes_list_service, notes_list
     notes_list = notes_list_service.get(a_notes_list_name())
+
+
+def adding_a_notes_list_with_existing_name():
+    creating_a_notes_list()
 
 
 def another_existing_notes_list():

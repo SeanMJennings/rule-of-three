@@ -10,19 +10,21 @@ class NotesListService:
 
     def add(self, name: str):
         notes_list = NotesList(name)
+        if self.get(name) is not None:
+            raise ValueError("Notes list with name already exists")
         item = self.db.upsert_item(notes_list.to_dict())
         return item["id"]
 
-    def update(self, name: str, new_name: str):
-        notes_list = self.get(name)
+    def update(self, id: str, new_name: str):
         if self.get(new_name) is not None:
             raise ValueError("Notes list with name already exists")
+        notes_list = self.get_by_id(id)
         notes_list.name = new_name
         item = self.db.upsert_item(notes_list.to_dict())
         return item["id"]
 
-    def delete(self, name: str):
-        notes_list = self.get(name)
+    def delete(self, id: str):
+        notes_list = self.get_by_id(id)
         self.db.delete_item(
             notes_list.id,
             notes_list.id,

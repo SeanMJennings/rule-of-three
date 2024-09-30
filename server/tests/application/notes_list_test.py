@@ -14,6 +14,12 @@ def test_rename_notes_list():
     Then(the_notes_list_is_renamed)
 
 
+def test_cannot_add_notes_list_with_existing_name():
+    Given(an_existing_notes_list)
+    When(validating(adding_a_notes_list_with_existing_name))
+    Then(informs("Notes list with name already exists"))
+
+
 def test_cannot_rename_notes_list_to_existing_name():
     Given(an_existing_notes_list)
     And(another_existing_notes_list)

@@ -1,4 +1,4 @@
-﻿from src.handlers.notes_list_handler import (
+﻿from src.handlers.notes_list_handlers import (
     NotesListHandlerForGroups,
     NotesListHandlerForItems,
 )

@@ -1,7 +1,9 @@
 ﻿from flask.views import MethodView
-from flask import request
+from flask import request, Response
 from .converters import convert_to_response
 from .requests import get_request_body_property
+import http
+import json
 
 from src.application.notes_list_service import NotesListService
 
@@ -11,7 +13,7 @@ class NotesListHandlerForGroups(MethodView):
 
     @staticmethod
     def route():
-        return "/notes"
+        return "/notes_lists"
 
     @staticmethod
     def name():
@@ -22,7 +24,7 @@ class NotesListHandlerForGroups(MethodView):
 
     def post(self):
         id = self.notes_list_service.add(get_request_body_property(request, "name"))
-        return {"id": id}
+        return Response(response=json.dumps({"id": id}), status=http.client.CREATED)
 
 
 class NotesListHandlerForItems(MethodView):
@@ -30,7 +32,7 @@ class NotesListHandlerForItems(MethodView):
 
     @staticmethod
     def route():
-        return "/notes/<id>"
+        return "/notes_lists/<id>"
 
     @staticmethod
     def name():
@@ -41,3 +43,10 @@ class NotesListHandlerForItems(MethodView):
 
     def get(self, id):
         return convert_to_response(self.notes_list_service.get_by_id(id))
+
+    def patch(self, id):
+        id = self.notes_list_service.update(
+            id,
+            get_request_body_property(request, "name"),
+        )
+        return Response(status=http.client.NO_CONTENT)
