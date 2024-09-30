@@ -7,7 +7,7 @@ def get_new_uuid() -> uuid:
 
 
 @dataclass(frozen=True)
-class Note:
+class Task:
     content: str
     id: str = field(default_factory=get_new_uuid)
     is_ticked: bool = False
@@ -27,7 +27,7 @@ class Note:
 
     @staticmethod
     def from_dict(dictionary):
-        return Note(
+        return Task(
             dictionary["content"],
             dictionary["id"],
             dictionary["is_ticked"],
@@ -37,7 +37,7 @@ class Note:
         )
 
     def tick(self):
-        return Note(
+        return Task(
             self.content,
             self.id,
             True,
@@ -47,7 +47,7 @@ class Note:
         )
 
     def carry(self):
-        return Note(
+        return Task(
             self.content,
             self.id,
             self.is_ticked,
@@ -57,7 +57,7 @@ class Note:
         )
 
     def remove(self):
-        return Note(
+        return Task(
             self.content,
             self.id,
             self.is_ticked,
@@ -67,7 +67,7 @@ class Note:
         )
 
     def carried(self):
-        return Note(
+        return Task(
             self.content,
             self.id,
             self.is_ticked,

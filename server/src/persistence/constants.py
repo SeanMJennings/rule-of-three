@@ -1,2 +1,2 @@
-﻿CONTAINER_ID = "notes_lists"
+﻿CONTAINER_ID = "tasks_lists"
 PARTITIONKEYPATH = "/id"
