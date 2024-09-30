@@ -1,9 +1,9 @@
 ﻿export type Id = { id: number };
-export type NotesList = Id & {
+export type TasksList = Id & {
   name: string;
 };
-export type Notes = Note[];
-export type Note = Id & {
+export type Tasks = Task[];
+export type Task = Id & {
   content: string;
   ticked: boolean;
   carried: boolean;

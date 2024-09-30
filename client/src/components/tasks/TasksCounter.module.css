@@ -1,9 +1,9 @@
-﻿.noteCountContainer {
+﻿.taskCountContainer {
   height: 20px;
   min-height: 20px;
   margin: 10px 0;
 }
 
-.maxNoteCount {
+.maxTaskCount {
   color: var(--color-warning-text);
 }

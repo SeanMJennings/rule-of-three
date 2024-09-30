@@ -7,7 +7,7 @@ import styles from "./Header.module.css";
   <header :class="styles.header">
     <h1>Rule of three</h1>
     <nav :class="styles.nav">
-      <RouterLink to="/notes">Notes</RouterLink>
+      <RouterLink to="/tasks">Tasks</RouterLink>
     </nav>
   </header>
 </template>

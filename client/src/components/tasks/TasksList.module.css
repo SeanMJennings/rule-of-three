@@ -43,7 +43,7 @@
   padding-right: 10px;
 }
 
-.addNoteList {
+.addTaskList {
   display: flex;
   align-items: center;
   justify-content: start;
@@ -51,7 +51,7 @@
   border-bottom: solid 1px var(--color-border);
 }
 
-.selectNotesList {
+.selectTasksList {
   display: flex;
   align-items: center;
   justify-content: start;
@@ -64,7 +64,7 @@
   margin-right: 10px;
 }
 
-.addNoteListIcon {
+.addTaskListIcon {
   font-size: 21px;
   margin-right: 10px;
   cursor: pointer;

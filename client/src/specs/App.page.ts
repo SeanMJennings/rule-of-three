@@ -9,8 +9,8 @@ let app: VueWrapper;
 vi.mock("../views/Landing.vue", () => {
   return { default: { template: "<div>I am a fake landing!</div>" } };
 });
-vi.mock("../views/Notes.vue", () => {
-  return { default: { template: "<div>I am a fake notes page!</div>" } };
+vi.mock("../views/Tasks.vue", () => {
+  return { default: { template: "<div>I am a fake tasks page!</div>" } };
 });
 
 beforeEach(() => {
@@ -30,9 +30,9 @@ export async function renderLanding() {
   return app;
 }
 
-export async function renderNotes() {
+export async function renderTasks() {
   app = mountApp();
-  await router.push("/notes");
+  await router.push("/tasks");
   return app;
 }
 

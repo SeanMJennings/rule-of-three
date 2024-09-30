@@ -4,9 +4,9 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 import Landing from "../views/Landing.vue";
-import Notes from "../views/Notes.vue";
+import Tasks from "../views/Tasks.vue";
 import { useMachine } from '@xstate/vue'
-import { notesMachine } from '@/state-machines/notes.state-machine'
+import { tasksMachine } from '@/state-machines/tasks.state-machine'
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -14,10 +14,10 @@ export const routes: RouteRecordRaw[] = [
     component: Landing,
   },
   {
-    path: "/notes",
-    component: Notes,
-    props: { notesMachineProvider: () => {  
-        const { snapshot, send, actorRef } = useMachine(notesMachine); 
+    path: "/tasks",
+    component: Tasks,
+    props: { tasksMachineProvider: () => {  
+        const { snapshot, send, actorRef } = useMachine(tasksMachine); 
         return { snapshot, send, actorRef } 
       }
     }

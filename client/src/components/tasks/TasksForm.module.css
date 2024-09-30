@@ -9,7 +9,7 @@
   }
 }
 
-.addNote {
+.addTask {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -22,7 +22,7 @@
   margin-right: 10px;
 }
 
-.addNoteIcon {
+.addTaskIcon {
   font-size: 21px;
   margin-right: 10px;
   cursor: pointer;
@@ -38,7 +38,7 @@
   line-height: 21px;
 }
 
-.noteList {
+.taskList {
   margin-top: 20px;
   height: auto;
   overflow: auto;
