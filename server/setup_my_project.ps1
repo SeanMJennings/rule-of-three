@@ -16,7 +16,7 @@ try {
 }
 catch {
     write-host "`Installing Python: " -fore yellow
-    choco install python --version=3.10.11
+    choco install python --version=3.11.9
     refreshenv
 }
 
