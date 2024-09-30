@@ -3,7 +3,7 @@ import http
 import json
 
 
-def success_response(item: dict) -> Response:
+def success_response(item) -> Response:
     return Response(response=json.dumps(item.__dict__), status=http.client.OK)
 
 

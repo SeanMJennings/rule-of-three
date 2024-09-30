@@ -86,26 +86,26 @@ jobs:
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
-#      - name: Install poetry
-#        uses: abatilo/actions-poetry@v2
-#      - name: Install Python
-#        uses: actions/setup-python@v5
-#        with:
-#          python-version: '3.11.9'
-#          cache: 'poetry'
-#      - name: Install dependencies
-#        run: python -m pip install pyyaml
-#      - name: Install project dependencies
-#        run: cd ./server && poetry install
-#      - name: Lint using Flake8
-#        run: cd ./server && poetry run flake8
-#      - name: Start Azure Cosmos DB emulator
-#        run: |
-#          Write-Host "Launching Cosmos DB Emulator"
-#          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
-#          Start-CosmosDbEmulator
-#      - name: Test with pytest
-#        run: cd ./server && poetry run pytest
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9'
+          cache: 'poetry'
+      - name: Install dependencies
+        run: python -m pip install pyyaml
+      - name: Install project dependencies
+        run: cd ./server && poetry install
+      - name: Lint using Flake8
+        run: cd ./server && poetry run flake8
+      - name: Start Azure Cosmos DB emulator
+        run: |
+          Write-Host "Launching Cosmos DB Emulator"
+          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
+          Start-CosmosDbEmulator
+      - name: Test with pytest
+        run: cd ./server && poetry run pytest
   deploy:
     needs: [ build_client, build_server, test_server ]
     runs-on: ubuntu-latest
