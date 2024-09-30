@@ -34,6 +34,11 @@ def creating_a_tasks_list():
     tasks_list_id = tasks_list_service.add(a_tasks_list_name())
 
 
+def getting_all_tasks_lists():
+    global tasks_list_service
+    tasks_list_service.get_all()
+
+
 def creating_another_tasks_list():
     global tasks_list_service
     tasks_list_service.add(another_tasks_list_name())
@@ -110,6 +115,14 @@ def the_tasks_list_can_be_retrieved():
     tasks_list = tasks_list_service.get(a_tasks_list_name())
     assert tasks_list.id == tasks_list_id
     assert tasks_list.name == "My Tasks List"
+
+
+def all_tasks_lists_are_retrieved():
+    global tasks_list_service
+    tasks_lists = tasks_list_service.get_all()
+    assert len(tasks_lists) == 2
+    assert tasks_lists[0].name == "My Tasks List"
+    assert tasks_lists[1].name == "Another Tasks List"
 
 
 def the_tasks_list_is_renamed():

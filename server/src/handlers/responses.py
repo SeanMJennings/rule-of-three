@@ -4,6 +4,10 @@ import json
 
 
 def success_response(item) -> Response:
+    if isinstance(item, list):
+        return Response(
+            response=json.dumps([i.__dict__ for i in item]), status=http.client.OK
+        )
     return Response(response=json.dumps(item.__dict__), status=http.client.OK)
 
 

@@ -8,6 +8,13 @@ def test_can_add_tasks_list():
     Then(the_tasks_list_is_added)
 
 
+def test_can_list_tasks_lists():
+    Given(a_tasks_list)
+    And(another_tasks_list)
+    When(listing_tasks_lists)
+    Then(the_tasks_lists_are_listed)
+
+
 def test_can_update_tasks_list():
     Given(a_tasks_list)
     When(updating_the_tasks_list)

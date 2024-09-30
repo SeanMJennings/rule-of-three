@@ -8,6 +8,13 @@ def test_create_empty_tasks_list():
     Then(the_tasks_list_can_be_retrieved)
 
 
+def test_get_all_tasks_lists():
+    Given(an_existing_tasks_list)
+    And(another_existing_tasks_list)
+    When(getting_all_tasks_lists)
+    Then(all_tasks_lists_are_retrieved)
+
+
 def test_rename_tasks_list():
     Given(an_existing_tasks_list)
     When(renaming_a_tasks_list)

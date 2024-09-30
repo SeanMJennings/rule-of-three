@@ -19,6 +19,9 @@ class TasksListHandlerForGroups(MethodView):
     def __init__(self, tasks_list_service: TasksListService):
         self.tasks_list_service = tasks_list_service
 
+    def get(self):
+        return success_response(self.tasks_list_service.get_all())
+
     def post(self):
         id = self.tasks_list_service.add(get_request_body_property(request, "name"))
         return created_response({"id": id})
