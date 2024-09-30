@@ -1,10 +1,7 @@
 ﻿from flask.views import MethodView
-from flask import request, Response
-from .converters import convert_to_response
+from flask import request
 from .requests import get_request_body_property
-import http
-import json
-
+from .responses import *
 from src.application.tasks_list_service import TasksListService
 
 
@@ -13,7 +10,7 @@ class TasksListHandlerForGroups(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks_lists"
+        return "/tasks_list"
 
     @staticmethod
     def name():
@@ -24,7 +21,7 @@ class TasksListHandlerForGroups(MethodView):
 
     def post(self):
         id = self.tasks_list_service.add(get_request_body_property(request, "name"))
-        return Response(response=json.dumps({"id": id}), status=http.client.CREATED)
+        return created_response({"id": id})
 
 
 class TasksListHandlerForItems(MethodView):
@@ -32,7 +29,7 @@ class TasksListHandlerForItems(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks_lists/<id>"
+        return "/tasks_list/<id>"
 
     @staticmethod
     def name():
@@ -42,11 +39,18 @@ class TasksListHandlerForItems(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def get(self, id):
-        return convert_to_response(self.tasks_list_service.get_by_id(id))
+        tasks_list = self.tasks_list_service.get_by_id(id)
+        if tasks_list is None:
+            return not_found_response("Tasks list not found")
+        return success_response(tasks_list)
 
     def patch(self, id):
-        id = self.tasks_list_service.update(
+        self.tasks_list_service.update(
             id,
             get_request_body_property(request, "name"),
         )
-        return Response(status=http.client.NO_CONTENT)
+        return no_content_response()
+
+    def delete(self, id):
+        self.tasks_list_service.delete(id)
+        return no_content_response()

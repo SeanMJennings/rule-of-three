@@ -1,5 +1,6 @@
 ﻿import pytest
 import json
+import http
 
 from src.application.tasks_list_service import TasksListService
 from tests.handlers.routing import tasks_url
@@ -48,17 +49,30 @@ def updating_the_tasks_list():
     )
 
 
+def deleting_the_tasks_list():
+    global response
+    response = client.delete(tasks_url_with_id(tasks_id))
+
+
 def the_tasks_list_is_added():
     global response
-    assert response.status_code == 201
+    assert response.status_code == http.client.CREATED
     response = client.get(tasks_url_with_id(tasks_id))
-    assert response.status_code == 200
+    assert response.status_code == http.client.OK
     assert json.loads(response.data)["name"] == a_tasks_list_name()
 
 
 def the_tasks_list_is_updated():
     global response
-    assert response.status_code == 204
+    assert response.status_code == http.client.NO_CONTENT
     response = client.get(tasks_url_with_id(tasks_id))
-    assert response.status_code == 200
+    assert response.status_code == http.client.OK
     assert json.loads(response.data)["name"] == an_updated_tasks_list_name()
+
+
+def the_tasks_list_is_deleted():
+    global response
+    assert response.status_code == http.client.NO_CONTENT
+    response = client.get(tasks_url_with_id(tasks_id))
+    assert response.status_code == http.client.NOT_FOUND
+    assert json.loads(response.data)["error"] == "Tasks list not found"

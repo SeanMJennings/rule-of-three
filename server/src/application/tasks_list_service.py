@@ -39,12 +39,12 @@ class TasksListService:
         return convert_to_domain(TasksList, items)
 
     def get_by_id(self, id: str) -> TasksList | None:
-        items = self.db.query_items(
+        item = self.db.query_items(
             query="SELECT * FROM c WHERE c.id = @id",
             parameters=[dict(name="@id", value=id)],
             enable_cross_partition_query=True,
         )
-        return convert_to_domain(TasksList, items)
+        return convert_to_domain(TasksList, item)
 
     def add_task(self, tasks_list_id: str, task: str):
         tasks_list = self.get_by_id(tasks_list_id)

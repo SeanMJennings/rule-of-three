@@ -12,3 +12,9 @@ def test_can_update_tasks_list():
     Given(a_tasks_list)
     When(updating_the_tasks_list)
     Then(the_tasks_list_is_updated)
+
+
+def test_can_delete_tasks_list():
+    Given(a_tasks_list)
+    When(deleting_the_tasks_list)
+    Then(the_tasks_list_is_deleted)

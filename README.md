@@ -1,2 +1,2 @@
 # RuleOfThree
-An app to implement the rule of three approach for notes.
+An app to implement the rule of three approach for tasks.
