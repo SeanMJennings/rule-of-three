@@ -97,7 +97,10 @@ jobs:
           Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
           Start-CosmosDbEmulator
       - name: Test with pytest
-        run: cd ./server && ./venv/Scripts/activate.ps1 && pytest
+        run: |
+          cd ./server
+          . ./venv/bin/activate
+          pytest
   deploy:
     needs: [ build_client, build_server, test_server ]
     runs-on: ubuntu-latest
