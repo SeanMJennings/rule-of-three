@@ -6,12 +6,14 @@ import json
 def success_response(item) -> Response:
     if isinstance(item, list):
         return Response(
-            response=json.dumps([i.__dict__ for i in item]), status=http.client.OK
+            response=json.dumps([i.to_dict() for i in item]), status=http.client.OK
         )
-    return Response(response=json.dumps(item.__dict__), status=http.client.OK)
+    return Response(response=json.dumps(item.to_dict()), status=http.client.OK)
 
 
 def created_response(id) -> Response:
+    if id is None:
+        return Response(status=http.client.CREATED)
     return Response(response=json.dumps(id), status=http.client.CREATED)
 
 

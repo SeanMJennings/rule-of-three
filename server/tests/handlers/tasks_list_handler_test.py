@@ -25,3 +25,9 @@ def test_can_delete_tasks_list():
     Given(a_tasks_list)
     When(deleting_the_tasks_list)
     Then(the_tasks_list_is_deleted)
+
+
+def test_can_add_task_to_tasks_list():
+    Given(a_tasks_list)
+    When(adding_a_task_to_tasks_list)
+    Then(the_task_is_added_to_the_tasks_list)

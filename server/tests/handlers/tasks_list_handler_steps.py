@@ -3,14 +3,13 @@ import json
 import http
 
 from src.application.tasks_list_service import TasksListService
-from tests.handlers.routing import tasks_url
 from src.app import create_app
-from tests.handlers.routing import tasks_url_with_id
+from tests.handlers.routing import *
 from tests.database import setup_db, get_db_connection, clear_db
 
 response = None
 client = None
-tasks_id = None
+tasks_list_id = None
 
 
 @pytest.fixture(autouse=True)
@@ -36,9 +35,9 @@ def an_updated_tasks_list_name():
 
 
 def adding_a_tasks_list():
-    global response, tasks_id
+    global response, tasks_list_id
     response = client.post(tasks_url(), json={"name": a_tasks_list_name()})
-    tasks_id = json.loads(response.data)["id"]
+    tasks_list_id = json.loads(response.data)["id"]
 
 
 def listing_tasks_lists():
@@ -51,28 +50,33 @@ def a_tasks_list():
 
 
 def another_tasks_list():
-    global response, tasks_id
+    global response, tasks_list_id
     response = client.post(tasks_url(), json={"name": another_tasks_list_name()})
-    tasks_id = json.loads(response.data)["id"]
+    tasks_list_id = json.loads(response.data)["id"]
 
 
 def updating_the_tasks_list():
     global response
     response = client.patch(
-        tasks_url_with_id(tasks_id),
+        tasks_list_url_with_id(tasks_list_id),
         json={"name": an_updated_tasks_list_name()},
     )
 
 
 def deleting_the_tasks_list():
     global response
-    response = client.delete(tasks_url_with_id(tasks_id))
+    response = client.delete(tasks_list_url_with_id(tasks_list_id))
+
+
+def adding_a_task_to_tasks_list():
+    global response
+    response = client.post(task_url(tasks_list_id), json={"task": "A Task"})
 
 
 def the_tasks_list_is_added():
     global response
     assert response.status_code == http.client.CREATED
-    response = client.get(tasks_url_with_id(tasks_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id))
     assert response.status_code == http.client.OK
     assert json.loads(response.data)["name"] == a_tasks_list_name()
 
@@ -89,7 +93,7 @@ def the_tasks_lists_are_listed():
 def the_tasks_list_is_updated():
     global response
     assert response.status_code == http.client.NO_CONTENT
-    response = client.get(tasks_url_with_id(tasks_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id))
     assert response.status_code == http.client.OK
     assert json.loads(response.data)["name"] == an_updated_tasks_list_name()
 
@@ -97,6 +101,14 @@ def the_tasks_list_is_updated():
 def the_tasks_list_is_deleted():
     global response
     assert response.status_code == http.client.NO_CONTENT
-    response = client.get(tasks_url_with_id(tasks_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id))
     assert response.status_code == http.client.NOT_FOUND
     assert json.loads(response.data)["error"] == "Tasks list not found"
+
+
+def the_task_is_added_to_the_tasks_list():
+    global response
+    assert response.status_code == http.client.CREATED
+    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    assert response.status_code == http.client.OK
+    assert json.loads(response.data)["tasks"][0]["content"] == "A Task"

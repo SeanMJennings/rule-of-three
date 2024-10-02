@@ -54,7 +54,7 @@ class TasksList:
                 if task.is_ticked:
                     raise Exception("Ticked tasks cannot be carried")
                 self.tasks[index] = task.carry()
-                self.last_task_carried_or_removed()
+                self.__last_task_carried_or_removed()
                 return
         raise Exception("Task not found")
 
@@ -66,11 +66,11 @@ class TasksList:
                 if task.is_ticked:
                     raise Exception("Ticked tasks cannot be marked for removal")
                 self.tasks[index] = task.remove()
-                self.last_task_carried_or_removed()
+                self.__last_task_carried_or_removed()
                 return
         raise Exception("Task not found")
 
-    def last_task_carried_or_removed(self):
+    def __last_task_carried_or_removed(self):
         if all(
             [
                 task.is_carried or task.is_removed or task.is_ticked

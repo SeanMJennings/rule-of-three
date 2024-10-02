@@ -57,3 +57,24 @@ class TasksListHandlerForItems(MethodView):
     def delete(self, id):
         self.tasks_list_service.delete(id)
         return no_content_response()
+
+
+class AddTaskToTasksListHandler(MethodView):
+    init_every_request = False
+
+    @staticmethod
+    def route():
+        return "/tasks_list/<tasks_list_id>/task"
+
+    @staticmethod
+    def name():
+        return "add_task_to_tasks_list_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def post(self, tasks_list_id):
+        self.tasks_list_service.add_task(
+            tasks_list_id, get_request_body_property(request, "task")
+        )
+        return created_response(None)

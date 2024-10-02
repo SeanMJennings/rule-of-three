@@ -2,5 +2,13 @@
     return "http://localhost:5000/api/tasks_list"
 
 
-def tasks_url_with_id(id):
+def tasks_list_url_with_id(id):
     return f"{tasks_url()}/{id}"
+
+
+def task_url(tasks_list_id):
+    return f"{tasks_list_url_with_id(tasks_list_id)}/task"
+
+
+def task_url_with_id(tasks_list_id, task_id):
+    return f"{tasks_list_url_with_id(tasks_list_id)}/task/{task_id}"
