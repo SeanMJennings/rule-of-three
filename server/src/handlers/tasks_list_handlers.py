@@ -3,6 +3,7 @@ from flask import request
 from .requests import get_request_body_property
 from .responses import *
 from src.application.tasks_list_service import TasksListService
+from src._app import __add_app_url
 
 
 class TasksListHandlerForGroups(MethodView):
@@ -59,7 +60,7 @@ class TasksListHandlerForItems(MethodView):
         return no_content_response()
 
 
-class AddTaskToTasksListHandler(MethodView):
+class AddTaskHandler(MethodView):
     init_every_request = False
 
     @staticmethod
@@ -68,13 +69,52 @@ class AddTaskToTasksListHandler(MethodView):
 
     @staticmethod
     def name():
-        return "add_task_to_tasks_list_handler"
+        return "add_task_handler"
 
     def __init__(self, tasks_list_service: TasksListService):
         self.tasks_list_service = tasks_list_service
 
     def post(self, tasks_list_id):
-        self.tasks_list_service.add_task(
+        task_id = self.tasks_list_service.add_task(
             tasks_list_id, get_request_body_property(request, "task")
         )
-        return created_response(None)
+        return created_response({"id": task_id})
+
+
+class TickTaskHandler(MethodView):
+    init_every_request = False
+
+    @staticmethod
+    def route():
+        return "/tasks_list/<tasks_list_id>/task/<task_id>/tick"
+
+    @staticmethod
+    def name():
+        return "tick_task_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def patch(self, tasks_list_id, task_id):
+        self.tasks_list_service.tick_task(tasks_list_id, task_id)
+        return no_content_response()
+
+
+def register_handlers(app, tasks_list_service):
+    tasks_list_handler_for_groups = TasksListHandlerForGroups.as_view(
+        TasksListHandlerForGroups.name(), tasks_list_service
+    )
+    tasks_list_handler_for_items = TasksListHandlerForItems.as_view(
+        TasksListHandlerForItems.name(), tasks_list_service
+    )
+    add_tasks_handler = AddTaskHandler.as_view(
+        AddTaskHandler.name(), tasks_list_service
+    )
+    tick_task_handler = TickTaskHandler.as_view(
+        TickTaskHandler.name(), tasks_list_service
+    )
+    __add_app_url(app, TasksListHandlerForGroups.route(), tasks_list_handler_for_groups)
+    __add_app_url(app, TasksListHandlerForItems.route(), tasks_list_handler_for_items)
+    __add_app_url(app, AddTaskHandler.route(), add_tasks_handler)
+    __add_app_url(app, TickTaskHandler.route(), tick_task_handler)
+    return app

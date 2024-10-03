@@ -49,6 +49,11 @@ def a_tasks_list():
     adding_a_tasks_list()
 
 
+def a_tasks_list_with_tasks():
+    adding_a_tasks_list()
+    adding_a_task_to_tasks_list()
+
+
 def another_tasks_list():
     global response, tasks_list_id
     response = client.post(tasks_url(), json={"name": another_tasks_list_name()})
@@ -71,6 +76,12 @@ def deleting_the_tasks_list():
 def adding_a_task_to_tasks_list():
     global response
     response = client.post(task_url(tasks_list_id), json={"task": "A Task"})
+
+
+def ticking_a_task_in_tasks_list():
+    global response
+    task_id = json.loads(response.data)["id"]
+    response = client.patch(tick_task_url(tasks_list_id, task_id))
 
 
 def the_tasks_list_is_added():
@@ -109,6 +120,16 @@ def the_tasks_list_is_deleted():
 def the_task_is_added_to_the_tasks_list():
     global response
     assert response.status_code == http.client.CREATED
+    task_id = json.loads(response.data)["id"]
     response = client.get(tasks_list_url_with_id(tasks_list_id))
     assert response.status_code == http.client.OK
+    assert json.loads(response.data)["tasks"][0]["id"] == task_id
     assert json.loads(response.data)["tasks"][0]["content"] == "A Task"
+
+
+def the_task_is_ticked_in_the_tasks_list():
+    global response
+    assert response.status_code == http.client.NO_CONTENT
+    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    assert response.status_code == http.client.OK
+    assert json.loads(response.data)["tasks"][0]["is_ticked"] is True

@@ -31,3 +31,9 @@ def test_can_add_task_to_tasks_list():
     Given(a_tasks_list)
     When(adding_a_task_to_tasks_list)
     Then(the_task_is_added_to_the_tasks_list)
+
+
+def test_can_tick_task_in_tasks_list():
+    Given(a_tasks_list_with_tasks)
+    When(ticking_a_task_in_tasks_list)
+    Then(the_task_is_ticked_in_the_tasks_list)

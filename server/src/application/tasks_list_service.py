@@ -55,8 +55,9 @@ class TasksListService:
 
     def add_task(self, tasks_list_id: str, task: str):
         tasks_list = self.get_by_id(tasks_list_id)
-        tasks_list.add(task)
+        the_task_id = tasks_list.add(task)
         self.db.upsert_item(tasks_list.to_dict())
+        return the_task_id
 
     def tick_task(self, tasks_list_id: str, task_id: str):
         tasks_list = self.get_by_id(tasks_list_id)

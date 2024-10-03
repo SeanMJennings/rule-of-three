@@ -35,7 +35,9 @@ class TasksList:
             raise Exception(
                 "Tasks list holds 22 tasks. Each task must be carried or removed"
             )
-        self.tasks.append(Task(task))
+        the_task = Task(task)
+        self.tasks.append(the_task)
+        return the_task.id
 
     def tick(self, task_id: str):
         for index, task in enumerate(self.tasks):
