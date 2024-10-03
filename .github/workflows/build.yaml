@@ -50,9 +50,13 @@ jobs:
       - name: Install project dependencies
         run: |
           cd server
+          uv sync
           uv pip compile pyproject.toml -o requirements.txt
-          uv venv
           uv pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          rm pyproject.toml
+          rm -rf .venv
+          rm uv.lock
+          echo "" > requirements.txt # blank out requirements.txt so it doesn't get installed again
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -119,8 +123,6 @@ jobs:
           path: ${{ env.SERVER_OUTPUT_FOLDER }}
           key: ${{ runner.os }}-server-${{ github.run_id}}-${{ github.run_number }}
           restore-keys: ${{ runner.os }}-server-${{ github.run_id}}-${{ github.run_number }}
-      - name: Rename .venv to venv
-        run: mv server/.venv server/venv
       - name: Azure Login
         uses: azure/login@v2
         with:
