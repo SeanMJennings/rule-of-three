@@ -2,7 +2,7 @@
 env:
   CLIENT_OUTPUT_FOLDER: client/dist
   SERVER_OUTPUT_FOLDER: server
-  PYTHON_VERSION: '3.11.9'
+  PYTHON_VERSION: '3.10.14'
 on:
   push:
     branches:
@@ -143,11 +143,7 @@ jobs:
           skip_app_build: true
           skip_api_build: true
           app_location: ${{ env.CLIENT_OUTPUT_FOLDER }}
-      - name: Deploy Azure function app
-        uses: Azure/functions-action@v1
-        with:
-          app-name: ${{ secrets.FUNCTION_APP_NAME }}
-          package: ${{ env.SERVER_OUTPUT_FOLDER }}
+          api_location: ${{ env.SERVER_OUTPUT_FOLDER }}
       - name: Cleanup cache
         run: |
           gh extension install actions/gh-actions-cache
