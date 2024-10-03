@@ -37,3 +37,15 @@ def test_can_tick_task_in_tasks_list():
     Given(a_tasks_list_with_tasks)
     When(ticking_a_task_in_tasks_list)
     Then(the_task_is_ticked_in_the_tasks_list)
+
+
+def test_can_remove_task_from_tasks_list():
+    Given(a_tasks_list_full_of_tasks)
+    When(removing_a_task_from_tasks_list)
+    Then(the_task_is_removed_from_the_tasks_list)
+
+
+def test_can_carry_task_in_tasks_list():
+    Given(a_tasks_list_full_of_tasks)
+    When(carrying_a_task_in_tasks_list)
+    Then(the_task_is_carried_in_the_tasks_list)

@@ -16,3 +16,7 @@ def task_url_with_id(tasks_list_id, task_id):
 
 def tick_task_url(tasks_list_id, task_id):
     return f"{task_url_with_id(tasks_list_id, task_id)}/tick"
+
+
+def carry_task_url(tasks_list_id, task_id):
+    return f"{task_url_with_id(tasks_list_id, task_id)}/carry"

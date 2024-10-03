@@ -60,7 +60,7 @@ class TasksListHandlerForItems(MethodView):
         return no_content_response()
 
 
-class AddTaskHandler(MethodView):
+class AddTasksHandler(MethodView):
     init_every_request = False
 
     @staticmethod
@@ -100,6 +100,44 @@ class TickTaskHandler(MethodView):
         return no_content_response()
 
 
+class RemoveTaskHandler(MethodView):
+    init_every_request = False
+
+    @staticmethod
+    def route():
+        return "/tasks_list/<tasks_list_id>/task/<task_id>"
+
+    @staticmethod
+    def name():
+        return "remove_task_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def delete(self, tasks_list_id, task_id):
+        self.tasks_list_service.remove_task(tasks_list_id, task_id)
+        return no_content_response()
+
+
+class CarryTaskHandler(MethodView):
+    init_every_request = False
+
+    @staticmethod
+    def route():
+        return "/tasks_list/<tasks_list_id>/task/<task_id>/carry"
+
+    @staticmethod
+    def name():
+        return "carry_task_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def patch(self, tasks_list_id, task_id):
+        self.tasks_list_service.carry_task(tasks_list_id, task_id)
+        return no_content_response()
+
+
 def register_handlers(app, tasks_list_service):
     tasks_list_handler_for_groups = TasksListHandlerForGroups.as_view(
         TasksListHandlerForGroups.name(), tasks_list_service
@@ -107,14 +145,23 @@ def register_handlers(app, tasks_list_service):
     tasks_list_handler_for_items = TasksListHandlerForItems.as_view(
         TasksListHandlerForItems.name(), tasks_list_service
     )
-    add_tasks_handler = AddTaskHandler.as_view(
-        AddTaskHandler.name(), tasks_list_service
+    add_tasks_handler = AddTasksHandler.as_view(
+        AddTasksHandler.name(), tasks_list_service
     )
     tick_task_handler = TickTaskHandler.as_view(
         TickTaskHandler.name(), tasks_list_service
     )
+    remove_task_handler = RemoveTaskHandler.as_view(
+        RemoveTaskHandler.name(), tasks_list_service
+    )
+    carry_task_handler = CarryTaskHandler.as_view(
+        CarryTaskHandler.name(), tasks_list_service
+    )
+
     __add_app_url(app, TasksListHandlerForGroups.route(), tasks_list_handler_for_groups)
     __add_app_url(app, TasksListHandlerForItems.route(), tasks_list_handler_for_items)
-    __add_app_url(app, AddTaskHandler.route(), add_tasks_handler)
+    __add_app_url(app, AddTasksHandler.route(), add_tasks_handler)
     __add_app_url(app, TickTaskHandler.route(), tick_task_handler)
+    __add_app_url(app, RemoveTaskHandler.route(), remove_task_handler)
+    __add_app_url(app, CarryTaskHandler.route(), carry_task_handler)
     return app
