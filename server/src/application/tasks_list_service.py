@@ -1,6 +1,7 @@
 ﻿from azure.cosmos import ContainerProxy
 from src.domain.tasks_list import TasksList
 from src.persistence.converters import convert_to_domain
+from src.application.validation_exception import ValidationException
 
 
 class TasksListService:
@@ -11,13 +12,13 @@ class TasksListService:
     def add(self, name: str):
         tasks_list = TasksList(name)
         if self.get(name) is not None:
-            raise ValueError("Tasks list with name already exists")
+            raise ValidationException("Tasks list with name already exists")
         item = self.db.upsert_item(tasks_list.to_dict())
         return item["id"]
 
     def update(self, id: str, new_name: str):
         if self.get(new_name) is not None:
-            raise ValueError("Tasks list with name already exists")
+            raise ValidationException("Tasks list with name already exists")
         tasks_list = self.get_by_id(id)
         tasks_list.name = new_name
         item = self.db.upsert_item(tasks_list.to_dict())
