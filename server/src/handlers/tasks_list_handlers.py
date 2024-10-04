@@ -3,7 +3,7 @@ from flask import request
 from .requests import get_request_body_property
 from .responses import *
 from src.application.tasks_list_service import TasksListService
-from src._app import __add_app_url
+from src._app import add_app_url
 
 
 class TasksListHandlerForGroups(MethodView):
@@ -158,10 +158,10 @@ def register_handlers(app, tasks_list_service):
         CarryTaskHandler.name(), tasks_list_service
     )
 
-    __add_app_url(app, TasksListHandlerForGroups.route(), tasks_list_handler_for_groups)
-    __add_app_url(app, TasksListHandlerForItems.route(), tasks_list_handler_for_items)
-    __add_app_url(app, AddTasksHandler.route(), add_tasks_handler)
-    __add_app_url(app, TickTaskHandler.route(), tick_task_handler)
-    __add_app_url(app, RemoveTaskHandler.route(), remove_task_handler)
-    __add_app_url(app, CarryTaskHandler.route(), carry_task_handler)
+    add_app_url(app, TasksListHandlerForGroups.route(), tasks_list_handler_for_groups)
+    add_app_url(app, TasksListHandlerForItems.route(), tasks_list_handler_for_items)
+    add_app_url(app, AddTasksHandler.route(), add_tasks_handler)
+    add_app_url(app, TickTaskHandler.route(), tick_task_handler)
+    add_app_url(app, RemoveTaskHandler.route(), remove_task_handler)
+    add_app_url(app, CarryTaskHandler.route(), carry_task_handler)
     return app

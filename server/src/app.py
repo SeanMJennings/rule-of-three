@@ -1,6 +1,6 @@
 ﻿from src.handlers.tasks_list_handlers import register_handlers
 from flask import Flask
-from src.handlers.error_handlers import handle_exception
+from src.handlers.exception_handlers import handle_exception
 
 
 def create_app(tasks_list_service):
