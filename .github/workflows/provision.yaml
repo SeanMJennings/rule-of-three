@@ -15,7 +15,7 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Register subscription for for Domain Registration
+      - name: Register subscription for Domain Registration
         uses: azure/cli@v2
         with:
           azcliversion: latest

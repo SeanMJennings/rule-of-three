@@ -1,4 +1,4 @@
-﻿import { assign, createMachine } from "xstate";
+﻿import {assign, createMachine, fromPromise} from "xstate";
 import type { Task, Tasks, TasksList } from '@/types/types'
 import {
   canCarryTask,
@@ -11,6 +11,7 @@ import {
   TasksListMachineStates,
   TasksMachineStates,
 } from "@/state-machines/tasks.states";
+import {createTasksList} from "@/common/http";
 
 export const taskLimit = 22;
 
@@ -42,14 +43,21 @@ export const tasksMachine = createMachine(
       readyToAddTasksLists: {
         on: {
           addTasksList: {
-            actions: [
-              assign({
-                id: ({ context }) => (context.id = getNextTaskListId(context.tasksLists)),
-                name: ({ context, event }) => (context.name = event.name),
-                tasksLists: ({ context }) => context.tasksLists.concat({id: context.id, name: context.name,}),
-              }),
-            ],
+            target: 'creatingTheTasksList',
+          },
+        },
+      },
+      creatingTheTasksList: {
+        invoke: {
+          src: fromPromise(({ input: { name } }) => createTasksList(name)),
+          input: ({ event }) => ({ name: event.name }),
+          onDone: {
             target: TasksListMachineStates.addingTasksLists,
+            actions: assign({
+              id: ({ context, event }) => (context.name = event.output.id),
+              name: ({ context, event }) => (context.name = event.output.name),
+              tasksLists: ({ context, event }) => context.tasksLists.concat({id: event.output.id, name: event.output.name}),
+            }),
           },
         },
       },

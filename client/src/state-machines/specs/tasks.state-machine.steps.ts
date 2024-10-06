@@ -5,6 +5,8 @@ import { TasksMachineCombinedStates } from "@/state-machines/tasks.states";
 
 const tasks = createActor(tasksMachine);
 tasks.start();
+const task_list_id = crypto.randomUUID(); 
+const task_id = crypto.randomUUID();
 
 afterEach(() => {
   tasks.send({ type: "reset" })
@@ -16,12 +18,12 @@ afterAll(() => {
 
 export function adds_a_task_list() {
   tasks.send({ type: "readyToAddFirstTaskList" });
-  tasks.send({ type: "addTasksList", id: 1, name: "Task list name" });
+  tasks.send({ type: "addTasksList", name: "Task list name" });
   expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
-  expect(tasks.getSnapshot().context.id).toEqual(1);
+  expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
   expect(tasks.getSnapshot().context.name).toEqual("Task list name");
   expect(tasks.getSnapshot().context.tasks).toEqual([]);
-  expect(tasks.getSnapshot().context.tasksLists).toEqual([{id: 1, name: "Task list name" }]);
+  expect(tasks.getSnapshot().context.tasksLists).toEqual([{id: task_id, name: "Task list name" }]);
 }
 
 export function updates_a_task_list_name() {
