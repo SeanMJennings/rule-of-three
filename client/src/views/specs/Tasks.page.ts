@@ -63,6 +63,10 @@ export function taskListSingleSelectChosenValue() {
     return elements.taskListSingleSelect.value;
 }
 
+export function taskListSingleSelectIndex() {
+    return elements.taskListSingleSelect.selectedIndex;
+}
+
 export function addTaskListSubmit() {
     return elements.addTaskListSubmit.trigger("click");
 }

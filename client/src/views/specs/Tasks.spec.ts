@@ -21,7 +21,7 @@ import {
     only_shows_remove_tasks_for_tasks_carried_twice,
     removes_add_first_task_placeholder_on_click,
     renders_tasks,
-    resets_tasks_when_different_tasks_list_selected,
+    resets_tasks_when_different_tasks_list_selected, selects_first_of_multiple_lists,
     shows_task_count_if_there_are_tasks,
     shows_task_list_single_select_when_there_are_two_lists
 } from '@/views/specs/Tasks.steps'
@@ -37,6 +37,7 @@ describe("Tasks", () => {
         it("shows task list single select when there are two lists", shows_task_list_single_select_when_there_are_two_lists);
         it('lets user collapse tasks list single select', lets_user_collapse_tasks_list_single_select);
         it('lets user expand tasks list single select', lets_user_expand_tasks_list_single_select);
+        it('selects first of multiple lists', selects_first_of_multiple_lists);
     });
     describe("Tasks", () => {
         it("renders tasks", renders_tasks);

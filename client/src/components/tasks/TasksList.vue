@@ -92,8 +92,8 @@ onUnmounted(() => {
     <div v-if="snapshot.context.tasksLists.length > 1 && !tasksListSelectCollapsedModel.collapsed"
          :class="style.selectTasksList">
       <label :class="style.label" for="task-list-single-select">Select Tasks List</label>
-      <select id="task-list-single-select" v-model="selectedTasksList.id" :class="style.input">
-        <option v-for="option in snapshot.context.tasksLists" :key="option.id" :value="option.id">
+      <select id="task-list-single-select" ref="selectedTasksList.id" :class="style.input">
+        <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :value="option.id" :selected="index === 0">
           {{ option.name }}
         </option>
       </select>

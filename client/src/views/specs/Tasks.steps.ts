@@ -24,7 +24,7 @@ import {
     taskCountHidden,
     taskListCharacterCount,
     taskListCharacterCountHidden,
-    taskListNameInputText,
+    taskListNameInputText, taskListSingleSelectIndex,
     taskListSingleSelectChosenValue,
     taskListSingleSelectHidden,
     taskPageNumber,
@@ -55,7 +55,7 @@ let wait_for_create_tasks_list: () => boolean;
 
 beforeEach(() => {
     mockServer.reset();
-    wait_for_get_tasks_list = mockServer.get("/tasks-listss", [])
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
     mockServer.start()
     createActor();
@@ -134,6 +134,21 @@ export async function lets_user_expand_tasks_list_single_select() {
     await toggleTasksListSingleSelect();
     expect(tasksListSingleSelectCollapsed()).toBe(false);
     expect(tasksListSingleSelectCaretPointsDown()).toBe(false);
+}
+
+export async function selects_first_of_multiple_lists() {
+    renderTasksView();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        id: another_task_list_id,
+        name: another_task_list_name
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await addAnotherTaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    expect(taskListSingleSelectIndex()).toBe(0);
 }
 
 export async function lets_user_add_a_task_list() {
