@@ -5,9 +5,10 @@ import {faCaretSquareDown, faPlusSquare} from "@fortawesome/free-regular-svg-ico
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from 'xstate'
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
-import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
+import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import type {Id} from "@/types/types";
 import {faList, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
+import ButtonIcon from "@/components/ButtonIcon.vue";
 
 let subscription: Subscription;
 
@@ -41,6 +42,8 @@ const submit = () => {
   props.send({type: "addTasksList", name: tasksListModel.name});
   tasksListModel.name = "";
 };
+const addTaskListButtonStyle = () => `${disabled() ? style.disabled : ''} ${style.addTaskListIcon}`;
+const disableAddTaskListButton = () => props.snapshot.value === TasksListMachineStates.creatingTheTasksList || props.snapshot.value === TasksListMachineStates.updatingTheTasksList;
 
 const toggleTasksList = () => {
   tasksListInputCollapsedModel.collapsed = !tasksListInputCollapsedModel.collapsed;
@@ -79,8 +82,7 @@ onUnmounted(() => {
          :class="style.addTaskList">
       <label :class="style.label" for="add-task-list-input">Add Tasks List</label>
       <input id="add-task-list-input" v-model="tasksListModel.name" :class="style.input" type="text"/>
-      <FontAwesomeIcon id="add-task-list-submit" :class="`${disabled() ? style.disabled : ''} ${style.addTaskListIcon}`"
-                       :icon="faPlusSquare" v-on:click="submit()"/>
+      <ButtonIcon id="add-task-list-submit" :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :style="addTaskListButtonStyle()" v-on:click="submit()"/>
       <span id="tasks-list-character-count" :class="style.characterCount">{{
           tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : ""
         }}</span>

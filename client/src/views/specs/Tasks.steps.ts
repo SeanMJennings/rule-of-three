@@ -3,7 +3,7 @@ import {
     addAnotherTaskList,
     addATaskList,
     addFirstTaskHidden,
-    addTask,
+    addTask, addTaskListSubmitDisabled,
     addTaskVisible,
     another_task_list_id,
     another_task_list_name,
@@ -34,7 +34,6 @@ import {
     tasksListSingleSelectCaretPointsDown,
     tasksListSingleSelectCollapsed,
     taskVisible,
-    the_page,
     tickTask,
     tickTaskHidden,
     toggleTasksListInput,
@@ -75,6 +74,7 @@ export async function renders_tasks() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     expect(pageText()).toContain("Add your first task");
 }
 
@@ -92,12 +92,14 @@ export async function shows_task_list_single_select_when_there_are_two_lists() {
         id: another_task_list_id,
         name: another_task_list_name
     })
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await addAnotherTaskList();
-    // await waitUntil(wait_for_create_tasks_list)
-    // expect(taskListSingleSelectHidden()).toBe(false);
-    // expect(pageText()).not.toContain("Create your first task list");
-    // expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
-    // expect(taskListNameInputText()).toBe("");
+    await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    expect(taskListSingleSelectHidden()).toBe(false);
+    expect(pageText()).not.toContain("Create your first task list");
+    expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
+    expect(taskListNameInputText()).toBe("");
 }
 
 export async function lets_user_collapse_tasks_list_single_select() {
@@ -108,8 +110,10 @@ export async function lets_user_collapse_tasks_list_single_select() {
         id: another_task_list_id,
         name: another_task_list_name
     })
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await addAnotherTaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     expect(tasksListSingleSelectCollapsed()).toBe(true);
     expect(tasksListSingleSelectCaretPointsDown()).toBe(true);
@@ -123,8 +127,10 @@ export async function lets_user_expand_tasks_list_single_select() {
         id: another_task_list_id,
         name: another_task_list_name
     })
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await addAnotherTaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     await toggleTasksListSingleSelect();
     expect(tasksListSingleSelectCollapsed()).toBe(false);
@@ -172,6 +178,7 @@ export async function removes_add_first_task_placeholder_on_click() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     expect(addFirstTaskHidden()).toBe(true);
     expect(addTaskVisible()).toBe(true);
@@ -181,6 +188,7 @@ export async function shows_task_count_if_there_are_tasks() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     expect(taskCountHidden()).toBe(true);
     await typeTask(testTaskText);
@@ -192,6 +200,7 @@ export async function disables_add_task_button_when_input_is_empty() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await addTask();
     expect(addTaskVisible()).toBe(true);
@@ -201,6 +210,7 @@ export async function adds_and_lists_a_task() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     await addTask();
@@ -212,6 +222,7 @@ export async function limits_task_length_to_150_characters() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskTextMoreThan150Chars);
     await addTask();
@@ -223,6 +234,7 @@ export async function displays_character_count_limit() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskTextMoreThan150Chars);
     expect(characterCount()).toBe("150/150");
@@ -232,6 +244,7 @@ export async function character_count_limit_hidden_when_input_is_empty() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     expect(characterCountHidden()).toBe(true);
 }
@@ -240,6 +253,7 @@ export async function lets_user_tick_tasks() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 21; i++) {
@@ -255,6 +269,7 @@ export async function lets_user_carry_tasks() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 22; i++) {
@@ -270,6 +285,7 @@ export async function lets_user_remove_tasks() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 22; i++) {
@@ -285,6 +301,7 @@ export async function displays_page_number_of_tasks() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 22; i++) {
@@ -303,6 +320,7 @@ export async function only_shows_remove_tasks_for_tasks_carried_twice() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 22; i++) {
@@ -323,6 +341,7 @@ export async function does_not_show_remove_or_carry_for_ticked_tasks() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 20; i++) {
@@ -343,6 +362,7 @@ export async function resets_tasks_when_different_tasks_list_selected() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 22; i++) {

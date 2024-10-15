@@ -28,10 +28,6 @@ export function pageText() {
     return page.text();
 }
 
-export function the_page() {
-    return page;
-}
-
 export function clickAddTaskListPlaceholder() {
     return elements.addTaskListPlaceholder.trigger("click");
 }
@@ -62,6 +58,10 @@ export function taskListSingleSelectChosenValue() {
 
 export function addTaskListSubmit() {
     return elements.addTaskListSubmit.trigger("click");
+}
+
+export function addTaskListSubmitDisabled() {
+    return (elements.addTaskListSubmit.element as HTMLButtonElement).disabled;
 }
 
 export async function clickAddFirstTask() {
@@ -129,10 +129,6 @@ export function typeTask(task: string) {
 
 export function addTask() {
     return elements.addTasksubmit.trigger("click");
-}
-
-export function taskListVisible(name: string) {
-    return elements.addTaskListInput.text() === name;
 }
 
 export function taskVisible(taskId: string | number, task: string) {

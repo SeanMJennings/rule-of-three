@@ -112,7 +112,7 @@ export const tasksMachine = createMachine(
                             },
                         },
                         always: {
-                            guard: "tasksAreEmpty",
+                            guard: "tasksAreNotEmpty",
                             target: TasksMachineStates.addingTasks,
                         },
                     },
@@ -206,7 +206,7 @@ export const tasksMachine = createMachine(
             tasksListsExist: ({context}) => {
                 return context.id !== "";
             },
-            tasksAreEmpty: ({context}) => {
+            tasksAreNotEmpty: ({context}) => {
                 return !tasksAreEmpty(context);
             },
         },
