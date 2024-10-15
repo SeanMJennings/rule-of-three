@@ -1,16 +1,18 @@
-﻿export const createTasksList = (name: any) => {
-    console.log(name)
-    throw new Error(name)
+﻿import {patch, post} from '@/common/http'
+
+export const createTasksList = async (name: any) => {
+    let response = await post(`/tasks-list`, {name});
+    return {
+        id: response.id,
+        name: name
+    }
 }
 
-
-const search = (query: string) =>
-    new Promise((resolve, reject) => {
-        if (!query.length) {
-            return reject('No query specified');
-            // or:
-            // throw new Error('No query specified');
-        }
-
-        return resolve(getSearchResults(query));
-    });
+export const updateTasksList = async (id: any, name: any) => {
+    let response = await patch(`/tasks-list/${id}`, {name});
+    return {
+        ...(response),
+        id,
+        name
+    }
+}

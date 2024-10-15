@@ -1,5 +1,5 @@
-﻿<script setup lang="ts">
-import { RouterLink } from "vue-router";
+﻿<script lang="ts" setup>
+import {RouterLink} from "vue-router";
 import styles from "./Header.module.css";
 </script>
 
@@ -12,4 +12,4 @@ import styles from "./Header.module.css";
   </header>
 </template>
 
-<style src="@/components/Header.module.css" scoped></style>
+<style scoped src="@/components/Header.module.css"></style>

@@ -1,45 +1,46 @@
-﻿import { mount, VueWrapper } from '@vue/test-utils'
-import { vi, beforeEach, afterEach } from 'vitest'
+﻿import {mount, VueWrapper} from '@vue/test-utils'
+import {afterEach, beforeEach, vi} from 'vitest'
 import App from "../App.vue";
-import { createRouter, createWebHistory, type Router } from "vue-router";
-import { routes } from "@/router";
+import {createRouter, createWebHistory, type Router} from "vue-router";
+import {routes} from "@/router";
+
 let router: Router = {} as Router;
 let app: VueWrapper;
 
 vi.mock("../views/Landing.vue", () => {
-  return { default: { template: "<div>I am a fake landing!</div>" } };
+    return {default: {template: "<div>I am a fake landing!</div>"}};
 });
 vi.mock("../views/Tasks.vue", () => {
-  return { default: { template: "<div>I am a fake tasks page!</div>" } };
+    return {default: {template: "<div>I am a fake tasks page!</div>"}};
 });
 
 beforeEach(() => {
-  router = createRouter({
-    history: createWebHistory(),
-    routes: routes,
-  });
+    router = createRouter({
+        history: createWebHistory(),
+        routes: routes,
+    });
 });
 
 afterEach(() => {
-  app.unmount();
+    app.unmount();
 });
 
 export async function renderLanding() {
-  app = mountApp();
-  await router.push("/");
-  return app;
+    app = mountApp();
+    await router.push("/");
+    return app;
 }
 
 export async function renderTasks() {
-  app = mountApp();
-  await router.push("/tasks");
-  return app;
+    app = mountApp();
+    await router.push("/tasks");
+    return app;
 }
 
 function mountApp() {
-  return mount(App, {
-    global: {
-      plugins: [router],
-    },
-  });
+    return mount(App, {
+        global: {
+            plugins: [router],
+        },
+    });
 }

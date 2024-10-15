@@ -1,5 +1,6 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import style from "./TasksCounter.module.css";
+
 const props = defineProps<{
   taskCount: number;
   maxTasks: number;
@@ -8,7 +9,7 @@ const props = defineProps<{
 
 <template>
   <div :class="`${props.taskCount === props.maxTasks ? style.maxTaskCount : ''} ${style.taskCountContainer}`">
-    <div id="task-count" v-if="props.taskCount !== 0">
+    <div v-if="props.taskCount !== 0" id="task-count">
       {{ props.taskCount }}/{{ props.maxTasks }} tasks
     </div>
   </div>

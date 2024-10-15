@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import style from "./Landing.module.css";
 </script>
 
@@ -8,7 +8,7 @@ import style from "./Landing.module.css";
       <h1>A simple approach</h1>
       <h1>to doing</h1>
       <h1>or accepting</h1>
-      <br />
+      <br/>
       <span>Carry a task for up to three pages of 22 lines or forget it</span>
     </div>
   </main>
