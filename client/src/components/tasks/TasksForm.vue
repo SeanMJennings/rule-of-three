@@ -9,6 +9,7 @@ import {type EventFromLogic, type SnapshotFrom} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import {canCarryTask} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
+import ButtonIcon from "@/components/ButtonIcon.vue";
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
@@ -46,8 +47,7 @@ const remove = (id: string | number) => {
     <div v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)" id="add-task"
          :class="styles.addTask">
       <input id="add-task-input" v-model="model.taskText" :class="styles.input" type="text"/>
-      <FontAwesomeIcon id="add-task-submit" :class="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`"
-                       :icon="faPlusSquare" v-on:click="submit()"/>
+      <ButtonIcon the_id="add-task-submit" :iconStyle="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`" :icon="faPlusSquare" v-on:click="submit()"/>
       <span id="character-count"
             :class="styles.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
     </div>

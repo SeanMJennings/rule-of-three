@@ -11,7 +11,7 @@ class TasksListHandlerForGroups(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks-list"
+        return "/tasks-lists"
 
     @staticmethod
     def name():
@@ -33,7 +33,7 @@ class TasksListHandlerForItems(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks-list/<id>"
+        return "/tasks-lists/<id>"
 
     @staticmethod
     def name():
@@ -65,7 +65,7 @@ class AddTasksHandler(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks-list/<tasks_list_id>/task"
+        return "/tasks-lists/<tasks_list_id>/task"
 
     @staticmethod
     def name():
@@ -86,7 +86,7 @@ class TickTaskHandler(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks-list/<tasks_list_id>/task/<task_id>/tick"
+        return "/tasks-lists/<tasks_list_id>/task/<task_id>/tick"
 
     @staticmethod
     def name():
@@ -105,7 +105,7 @@ class RemoveTaskHandler(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks-list/<tasks_list_id>/task/<task_id>"
+        return "/tasks-lists/<tasks_list_id>/task/<task_id>"
 
     @staticmethod
     def name():
@@ -124,7 +124,7 @@ class CarryTaskHandler(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks-list/<tasks_list_id>/task/<task_id>/carry"
+        return "/tasks-lists/<tasks_list_id>/task/<task_id>/carry"
 
     @staticmethod
     def name():

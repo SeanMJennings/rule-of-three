@@ -55,8 +55,8 @@ let wait_for_create_tasks_list: () => boolean;
 
 beforeEach(() => {
     mockServer.reset();
-    wait_for_get_tasks_list = mockServer.get("/tasks-list", [])
-    wait_for_create_tasks_list = mockServer.post("/tasks-list", {id: task_list_id, name: task_list_name})
+    wait_for_get_tasks_list = mockServer.get("/tasks-listss", [])
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
     mockServer.start()
     createActor();
 });
@@ -87,7 +87,7 @@ export async function shows_task_list_single_select_when_there_are_two_lists() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-list", {
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
         id: another_task_list_id,
         name: another_task_list_name
     })
@@ -105,7 +105,7 @@ export async function lets_user_collapse_tasks_list_single_select() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-list", {
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
         id: another_task_list_id,
         name: another_task_list_name
     })
@@ -122,7 +122,7 @@ export async function lets_user_expand_tasks_list_single_select() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-list", {
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
         id: another_task_list_id,
         name: another_task_list_name
     })

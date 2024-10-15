@@ -1,5 +1,5 @@
 ﻿def tasks_url():
-    return "http://localhost:5000/api/tasks-list"
+    return "http://localhost:5000/api/tasks-lists"
 
 
 def tasks_list_url_with_id(id):

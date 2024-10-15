@@ -103,11 +103,11 @@ export function tasksListSingleSelectCollapsed() {
 }
 
 export function tasksListSingleSelectCaretPointsDown() {
-    return !elements.tasksListSelectCaret.classes().includes("fa-rotate-180");
+    return !elements.tasksListSelectCaretIcon.classes().includes("fa-rotate-180");
 }
 
 export function tasksListInputCaretPointsDown() {
-    return !elements.tasksListCaret.classes().includes("fa-rotate-180");
+    return !elements.tasksListCaretIcon.classes().includes("fa-rotate-180");
 }
 
 export function tasksListInputCaretPointsUp() {
@@ -202,9 +202,15 @@ const elements = {
     },
     get tasksListCaret() {
         return page.find("#tasks-list-input-caret");
+    },    
+    get tasksListCaretIcon() {
+        return page.find("#tasks-list-input-caret-icon");
     },
     get tasksListSelectCaret() {
         return page.find("#tasks-list-select-caret");
+    },
+    get tasksListSelectCaretIcon() {
+        return page.find("#tasks-list-select-caret-icon");
     },
     get addTaskListInput() {
         return page.find("#add-task-list-input");

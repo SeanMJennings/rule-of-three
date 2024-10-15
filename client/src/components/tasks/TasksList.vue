@@ -42,7 +42,6 @@ const submit = () => {
   props.send({type: "addTasksList", name: tasksListModel.name});
   tasksListModel.name = "";
 };
-const addTaskListButtonStyle = () => `${disabled() ? style.disabled : ''} ${style.addTaskListIcon}`;
 const disableAddTaskListButton = () => props.snapshot.value === TasksListMachineStates.creatingTheTasksList || props.snapshot.value === TasksListMachineStates.updatingTheTasksList;
 
 const toggleTasksList = () => {
@@ -74,23 +73,21 @@ onUnmounted(() => {
       <span>Create your first task list</span>
     </div>
     <div v-if="snapshot.value !== TasksMachineCombinedStates.empty" :class="style.header">
-      <FontAwesomeIcon :class="style.span" :icon="faPlusCircle"/>
-      <FontAwesomeIcon id="tasks-list-input-caret"
-                       :class="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" :icon="faCaretSquareDown" v-on:click="toggleTasksList()"/>
+      <ButtonIcon :class="style.button" :iconStyle="style.icon" :icon="faPlusCircle"/>
+      <ButtonIcon the_id="tasks-list-input-caret" :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" :icon="faCaretSquareDown" v-on:click="toggleTasksList()"/>
     </div>
     <div v-if="snapshot.value !== TasksMachineCombinedStates.empty && !tasksListInputCollapsedModel.collapsed"
          :class="style.addTaskList">
       <label :class="style.label" for="add-task-list-input">Add Tasks List</label>
       <input id="add-task-list-input" v-model="tasksListModel.name" :class="style.input" type="text"/>
-      <ButtonIcon id="add-task-list-submit" :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :style="addTaskListButtonStyle()" v-on:click="submit()"/>
+      <ButtonIcon the_id="add-task-list-submit" :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? style.disabled : ''} ${style.addTaskListIcon}`" v-on:click="submit()"/>
       <span id="tasks-list-character-count" :class="style.characterCount">{{
           tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : ""
         }}</span>
     </div>
     <div v-if="snapshot.context.tasksLists.length > 1" :class="style.header">
-      <FontAwesomeIcon :class="style.span" :icon="faList"/>
-      <FontAwesomeIcon id="tasks-list-select-caret"
-                       :class="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" :icon="faCaretSquareDown" v-on:click="toggleTasksSelect()"/>
+      <ButtonIcon :class="style.button" :iconStyle="style.icon" :icon="faList"/>
+      <ButtonIcon the_id="tasks-list-select-caret" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" :icon="faCaretSquareDown" v-on:click="toggleTasksSelect()"/>
     </div>
     <div v-if="snapshot.context.tasksLists.length > 1 && !tasksListSelectCollapsedModel.collapsed"
          :class="style.selectTasksList">

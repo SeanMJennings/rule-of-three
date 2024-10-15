@@ -3,15 +3,16 @@ import styles from "./ButtonIcon.module.css";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {type IconDefinition} from "@fortawesome/free-solid-svg-icons";
 const props = defineProps<{
+  the_id?: string
   disabled?: boolean
   icon: IconDefinition
-  style: typeof styles
+  iconStyle: typeof styles
 }>();
 </script>
 
 <template>
-  <button :disabled="disabled" :class="styles.button">
-    <FontAwesomeIcon :class="props.style" :icon="props.icon" />
+  <button :id="the_id" :disabled="disabled" :class="styles.button">
+    <FontAwesomeIcon :id="`${the_id !== '' ? the_id + '-icon' : ''}`" :class="props.iconStyle" :icon="props.icon" />
   </button>
 </template>
 

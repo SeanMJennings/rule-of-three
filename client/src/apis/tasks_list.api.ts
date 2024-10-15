@@ -2,11 +2,11 @@
 import type {TasksList} from "@/types/types";
 
 export const getTasksLists = async () => {
-    return await get<TasksList[]>(`/tasks-list`);
+    return await get<TasksList[]>(`/tasks-lists`);
 }
 
 export const createTasksList = async (name: any) => {
-    let response = await post(`/tasks-list`, {name});
+    let response = await post(`/tasks-lists`, {name});
     return {
         id: response.id,
         name: name
@@ -14,7 +14,7 @@ export const createTasksList = async (name: any) => {
 }
 
 export const updateTasksList = async (id: any, name: any) => {
-    let response = await patch(`/tasks-list/${id}`, {name});
+    let response = await patch(`/tasks-lists/${id}`, {name});
     return {
         ...(response),
         id,
