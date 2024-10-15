@@ -4,12 +4,19 @@ import {useMachine} from '@xstate/vue'
 import {tasksMachine} from '@/state-machines/tasks.state-machine'
 
 let page: VueWrapper;
-const {snapshot, send, actorRef} = useMachine(tasksMachine);
+let {snapshot, send, actorRef} = useMachine(tasksMachine);
 export const task_list_id = crypto.randomUUID();
 export const another_task_list_id = crypto.randomUUID();
 export const task_list_name = "Task list name";
 export const another_task_list_name = "2nd Task list name";
-actorRef.start();
+
+export function createActor() {
+    let {snapshot : the_snapshot, send : the_send, actorRef: the_actorRef} = useMachine(tasksMachine);
+    snapshot = the_snapshot
+    send = the_send
+    actorRef = the_actorRef
+    actorRef.start();
+}
 
 export function renderTasksView() {
     page = mountTasksView();

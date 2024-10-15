@@ -12,7 +12,7 @@ import {
     characterCount,
     characterCountHidden,
     clickAddFirstTask,
-    clickAddTaskListPlaceholder,
+    clickAddTaskListPlaceholder, createActor,
     pageText,
     removeTask,
     removeTaskHidden,
@@ -43,23 +43,22 @@ import {
     unmountTasksView
 } from './Tasks.page'
 import {MockServer} from "@/testing/mock-server";
-import {createActor} from "xstate";
-import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {waitUntil} from "@/testing/utilities";
 
 const testTaskText = "Hello, world!";
 const testTaskTextMoreThan150Chars =
     "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa";
 const mockServer = MockServer.New();
-const tasks = createActor(tasksMachine);
-tasks.start();
+let wait_for_get_tasks_list: () => boolean;
 let wait_for_create_tasks_list: () => boolean;
 
 
 beforeEach(() => {
     mockServer.reset();
+    wait_for_get_tasks_list = mockServer.get("/tasks-list", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-list", {id: task_list_id, name: task_list_name})
     mockServer.start()
+    createActor();
 });
 
 afterEach(() => {
