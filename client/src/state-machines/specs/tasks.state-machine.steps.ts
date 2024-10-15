@@ -1,25 +1,28 @@
 ﻿import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {afterAll, afterEach, beforeEach, expect} from 'vitest'
-import {createActor} from 'xstate'
+import {type Actor, createActor} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import {MockServer} from "@/testing/mock-server";
 import {waitUntil} from "@/testing/utilities";
 
 const mockServer = MockServer.New();
-const tasks = createActor(tasksMachine);
-tasks.start();
+let tasks = {} as Actor<typeof tasksMachine>;
 const task_list_id = crypto.randomUUID();
 const another_task_list_id = crypto.randomUUID();
 const task_id = crypto.randomUUID();
 const task_list_name = "Task list name";
 const new_task_list_name = "New task list name";
 const another_task_list_name = "2nd task list name";
+let wait_for_get_tasks_list: () => boolean;
 let wait_for_create_tasks_list: () => boolean;
 
 beforeEach(() => {
     mockServer.reset();
+    wait_for_get_tasks_list = mockServer.get("/tasks-list", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-list", {id: task_list_id, name: task_list_name})
     mockServer.start()
+    tasks = createActor(tasksMachine);
+    tasks.start();
 });
 
 afterEach(() => {
@@ -38,7 +41,22 @@ export async function adds_a_task_list() {
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
     expect(tasks.getSnapshot().context.name).toEqual(task_list_name);
     expect(tasks.getSnapshot().context.tasks).toEqual([]);
-    expect(tasks.getSnapshot().context.tasksLists).toEqual([{id: task_list_id, name: task_list_name}]);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual([{id: task_list_id, name: task_list_name, tasks: []}]);
+}
+
+export async function loads_a_task_list() {
+    wait_for_get_tasks_list = mockServer.get("/tasks-list", [{id: task_list_id, name: task_list_name, tasks: []}])
+    tasks.send({type: "reset"})
+    await waitUntil(wait_for_get_tasks_list)
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
+    expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
+    expect(tasks.getSnapshot().context.name).toEqual(task_list_name);
+    expect(tasks.getSnapshot().context.tasks).toEqual([]);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual([{
+        id: task_list_id,
+        name: task_list_name,
+        tasks: []
+    }]);
 }
 
 export async function adds_two_task_lists() {
@@ -54,8 +72,9 @@ export async function adds_two_task_lists() {
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
     expect(tasks.getSnapshot().context.tasksLists).toEqual([{
         id: task_list_id,
-        name: task_list_name
-    }, {id: another_task_list_id, name: another_task_list_name}]);
+        name: task_list_name, 
+        tasks: []
+    }, {id: another_task_list_id, name: another_task_list_name, tasks: []}]);
 }
 
 export async function updates_a_task_list_name() {
@@ -69,7 +88,7 @@ export async function updates_a_task_list_name() {
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
     expect(tasks.getSnapshot().context.name).toEqual(new_task_list_name);
     expect(tasks.getSnapshot().context.tasks).toEqual([]);
-    expect(tasks.getSnapshot().context.tasksLists).toEqual([{id: task_list_id, name: new_task_list_name}]);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual([{id: task_list_id, name: new_task_list_name, tasks: []}]);
 }
 
 export async function adds_a_task() {
@@ -124,8 +143,8 @@ export async function selects_a_different_tasks_list() {
     expect(tasks.getSnapshot().context.name).toEqual(another_task_list_name);
     expect(tasks.getSnapshot().context.tasks).toEqual([]);
     expect(tasks.getSnapshot().context.tasksLists).toEqual([
-        {id: task_list_id, name: task_list_name},
-        {id: another_task_list_id, name: another_task_list_name},
+        {id: task_list_id, name: task_list_name, tasks: []},
+        {id: another_task_list_id, name: another_task_list_name, tasks: []},
     ]);
 }
 

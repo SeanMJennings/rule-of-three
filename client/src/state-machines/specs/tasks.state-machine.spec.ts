@@ -7,7 +7,7 @@ import {
     lets_user_carry_tasks,
     lets_user_carry_tasks_maximum_twice,
     lets_user_remove_tasks,
-    lets_user_tick_off_task,
+    lets_user_tick_off_task, loads_a_task_list,
     removes_ticked_tasks_when_all_tasks_are_carried,
     selecting_a_tasks_list_resets_the_tasks,
     selects_a_different_tasks_list,
@@ -17,6 +17,7 @@ import {
 describe("Tasks state machine", () => {
     describe("Tasks lists", () => {
         it("adds a task list", adds_a_task_list);
+        it("loads a task list", loads_a_task_list);
         it("adds two task lists", adds_two_task_lists);
         it("updates a task list name", updates_a_task_list_name);
         it("selects a different tasks list", selects_a_different_tasks_list);

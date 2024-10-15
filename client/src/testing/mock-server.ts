@@ -28,6 +28,7 @@ export class MockServer {
         let called = false;
         let was_called = () => called;
         this.server.use(http.get(url, ({}) => {
+            called = true;
             return HttpResponse.json(response, {status: 200})
         }));
         return was_called

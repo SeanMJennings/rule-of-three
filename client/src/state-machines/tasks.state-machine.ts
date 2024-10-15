@@ -8,7 +8,7 @@ import {
     tasksHaveBeenCarried
 } from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
-import {createTasksList, updateTasksList} from "@/apis/tasks_list.api";
+import {createTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
 
 export const taskLimit = 22;
 
@@ -27,6 +27,16 @@ export const tasksMachine = createMachine(
         initial: TasksListMachineStates.empty,
         states: {
             empty: {
+                invoke: {
+                    src: fromPromise(async () => await getTasksLists()),
+                    onDone: {
+                        actions: assign({
+                            id: ({context, event}) => (context.name = event.output.length > 0 ? event.output[0].id : ''),
+                            name: ({context, event}) => (context.name = event.output.length > 0 ? event.output[0].name : ''),
+                            tasksLists: ({context, event}) => event.output.length > 0 ? context.tasksLists.concat(event.output) : context.tasksLists,
+                        }),
+                    },
+                },
                 on: {
                     readyToAddFirstTaskList: {
                         target: TasksListMachineStates.readyToAddTasksLists,
@@ -55,7 +65,8 @@ export const tasksMachine = createMachine(
                             name: ({context, event}) => (context.name = event.output.name),
                             tasksLists: ({context, event}) => context.tasksLists.concat({
                                 id: event.output.id,
-                                name: event.output.name
+                                name: event.output.name,
+                                tasks: [],
                             }),
                         }),
                     },

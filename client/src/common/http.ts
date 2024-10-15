@@ -1,7 +1,7 @@
 ﻿const api = import.meta.env.VITE_BASE_URL;
 
 export async function get<T>(url: string): Promise<T | HttpError> {
-    return await fetch(api + url, {method: "GET"})
+    return await fetch(api + url)
         .then(response => response.json())
         .catch(error => {
             error.error;
