@@ -22,7 +22,9 @@ const props = defineProps<{
     <span :class="style.marker">></span>
     <span
         :id="`task-${props.task.id}`"
-        :class="`${task.ticked ? style.taskTicked : !showTickAction && props.task.carried ? style.taskKept : ''} ${style.task}`">{{ props.task.content }}</span>
+        :class="`${task.ticked ? style.taskTicked : !showTickAction && props.task.carried ? style.taskKept : ''} ${style.task}`">{{
+        props.task.content
+      }}</span>
     <span :id="`task-${props.task.id}-page`" :class="style.page">{{ props.task.page }}</span>
     <div v-if="!showRemoveAction && !showCarryAction && !showTickAction"
          :class="`${choosingTasksToCarry ? style.largeSpacer : style.spacer}`"/>
@@ -31,6 +33,7 @@ const props = defineProps<{
     <FontAwesomeIcon v-if="showCarryAction" :id="`task-${props.task.id}-carry`" :class="style.icon" :icon="faArrowRight"
                      v-on:click="carry(props.task.id)"/>
     <FontAwesomeIcon v-if="showRemoveAction" :id="`task-${props.task.id}-remove`"
-                     :class="`${showCarryAction ? style.carryActionShown : ''} ${style.icon}`" :icon="faX" v-on:click="remove(props.task.id)"/>
+                     :class="`${showCarryAction ? style.carryActionShown : ''} ${style.icon}`" :icon="faX"
+                     v-on:click="remove(props.task.id)"/>
   </div>
 </template>

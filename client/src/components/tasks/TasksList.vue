@@ -2,7 +2,6 @@
 import style from "./TasksList.module.css";
 import {onMounted, onUnmounted, reactive, watch} from 'vue'
 import {faCaretSquareDown, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from 'xstate'
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machines/tasks.states";
@@ -68,32 +67,39 @@ onUnmounted(() => {
 
 <template>
   <div :class="style.container">
-    <div v-if="snapshot.value === TasksMachineCombinedStates.empty" id="add-task-list-placeholder" :class="style.placeholder"
+    <div v-if="snapshot.value === TasksMachineCombinedStates.empty" id="add-task-list-placeholder"
+         :class="style.placeholder"
          v-on:click="onClick()">
       <span>Create your first task list</span>
     </div>
     <div v-if="snapshot.value !== TasksMachineCombinedStates.empty" :class="style.header">
-      <ButtonIcon :class="style.button" :iconStyle="style.icon" :icon="faPlusCircle"/>
-      <ButtonIcon the_id="tasks-list-input-caret" :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" :icon="faCaretSquareDown" v-on:click="toggleTasksList()"/>
+      <ButtonIcon :class="style.button" :icon="faPlusCircle" :iconStyle="style.icon"/>
+      <ButtonIcon :icon="faCaretSquareDown"
+                  :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`"
+                  the_id="tasks-list-input-caret" v-on:click="toggleTasksList()"/>
     </div>
     <div v-if="snapshot.value !== TasksMachineCombinedStates.empty && !tasksListInputCollapsedModel.collapsed"
          :class="style.addTaskList">
       <label :class="style.label" for="add-task-list-input">Add Tasks List</label>
       <input id="add-task-list-input" v-model="tasksListModel.name" :class="style.input" type="text"/>
-      <ButtonIcon the_id="add-task-list-submit" :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? style.disabled : ''} ${style.addTaskListIcon}`" v-on:click="submit()"/>
+      <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? style.disabled : ''} ${style.addTaskListIcon}`"
+                  the_id="add-task-list-submit" v-on:click="submit()"/>
       <span id="tasks-list-character-count" :class="style.characterCount">{{
           tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : ""
         }}</span>
     </div>
     <div v-if="snapshot.context.tasksLists.length > 1" :class="style.header">
-      <ButtonIcon :class="style.button" :iconStyle="style.icon" :icon="faList"/>
-      <ButtonIcon the_id="tasks-list-select-caret" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" :icon="faCaretSquareDown" v-on:click="toggleTasksSelect()"/>
+      <ButtonIcon :class="style.button" :icon="faList" :iconStyle="style.icon"/>
+      <ButtonIcon :icon="faCaretSquareDown"
+                  :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`"
+                  the_id="tasks-list-select-caret" v-on:click="toggleTasksSelect()"/>
     </div>
     <div v-if="snapshot.context.tasksLists.length > 1 && !tasksListSelectCollapsedModel.collapsed"
          :class="style.selectTasksList">
       <label :class="style.label" for="task-list-single-select">Select Tasks List</label>
       <select id="task-list-single-select" ref="selectedTasksList.id" :class="style.input">
-        <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :value="option.id" :selected="index === 0">
+        <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :selected="index === 0"
+                :value="option.id">
           {{ option.name }}
         </option>
       </select>

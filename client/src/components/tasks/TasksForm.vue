@@ -1,6 +1,5 @@
 ﻿<script lang="ts" setup>
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import Task from "@/components/tasks/Task.vue";
 import {reactive, watch} from "vue";
@@ -47,14 +46,16 @@ const remove = (id: string | number) => {
     <div v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)" id="add-task"
          :class="styles.addTask">
       <input id="add-task-input" v-model="model.taskText" :class="styles.input" type="text"/>
-      <ButtonIcon the_id="add-task-submit" :iconStyle="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`" :icon="faPlusSquare" v-on:click="submit()"/>
+      <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`"
+                  the_id="add-task-submit" v-on:click="submit()"/>
       <span id="character-count"
             :class="styles.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
     </div>
   </div>
   <div
       :class="`${_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) ? '' : `${styles.addMargin}`} ${styles.taskList}`">
-    <Task v-for="task in snapshot.context.tasks" :key="task.id + '.' + task.page" :carry="carry" :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
+    <Task v-for="task in snapshot.context.tasks" :key="task.id + '.' + task.page" :carry="carry"
+          :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
           :remove="remove" :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
           snapshot.context.tasks.find((n) => n.id === task.id && n.carried === false && canCarryTask(n)) !== undefined"
           :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&

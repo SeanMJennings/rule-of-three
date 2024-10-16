@@ -8,7 +8,7 @@ import {
     tasksHaveBeenCarried
 } from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
-import {createTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
+import {addTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
 
 export const taskLimit = 22;
 
@@ -31,9 +31,18 @@ export const tasksMachine = createMachine(
                     src: fromPromise(async () => await getTasksLists()),
                     onDone: {
                         actions: assign({
-                            id: ({context, event}) => (context.name = event.output.length > 0 ? event.output[0].id : ''),
-                            name: ({context, event}) => (context.name = event.output.length > 0 ? event.output[0].name : ''),
-                            tasksLists: ({context, event}) => event.output.length > 0 ? context.tasksLists.concat(event.output) : context.tasksLists,
+                            id: ({
+                                     context,
+                                     event
+                                 }) => (context.name = event.output.length > 0 ? event.output[0].id : ''),
+                            name: ({
+                                       context,
+                                       event
+                                   }) => (context.name = event.output.length > 0 ? event.output[0].name : ''),
+                            tasksLists: ({
+                                             context,
+                                             event
+                                         }) => event.output.length > 0 ? context.tasksLists.concat(event.output) : context.tasksLists,
                         }),
                     },
                 },
@@ -57,7 +66,7 @@ export const tasksMachine = createMachine(
             creatingTheTasksList: {
                 invoke: {
                     input: ({event}) => ({name: event.name}),
-                    src: fromPromise(async ({input: {name}}) => await createTasksList(name)),
+                    src: fromPromise(async ({input: {name}}) => await addTasksList(name)),
                     onDone: {
                         target: TasksListMachineStates.addingTasksLists,
                         actions: assign({

@@ -72,7 +72,7 @@ export async function adds_two_task_lists() {
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
     expect(tasks.getSnapshot().context.tasksLists).toEqual([{
         id: task_list_id,
-        name: task_list_name, 
+        name: task_list_name,
         tasks: []
     }, {id: another_task_list_id, name: another_task_list_name, tasks: []}]);
 }

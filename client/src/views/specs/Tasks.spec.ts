@@ -21,7 +21,8 @@ import {
     only_shows_remove_tasks_for_tasks_carried_twice,
     removes_add_first_task_placeholder_on_click,
     renders_tasks,
-    resets_tasks_when_different_tasks_list_selected, selects_first_of_multiple_lists,
+    resets_tasks_when_different_tasks_list_selected,
+    selects_first_of_multiple_lists,
     shows_task_count_if_there_are_tasks,
     shows_task_list_single_select_when_there_are_two_lists
 } from '@/views/specs/Tasks.steps'
