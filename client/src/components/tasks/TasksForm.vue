@@ -43,11 +43,11 @@ const remove = (id: string | number) => {
          v-on:click="send({ type: 'readyToAddFirstTask' })">
       Add your first task
     </div>
-    <div v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)" id="add-task"
+    <div v-if="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty)" id="add-task"
          :class="styles.addTask">
       <input id="add-task-input" v-model="model.taskText" :class="styles.input" type="text"/>
       <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`"
-                  the_id="add-task-submit" v-on:click="submit()"/>
+                  the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>
       <span id="character-count"
             :class="styles.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
     </div>

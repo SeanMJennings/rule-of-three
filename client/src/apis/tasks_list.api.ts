@@ -22,6 +22,10 @@ export const updateTasksList = async (id: any, name: any) => {
     }
 }
 
-export const addTask = async (tasksListId: any, task: any) => {
-    return await post(`/tasks-lists/${tasksListId}/task`, task);
+export const addTask = async (tasksListId: any, content: any) => {
+    let response = await post(`/tasks-lists/${tasksListId}/task`, {content});
+    return {
+        id: response.id,
+        content
+    }
 }

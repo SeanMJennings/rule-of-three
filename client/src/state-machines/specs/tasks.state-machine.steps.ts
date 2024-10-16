@@ -19,7 +19,7 @@ let wait_for_create_tasks_list: () => boolean;
 beforeEach(() => {
     mockServer.reset();
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", [])
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id })
     mockServer.start()
     tasks = createActor(tasksMachine);
     tasks.start();
@@ -96,10 +96,12 @@ export async function adds_a_task() {
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     tasks.send({type: "readyToAddFirstTask"});
+    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_id })
     tasks.send({type: "add", content: "Task content"});
+    await waitUntil(wait_for_add_task)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(tasks.getSnapshot().context.tasks).toEqual([{
-        id: 1,
+        id: task_id,
         content: "Task content",
         carried: false,
         page: 0,

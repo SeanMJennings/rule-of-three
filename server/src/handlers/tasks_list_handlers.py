@@ -76,7 +76,7 @@ class AddTasksHandler(MethodView):
 
     def post(self, tasks_list_id):
         task_id = self.tasks_list_service.add_task(
-            tasks_list_id, get_request_body_property(request, "task")
+            tasks_list_id, get_request_body_property(request, "content")
         )
         return created_response({"id": task_id})
 

@@ -3,7 +3,7 @@ import {
     addAnotherTaskList,
     addATaskList,
     addFirstTaskHidden,
-    addTask,
+    addTask, addTaskDisabled,
     addTaskListSubmitDisabled,
     addTaskVisible,
     another_task_list_id,
@@ -36,7 +36,7 @@ import {
     tasksListInputCollapsed,
     tasksListSingleSelectCaretPointsDown,
     tasksListSingleSelectCollapsed,
-    taskVisible,
+    taskTextShown,
     tickTask,
     tickTaskHidden,
     toggleTasksListInput,
@@ -52,13 +52,13 @@ const testTaskText = "Hello, world!";
 const testTaskTextMoreThan150Chars =
     "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa";
 const mockServer = MockServer.New();
-let wait_for_get_tasks_list: () => boolean;
+const task_ids = Array.from({length: 22}, (_) => crypto.randomUUID());
 let wait_for_create_tasks_list: () => boolean;
 
 
 beforeEach(() => {
     mockServer.reset();
-    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [])
+    mockServer.get("/tasks-lists", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
     mockServer.start()
     createActor();
@@ -208,8 +208,11 @@ export async function shows_task_count_if_there_are_tasks() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     expect(taskCountHidden()).toBe(true);
+    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
     await typeTask(testTaskText);
     await addTask();
+    await waitUntil(wait_for_add_task)
+    await waitUntil(() => !addTaskDisabled());
     expect(taskCount()).toBe("1/22 tasks");
 }
 
@@ -229,10 +232,12 @@ export async function adds_and_lists_a_task() {
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
+    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
     await typeTask(testTaskText);
     await addTask();
-    expect(addTaskVisible()).toBe(true);
-    expect(taskVisible(1, testTaskText)).toBe(true);
+    await waitUntil(wait_for_add_task)
+    await waitUntil(() => !addTaskDisabled());
+    expect(taskTextShown(task_ids[0], testTaskText)).toBe(true);
 }
 
 export async function limits_task_length_to_150_characters() {
@@ -241,10 +246,12 @@ export async function limits_task_length_to_150_characters() {
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
+    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
     await typeTask(testTaskTextMoreThan150Chars);
     await addTask();
-    expect(addTaskVisible()).toBe(true);
-    expect(taskVisible(1, testTaskTextMoreThan150Chars.slice(0, 150))).toBe(true);
+    await waitUntil(wait_for_add_task)
+    await waitUntil(() => !addTaskDisabled());
+    expect(taskTextShown(task_ids[0], testTaskTextMoreThan150Chars.slice(0, 150))).toBe(true);
 }
 
 export async function displays_character_count_limit() {
@@ -274,11 +281,13 @@ export async function lets_user_tick_tasks() {
     await clickAddFirstTask();
     await typeTask(testTaskText);
     for (let i = 0; i < 21; i++) {
+        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[i] })
         await addTask();
+        await waitUntil(wait_for_add_task)
     }
     for (let i = 0; i < 21; i++) {
-        await tickTask(i + 1);
-        expect(tickTaskHidden(i + 1)).toBe(true);
+        await tickTask(task_ids[i]);
+        expect(tickTaskHidden(task_ids[i])).toBe(true);
     }
 }
 

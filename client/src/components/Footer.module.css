@@ -1,0 +1,7 @@
+﻿.Footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background-mute);
+    border-bottom: solid 1px var(--color-border);
+}

@@ -139,10 +139,14 @@ export function typeTask(task: string) {
 }
 
 export function addTask() {
-    return elements.addTasksubmit.trigger("click");
+    return elements.addTaskSubmit.trigger("click");
 }
 
-export function taskVisible(taskId: string | number, task: string) {
+export function addTaskDisabled() {
+    return (elements.addTaskSubmit.element as HTMLButtonElement).disabled;
+}
+
+export function taskTextShown(taskId: string | number, task: string) {
     return elements.taskId(taskId).text() === task;
 }
 
@@ -240,7 +244,7 @@ const elements = {
     get addTaskInput() {
         return page.find("#add-task-input");
     },
-    get addTasksubmit() {
+    get addTaskSubmit() {
         return page.find("#add-task-submit");
     },
     get taskListCharacterCount() {

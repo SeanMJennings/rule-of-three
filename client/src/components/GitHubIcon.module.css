@@ -1,0 +1,17 @@
+﻿.GitHubIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    svg {
+        width: 30px;
+        height: 30px;
+        fill: var(--color-icon-fill);
+    }
+    span {
+        color: var(--color-text);
+        justify-content: center;
+        align-content: center;
+    }
+}

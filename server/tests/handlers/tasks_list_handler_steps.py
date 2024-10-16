@@ -81,7 +81,7 @@ def deleting_the_tasks_list():
 
 def adding_a_task_to_tasks_list():
     global response
-    response = client.post(task_url(tasks_list_id), json={"task": "A Task"})
+    response = client.post(task_url(tasks_list_id), json={"content": "A Task"})
 
 
 def ticking_a_task_in_tasks_list():

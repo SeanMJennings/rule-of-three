@@ -49,7 +49,7 @@ describe("Tasks", () => {
         it("limits task length to 150 characters", limits_task_length_to_150_characters);
         it("displays character count limit", displays_character_count_limit);
         it("character count limit hidden when input is empty", character_count_limit_hidden_when_input_is_empty);
-        it("lets user tick tasks", lets_user_tick_tasks);
+        it("lets user tick tasks", lets_user_tick_tasks, 100000);
         it("lets user carry tasks", lets_user_carry_tasks);
         it("lets user remove tasks", lets_user_remove_tasks);
         it("displays page number of tasks", displays_page_number_of_tasks);

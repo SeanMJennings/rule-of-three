@@ -2,13 +2,12 @@
 import type {Task, Tasks, TasksList} from '@/types/types'
 import {
     canCarryTask,
-    getNextTaskId,
     tasksAreEmpty,
     tasksAreFull,
     tasksHaveBeenCarried
 } from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
-import {addTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
+import {addTask, addTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
 
 export const taskLimit = 22;
 
@@ -136,19 +135,29 @@ export const tasksMachine = createMachine(
                             target: TasksMachineStates.addingTasks,
                         },
                     },
-                    addingTasks: {
-                        on: {
-                            add: {
+                    creatingTheTask: {
+                        invoke: {
+                            input: ({ context, event}) => ({id: context.id, content: event.content}),
+                            src: fromPromise(async ({input: {id, content}}) => await addTask(id, content)),
+                            onDone: {
+                                target: TasksMachineStates.addingTasks,
                                 actions: assign({
                                     tasks: ({context, event}) =>
                                         context.tasks.concat({
-                                            id: getNextTaskId(context.tasks),
-                                            content: event.content,
+                                            id: event.output.id,
+                                            content: event.output.content,
                                             carried: false,
                                             page: 0,
                                             ticked: false
                                         }),
                                 }),
+                            },
+                        },
+                    },
+                    addingTasks: {
+                        on: {
+                            add: {
+                                target: TasksMachineStates.creatingTheTask,
                             },
                             tick: {
                                 actions: assign({

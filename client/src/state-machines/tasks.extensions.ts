@@ -3,16 +3,6 @@ import type {StateValue} from "xstate";
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import {taskLimit} from "@/state-machines/tasks.state-machine";
 
-export const getNextTaskId = function (tasks: Tasks) {
-    let maxValue = 0;
-
-    tasks.map((el) => {
-        const valueFromObject = el.id;
-        maxValue = Math.max(maxValue, valueFromObject);
-    });
-    return maxValue === 0 ? 1 : maxValue + 1;
-};
-
 export const ReadyToAddTasks = (value: StateValue) => {
     return (value !== TasksMachineCombinedStates.empty && value !== TasksMachineCombinedStates.readyToAddTasksLists);
 };
