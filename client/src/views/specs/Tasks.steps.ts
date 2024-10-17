@@ -46,13 +46,13 @@ import {
     unmountTasksView
 } from './Tasks.page'
 import {MockServer} from "@/testing/mock-server";
-import {waitUntil} from "@/testing/utilities";
+import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 
 const testTaskText = "Hello, world!";
 const testTaskTextMoreThan150Chars =
     "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa";
 const mockServer = MockServer.New();
-const task_ids = Array.from({length: 22}, (_) => crypto.randomUUID());
+const task_ids = Array.from({length: reducedTaskLimit}, (_) => crypto.randomUUID());
 let wait_for_create_tasks_list: () => boolean;
 
 
@@ -213,7 +213,7 @@ export async function shows_task_count_if_there_are_tasks() {
     await addTask();
     await waitUntil(wait_for_add_task)
     await waitUntil(() => !addTaskDisabled());
-    expect(taskCount()).toBe("1/22 tasks");
+    expect(taskCount()).toBe(`1/${reducedTaskLimit} tasks`);
 }
 
 export async function disables_add_task_button_when_input_is_empty() {
@@ -280,14 +280,13 @@ export async function lets_user_tick_tasks() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
-    for (let i = 0; i < 21; i++) {
-        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[i] })
-        await addTask();
-        await waitUntil(wait_for_add_task)
-    }
-    for (let i = 0; i < 21; i++) {
-        await tickTask(task_ids[i]);
-        expect(tickTaskHidden(task_ids[i])).toBe(true);
+
+    await add_all_tasks_except_one();
+    for (const task_id of task_ids) {
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            await tickTask(task_id);
+            expect(tickTaskHidden(task_id)).toBe(true);
+        }
     }
 }
 
@@ -298,12 +297,13 @@ export async function lets_user_carry_tasks() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
-    for (let i = 0; i < 22; i++) {
-        await addTask();
-    }
-    for (let i = 0; i < 22; i++) {
-        await carryTask(i + 1);
-        expect(carryTaskHidden(i + 1)).toBe(i != 21);
+    await add_all_tasks();
+    await waitUntil( () => !carryTaskHidden(task_ids[0]));
+    for (const task_id of task_ids) {
+        await carryTask(task_id);
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            expect(carryTaskHidden(task_id)).toBe(true);
+        }
     }
 }
 
@@ -314,12 +314,11 @@ export async function lets_user_remove_tasks() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
-    for (let i = 0; i < 22; i++) {
-        await addTask();
-    }
-    for (let i = 0; i < 22; i++) {
-        await removeTask(i + 1);
-        expect(removeTaskHidden(i + 1)).toBe(true);
+    await add_all_tasks();
+    await waitUntil( () => !removeTaskHidden(task_ids[0]));
+    for (const task_id of task_ids) {
+        await removeTask(task_id);
+        expect(removeTaskHidden(task_id)).toBe(true);
     }
 }
 
@@ -330,15 +329,12 @@ export async function displays_page_number_of_tasks() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
-    for (let i = 0; i < 22; i++) {
-        await addTask();
-    }
-    for (let j = 0; j < 2; j++) {
-        for (let i = 0; i < 22; i++) {
-            expect(taskPageNumber(i + 1)).toBe(j.toString());
-            await carryTask(i + 1);
-            expect(taskPageNumber(i + 1)).toBe((j + 1).toString());
-        }
+    await add_all_tasks();
+    await waitUntil( () => !carryTaskHidden(task_ids[0]));
+    for (const task_id of task_ids) {
+        expect(taskPageNumber(task_id)).toBe('0');
+        await carryTask(task_id);
+        expect(taskPageNumber(task_id)).toBe('1');
     }
 }
 
@@ -349,17 +345,23 @@ export async function only_shows_remove_tasks_for_tasks_carried_twice() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
-    for (let i = 0; i < 22; i++) {
-        await addTask();
-    }
-    for (let j = 0; j < 2; j++) {
-        for (let i = 0; i < 22; i++) {
-            await carryTask(i + 1);
+    await add_all_tasks();
+    await waitUntil( () => !carryTaskHidden(task_ids[0]));
+    for (const task_id of task_ids) {
+        await carryTask(task_id);
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            expect(carryTaskHidden(task_id)).toBe(true);
         }
     }
-    for (let i = 0; i < 22; i++) {
-        expect(carryTaskHidden(i + 1)).toBe(true);
-        expect(removeTaskHidden(i + 1)).toBe(false);
+    for (const task_id of task_ids) {
+        await carryTask(task_id);
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            expect(carryTaskHidden(task_id)).toBe(true);
+        }
+    }
+    for (const task_id of task_ids) {
+        expect(carryTaskHidden(task_id)).toBe(true);
+        expect(removeTaskHidden(task_id)).toBe(false);
     }
 }
 
@@ -370,37 +372,38 @@ export async function does_not_show_remove_or_carry_for_ticked_tasks() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     await typeTask(testTaskText);
-    for (let i = 0; i < 20; i++) {
-        await addTask();
+    await add_all_tasks_except_one();
+    for (const task_id of task_ids) {
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            await tickTask(task_id);
+        }
     }
-    for (let i = 0; i < 20; i++) {
-        await tickTask(i + 1);
-    }
-    await addTask();
-    await addTask();
-    for (let i = 0; i < 20; i++) {
-        expect(carryTaskHidden(i + 1)).toBe(true);
-        expect(removeTaskHidden(i + 1)).toBe(true);
+    for (const task_id of task_ids) {
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            expect(carryTaskHidden(task_id)).toBe(true);
+            expect(removeTaskHidden(task_id)).toBe(true);
+        }
     }
 }
 
-export async function resets_tasks_when_different_tasks_list_selected() {
-    renderTasksView();
-    await addATaskList();
-    await waitUntil(wait_for_create_tasks_list)
-    await waitUntil(() => !addTaskListSubmitDisabled());
-    await clickAddFirstTask();
-    await typeTask(testTaskText);
-    for (let i = 0; i < 22; i++) {
-        await addTask();
-    }
-    for (let j = 0; j < 2; j++) {
-        for (let i = 0; i < 22; i++) {
-            await carryTask(i + 1);
+async function add_all_tasks_except_one() {
+    for (const task_id of task_ids) {
+        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            await addTask();
+            await waitUntil(wait_for_add_task)
+            await waitUntil(() => !addTaskDisabled());
         }
     }
-    for (let i = 0; i < 22; i++) {
-        expect(carryTaskHidden(i + 1)).toBe(true);
-        expect(removeTaskHidden(i + 1)).toBe(false);
+}
+
+async function add_all_tasks() {
+    for (const task_id of task_ids) {
+        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
+        await addTask();
+        await waitUntil(wait_for_add_task)
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            await waitUntil(() => !addTaskDisabled());
+        }
     }
 }

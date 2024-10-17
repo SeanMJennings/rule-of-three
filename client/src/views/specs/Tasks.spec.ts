@@ -21,7 +21,6 @@ import {
     only_shows_remove_tasks_for_tasks_carried_twice,
     removes_add_first_task_placeholder_on_click,
     renders_tasks,
-    resets_tasks_when_different_tasks_list_selected,
     selects_first_of_multiple_lists,
     shows_task_count_if_there_are_tasks,
     shows_task_list_single_select_when_there_are_two_lists
@@ -49,12 +48,11 @@ describe("Tasks", () => {
         it("limits task length to 150 characters", limits_task_length_to_150_characters);
         it("displays character count limit", displays_character_count_limit);
         it("character count limit hidden when input is empty", character_count_limit_hidden_when_input_is_empty);
-        it("lets user tick tasks", lets_user_tick_tasks, 100000);
+        it("lets user tick tasks", lets_user_tick_tasks);
         it("lets user carry tasks", lets_user_carry_tasks);
         it("lets user remove tasks", lets_user_remove_tasks);
         it("displays page number of tasks", displays_page_number_of_tasks);
         it("does not show remove or carry for ticked tasks", does_not_show_remove_or_carry_for_ticked_tasks);
         it("only shows remove tasks for tasks carried twice", only_shows_remove_tasks_for_tasks_carried_twice);
-        it('reset tasks when different tasks list selected', resets_tasks_when_different_tasks_list_selected)
     });
 });

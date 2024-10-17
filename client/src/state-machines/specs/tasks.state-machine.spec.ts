@@ -1,6 +1,6 @@
 ﻿import {describe, it} from "vitest";
 import {
-    adds_22_tasks_and_then_refuses_subsequent_tasks,
+    adds_maximum_tasks_and_then_refuses_subsequent_tasks,
     adds_a_task,
     adds_a_task_list,
     adds_two_task_lists,
@@ -26,7 +26,7 @@ describe("Tasks state machine", () => {
     describe("Tasks", () => {
         it("adds a task", adds_a_task);
         it("lets user tick off task", lets_user_tick_off_task);
-        it("adds 22 tasks and then refuses subsequent tasks", adds_22_tasks_and_then_refuses_subsequent_tasks);
+        it("adds maximum tasks and then refuses subsequent tasks", adds_maximum_tasks_and_then_refuses_subsequent_tasks);
         it("lets user carry tasks", lets_user_carry_tasks);
         it('removes ticked tasks when all tasks are carried', removes_ticked_tasks_when_all_tasks_are_carried);
         it("lets user remove tasks", lets_user_remove_tasks);

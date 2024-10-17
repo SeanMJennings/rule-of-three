@@ -1,11 +1,14 @@
 ﻿<script lang="ts" setup>
-import {taskLimit, tasksMachine} from "@/state-machines/tasks.state-machine";
+import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import styles from "./Tasks.module.css";
 import TasksCounter from "@/components/tasks/TasksCounter.vue";
 import TasksForm from "@/components/tasks/TasksForm.vue";
 import TasksList from "@/components/tasks/TasksList.vue";
 import {ReadyToAddTasks} from "@/state-machines/tasks.extensions";
 import {Actor, type EventFromLogic, type SnapshotFrom} from 'xstate'
+import { inject } from 'vue';
+
+const taskLimit = inject('taskLimit') as number
 
 const props = defineProps<{
   tasksMachineProvider: () => {

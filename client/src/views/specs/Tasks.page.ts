@@ -2,6 +2,7 @@
 import Tasks from "../Tasks.vue";
 import {useMachine} from '@xstate/vue'
 import {tasksMachine} from '@/state-machines/tasks.state-machine'
+import {reducedTaskLimit} from "@/testing/utilities";
 
 let page: VueWrapper;
 let {snapshot, send, actorRef} = useMachine(tasksMachine);
@@ -196,6 +197,11 @@ export function removeTaskHidden(taskId: string | number) {
 
 function mountTasksView() {
     return mount(Tasks, {
+        global: {
+            provide: {
+                taskLimit: reducedTaskLimit
+            }
+        },
         props: {
             tasksMachineProvider: () => {
                 return {snapshot: snapshot as any, send, actorRef};

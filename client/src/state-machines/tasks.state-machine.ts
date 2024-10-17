@@ -9,8 +9,6 @@ import {
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
 import {addTask, addTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
 
-export const taskLimit = 22;
-
 export const tasksMachine = createMachine(
     {
         types: {} as {
@@ -118,7 +116,7 @@ export const tasksMachine = createMachine(
                                 if (name === undefined) return context.name;
                                 return (context.name = name)
                             },
-                            tasks: ({context}) => (context.tasks = []),
+                            tasks: ({context, event}) => (context.tasks = context.tasksLists.find((list) => list.id === event.id)?.tasks || []),
                         }),
                         target: TasksListMachineStates.assessingTasksList,
                     },

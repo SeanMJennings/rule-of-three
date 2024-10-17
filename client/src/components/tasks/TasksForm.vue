@@ -52,8 +52,7 @@ const remove = (id: string | number) => {
             :class="styles.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
     </div>
   </div>
-  <div
-      :class="`${_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) ? '' : `${styles.addMargin}`} ${styles.taskList}`">
+  <div :class="`${_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) ? '' : `${styles.addMargin}`} ${styles.taskList}`">
     <Task v-for="task in snapshot.context.tasks" :key="task.id + '.' + task.page" :carry="carry"
           :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
           :remove="remove" :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
