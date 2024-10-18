@@ -16,10 +16,6 @@ export class MockServer {
         this.server.listen();
     }
 
-    public stop() {
-        this.server.close();
-    }
-
     public reset() {
         this.server.resetHandlers();
     }
@@ -27,7 +23,7 @@ export class MockServer {
     public get(url: string, response: any) {
         let called = false;
         let was_called = () => called;
-        this.server.use(http.get(url, ({}) => {
+        this.server.use(http.get(url, () => {
             called = true;
             return HttpResponse.json(response, {status: 200})
         }));
@@ -37,7 +33,7 @@ export class MockServer {
     public post(url: string, response?: any): () => boolean {
         let called = false;
         let was_called = () => called;
-        this.server.use(http.post(url, ({}) => {
+        this.server.use(http.post(url, () => {
             called = true;
             if (response) {
                 return HttpResponse.json(response, {status: 201})
@@ -50,17 +46,8 @@ export class MockServer {
     public patch(url: string) {
         let called = false;
         let was_called = () => called;
-        this.server.use(http.patch(url, async ({}) => {
+        this.server.use(http.patch(url, () => {
             called = true;
-            return HttpResponse.json({}, {status: 204})
-        }));
-        return was_called
-    }
-
-    public delete(url: string) {
-        let called = false;
-        let was_called = () => called;
-        this.server.use(http.delete(url, async ({}) => {
             return HttpResponse.json({}, {status: 204})
         }));
         return was_called

@@ -1,7 +1,6 @@
 ﻿<script lang="ts" setup>
 import {type Task} from "@/types/types";
 import {faArrowRight, faCheck, faX} from '@fortawesome/free-solid-svg-icons'
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import style from "./Task.module.css";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 

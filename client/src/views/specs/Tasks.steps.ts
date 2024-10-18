@@ -36,7 +36,7 @@ import {
     tasksListInputCollapsed,
     tasksListSingleSelectCaretPointsDown,
     tasksListSingleSelectCollapsed,
-    taskTextShown, the_status,
+    taskTextShown,
     tickTask,
     tickTaskHidden,
     toggleTasksListInput,
@@ -52,7 +52,7 @@ const testTaskText = "Hello, world!";
 const testTaskTextMoreThan150Chars =
     "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa";
 const mockServer = MockServer.New();
-const task_ids = Array.from({length: reducedTaskLimit}, (_) => crypto.randomUUID());
+const task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
 let wait_for_create_tasks_list: () => boolean;
 
 

@@ -14,8 +14,8 @@ const task_id = crypto.randomUUID();
 const task_list_name = "Task list name";
 const new_task_list_name = "New task list name";
 const another_task_list_name = "2nd task list name";
-const task_ids = Array.from({length: reducedTaskLimit}, (_) => crypto.randomUUID());
-const another_set_of_task_ids = Array.from({length: reducedTaskLimit}, (_) => crypto.randomUUID());
+const task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
+const another_set_of_task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
 let wait_for_get_tasks_list: () => boolean;
 let wait_for_create_tasks_list: () => boolean;
 
