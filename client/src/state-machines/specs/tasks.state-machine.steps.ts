@@ -1,5 +1,5 @@
 ﻿import {tasksMachine} from "@/state-machines/tasks.state-machine";
-import {afterAll, afterEach, beforeAll, beforeEach, expect} from 'vitest'
+import {afterEach, beforeEach, expect} from 'vitest'
 import {type Actor, createActor} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import {MockServer} from "@/testing/mock-server";
@@ -10,7 +10,6 @@ let tasks = {} as Actor<typeof tasksMachine>;
 const task_list_id = crypto.randomUUID();
 const another_task_list_id = crypto.randomUUID();
 const task_id = crypto.randomUUID();
-const another_task_id = crypto.randomUUID();
 const task_list_name = "Task list name";
 const new_task_list_name = "New task list name";
 const another_task_list_name = "2nd task list name";
@@ -45,17 +44,35 @@ export async function adds_a_task_list() {
 }
 
 export async function loads_a_task_list() {
-    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: []}])
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [{
+        id: task_id,
+        content: "Task content",
+        carried: false,
+        page: 0,
+        ticked: false
+        }]}])
     tasks.send({type: "reset"})
     await waitUntil(wait_for_get_tasks_list)
-    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
     expect(tasks.getSnapshot().context.name).toEqual(task_list_name);
-    expect(tasks.getSnapshot().context.tasks).toEqual([]);
+    expect(tasks.getSnapshot().context.tasks).toEqual([{
+        id: task_id,
+        content: "Task content",
+        carried: false,
+        page: 0,
+        ticked: false
+    }]);
     expect(tasks.getSnapshot().context.tasksLists).toEqual([{
         id: task_list_id,
         name: task_list_name,
-        tasks: []
+        tasks: [{
+            id: task_id,
+            content: "Task content",
+            carried: false,
+            page: 0,
+            ticked: false
+        }]
     }]);
 }
 

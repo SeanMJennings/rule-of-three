@@ -36,6 +36,10 @@ export const tasksMachine = createMachine(
                                        context,
                                        event
                                    }) => (context.name = event.output.length > 0 ? event.output[0].name : ''),
+                            tasks: ({
+                                        context,
+                                        event
+                                      }) => event.output.length > 0 ? context.tasks = event.output[0].tasks : context.tasks,
                             tasksLists: ({
                                              context,
                                              event
