@@ -15,6 +15,7 @@ const task_list_name = "Task list name";
 const new_task_list_name = "New task list name";
 const another_task_list_name = "2nd task list name";
 const task_ids = Array.from({length: reducedTaskLimit}, (_) => crypto.randomUUID());
+const another_set_of_task_ids = Array.from({length: reducedTaskLimit}, (_) => crypto.randomUUID());
 let wait_for_get_tasks_list: () => boolean;
 let wait_for_create_tasks_list: () => boolean;
 
@@ -215,25 +216,45 @@ export async function lets_user_carry_tasks_maximum_twice() {
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry);
 }
 
-export async function selecting_a_tasks_list_resets_the_tasks() {
+export async function selecting_a_different_tasks_list_retrieves_correct_tasks() {
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
+    tasks.send({type: "readyToAddFirstTask"});
+    await add_all_tasks();
+
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        id: another_task_list_id,
+        name: another_task_list_name
+    })
     tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    tasks.send({type: "readyToAddFirstTask"});
-    for (let i = 0; i < 22; i++) {
-        tasks.send({type: "add", content: "Task content"});
-    }
-    tasks.send({type: "selectTasksList", id: another_task_list_id});
 
-    expect(tasks.getSnapshot().context.tasks.length).toEqual(0);
+    tasks.send({type: "selectTasksList", id: another_task_list_id});
+    tasks.send({type: "readyToAddFirstTask"});
+    await add_all_tasks_for_another_task_list();
+
+    tasks.send({type: "selectTasksList", id: task_list_id});
+    expect(tasks.getSnapshot().context.tasks.length).toEqual(reducedTaskLimit);
+    expect(tasks.getSnapshot().context.tasks[0].id).toEqual(task_ids[0]);
+
+    tasks.send({type: "selectTasksList", id: another_task_list_id});
+    expect(tasks.getSnapshot().context.tasks.length).toEqual(reducedTaskLimit);
+    expect(tasks.getSnapshot().context.tasks[0].id).toEqual(another_set_of_task_ids[0]);
 }
 
 async function add_all_tasks() {
     for (const task_id of task_ids) {
         let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
         tasks.send({type: "add", content: "Task content"});
+        await waitUntil(wait_for_add_task)
+    }
+}
+
+async function add_all_tasks_for_another_task_list() {
+    for (const task_id of another_set_of_task_ids) {
+        let wait_for_add_task = mockServer.post(`/tasks-lists/${another_task_list_id}/task`, {id: task_id})
+        tasks.send({type: "add", content: "2nd Task content"});
         await waitUntil(wait_for_add_task)
     }
 }

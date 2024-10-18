@@ -1,4 +1,4 @@
-﻿export type Id = { id: number };
+﻿export type Id = { id: string };
 export type TasksList = Id & {
     name: string;
     tasks: Tasks;

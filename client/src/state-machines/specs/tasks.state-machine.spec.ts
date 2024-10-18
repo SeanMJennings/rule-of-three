@@ -10,7 +10,7 @@ import {
     lets_user_tick_off_task,
     loads_a_task_list,
     removes_ticked_tasks_when_all_tasks_are_carried,
-    selecting_a_tasks_list_resets_the_tasks,
+    selecting_a_different_tasks_list_retrieves_correct_tasks,
     selects_a_different_tasks_list,
     updates_a_task_list_name
 } from '@/state-machines/specs/tasks.state-machine.steps'
@@ -31,6 +31,6 @@ describe("Tasks state machine", () => {
         it('removes ticked tasks when all tasks are carried', removes_ticked_tasks_when_all_tasks_are_carried);
         it("lets user remove tasks", lets_user_remove_tasks);
         it("lets user carry tasks maximum twice", lets_user_carry_tasks_maximum_twice);
-        it("selecting a tasks list resets the tasks", selecting_a_tasks_list_resets_the_tasks);
+        it("selecting a different tasks list retrieves correct tasks", selecting_a_different_tasks_list_retrieves_correct_tasks);
     });
 });

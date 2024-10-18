@@ -39,7 +39,7 @@ export const tasksMachine = createMachine(
                             tasksLists: ({
                                              context,
                                              event
-                                         }) => event.output.length > 0 ? context.tasksLists.concat(event.output) : context.tasksLists,
+                                         }) => event.output.length > 0 ? context.tasksLists = event.output : context.tasksLists,
                         }),
                     },
                 },
