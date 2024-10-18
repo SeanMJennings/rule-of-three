@@ -26,14 +26,8 @@ export const tasksMachine = createMachine(
                     src: fromPromise(async () => await getTasksLists()),
                     onDone: {
                         actions: assign({
-                            id: ({
-                                     context,
-                                     event
-                                 }) => (context.id = event.output.length > 0 ? event.output[0].id : ''),
-                            tasksLists: ({
-                                             context,
-                                             event
-                                         }) => event.output.length > 0 ? context.tasksLists = event.output : context.tasksLists,
+                            id: ({context, event}) => (context.id = event.output.length > 0 ? event.output[0].id : ''),
+                            tasksLists: ({context, event}) => event.output.length > 0 ? context.tasksLists = event.output : context.tasksLists,
                         }),
                     },
                 },

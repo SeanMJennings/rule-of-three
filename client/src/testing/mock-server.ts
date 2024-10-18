@@ -22,7 +22,7 @@ export class MockServer {
 
     public get(url: string, response: any) {
         let called = false;
-        let was_called = () => called;
+        const was_called = () => called;
         this.server.use(http.get(url, () => {
             called = true;
             return HttpResponse.json(response, {status: 200})
@@ -32,7 +32,7 @@ export class MockServer {
 
     public post(url: string, response?: any): () => boolean {
         let called = false;
-        let was_called = () => called;
+        const was_called = () => called;
         this.server.use(http.post(url, () => {
             called = true;
             if (response) {
@@ -45,7 +45,7 @@ export class MockServer {
 
     public patch(url: string) {
         let called = false;
-        let was_called = () => called;
+        const was_called = () => called;
         this.server.use(http.patch(url, () => {
             called = true;
             return HttpResponse.json({}, {status: 204})

@@ -39,17 +39,13 @@ const remove = (id: string | number) => {
 
 <template>
   <div :class="styles.container">
-    <div v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty,)" id="add-first-task"
-         v-on:click="send({ type: 'readyToAddFirstTask' })">
+    <div v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty,)" id="add-first-task" v-on:click="send({ type: 'readyToAddFirstTask' })">
       Add your first task
     </div>
-    <div v-if="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty)" id="add-task"
-         :class="styles.addTask">
+    <div v-if="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty)" id="add-task" :class="styles.addTask">
       <input id="add-task-input" v-model="model.taskText" :class="styles.input" type="text"/>
-      <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`"
-                  the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>
-      <span id="character-count"
-            :class="styles.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
+      <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`" the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>
+      <span id="character-count" :class="styles.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
     </div>
   </div>
   <div :class="`${_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) ? '' : `${styles.addMargin}`} ${styles.taskList}`">

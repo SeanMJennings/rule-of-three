@@ -86,7 +86,7 @@ export async function updates_a_task_list_name() {
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    let wait_for_update_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}`)
+    const wait_for_update_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}`)
     tasks.send({type: "updateTasksList", id: task_list_id, name: new_task_list_name});
     await waitUntil(wait_for_update_tasks_list)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
@@ -101,7 +101,7 @@ export async function adds_a_task() {
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     tasks.send({type: "readyToAddFirstTask"});
-    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_id })
+    const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_id })
     tasks.send({type: "add", content: "Task content"});
     await waitUntil(wait_for_add_task)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
@@ -119,7 +119,7 @@ export async function lets_user_tick_off_task() {
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     tasks.send({type: "readyToAddFirstTask"});
-    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_id })
+    const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_id })
     tasks.send({type: "add", content: "Task content"});
     await waitUntil(wait_for_add_task)
     tasks.send({type: "tick", id: task_id});
@@ -250,7 +250,7 @@ export async function selecting_a_different_tasks_list_retrieves_correct_tasks()
 
 async function add_all_tasks() {
     for (const task_id of task_ids) {
-        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
+        const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
         tasks.send({type: "add", content: "Task content"});
         await waitUntil(wait_for_add_task)
     }
@@ -258,7 +258,7 @@ async function add_all_tasks() {
 
 async function add_all_tasks_for_another_task_list() {
     for (const task_id of another_set_of_task_ids) {
-        let wait_for_add_task = mockServer.post(`/tasks-lists/${another_task_list_id}/task`, {id: task_id})
+        const wait_for_add_task = mockServer.post(`/tasks-lists/${another_task_list_id}/task`, {id: task_id})
         tasks.send({type: "add", content: "2nd Task content"});
         await waitUntil(wait_for_add_task)
     }
@@ -272,14 +272,14 @@ function remove_all_tasks() {
 
 async function add_all_tasks_except_one() {
     for (const task_id of task_ids.slice(0, -1)) {
-        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
+        const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
         tasks.send({type: "add", content: "Task content"});
         await waitUntil(wait_for_add_task)
     }
 }
 
 async function add_last_task() {
-    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_ids[reducedTaskLimit - 1]})
+    const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_ids[reducedTaskLimit - 1]})
     tasks.send({type: "add", content: "Task content"});
     await waitUntil(wait_for_add_task)
 }

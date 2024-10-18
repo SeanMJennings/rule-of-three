@@ -20,11 +20,7 @@ const props = defineProps<{
 <template>
   <div :class="style.div">
     <span :class="style.marker">></span>
-    <span
-        :id="`task-${props.task.id}`"
-        :class="`${task.ticked ? style.taskTicked : !showTickAction && props.task.carried ? style.taskKept : ''} ${style.task}`">{{
-        props.task.content
-      }}</span>
+    <span :id="`task-${props.task.id}`" :class="`${task.ticked ? style.taskTicked : !showTickAction && props.task.carried ? style.taskKept : ''} ${style.task}`">{{props.task.content }}</span>
     <span :id="`task-${props.task.id}-page`" :class="style.page">{{ props.task.page }}</span>
     <div v-if="!showRemoveAction && !showCarryAction && !showTickAction" :class="`${choosingTasksToCarry ? style.largeSpacer : style.spacer}`"/>
     <ButtonIcon :the_id="`task-${props.task.id}-tick`" :icon="faCheck" :icon-style="style.icon" v-if="showTickAction" v-on:click="tick(props.task.id)"/>

@@ -9,8 +9,6 @@ const props = defineProps<{
 
 <template>
   <div :class="`${props.taskCount === props.maxTasks ? style.maxTaskCount : ''} ${style.taskCountContainer}`">
-    <div v-if="props.taskCount !== 0" id="task-count">
-      {{ props.taskCount }}/{{ props.maxTasks }} tasks
-    </div>
+    <div v-if="props.taskCount !== 0" id="task-count">{{ props.taskCount }}/{{ props.maxTasks }} tasks</div>
   </div>
 </template>

@@ -208,7 +208,7 @@ export async function shows_task_count_if_there_are_tasks() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
     expect(taskCountHidden()).toBe(true);
-    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
+    const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
     await typeTask(testTaskText);
     await addTask();
     await waitUntil(wait_for_add_task)
@@ -232,7 +232,7 @@ export async function adds_and_lists_a_task() {
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
-    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
+    const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
     await typeTask(testTaskText);
     await addTask();
     await waitUntil(wait_for_add_task)
@@ -246,7 +246,7 @@ export async function limits_task_length_to_150_characters() {
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await clickAddFirstTask();
-    let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
+    const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] })
     await typeTask(testTaskTextMoreThan150Chars);
     await addTask();
     await waitUntil(wait_for_add_task)
@@ -388,7 +388,7 @@ export async function does_not_show_remove_or_carry_for_ticked_tasks() {
 
 async function add_all_tasks_except_one() {
     for (const task_id of task_ids) {
-        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
+        const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
         if (task_id !== task_ids[task_ids.length - 1]) {
             await addTask();
             await waitUntil(wait_for_add_task)
@@ -399,7 +399,7 @@ async function add_all_tasks_except_one() {
 
 async function add_all_tasks() {
     for (const task_id of task_ids) {
-        let wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
+        const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
         await addTask();
         await waitUntil(wait_for_add_task)
         if (task_id !== task_ids[task_ids.length - 1]) {

@@ -6,7 +6,7 @@ export const getTasksLists = async () => {
 }
 
 export const addTasksList = async (name: any) => {
-    let response = await post(`/tasks-lists`, {name});
+    const response = await post(`/tasks-lists`, {name});
     return {
         id: response.id,
         name: name
@@ -14,7 +14,7 @@ export const addTasksList = async (name: any) => {
 }
 
 export const updateTasksList = async (id: any, name: any) => {
-    let response = await patch(`/tasks-lists/${id}`, {name});
+    const response = await patch(`/tasks-lists/${id}`, {name});
     return {
         ...(response),
         id,
@@ -23,7 +23,7 @@ export const updateTasksList = async (id: any, name: any) => {
 }
 
 export const addTask = async (tasksListId: any, content: any) => {
-    let response = await post(`/tasks-lists/${tasksListId}/task`, {content});
+    const response = await post(`/tasks-lists/${tasksListId}/task`, {content});
     return {
         id: response.id,
         content
