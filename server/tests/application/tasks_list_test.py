@@ -15,6 +15,11 @@ def test_get_all_tasks_lists():
     Then(all_tasks_lists_are_retrieved)
 
 
+def test_return_empty_list_when_no_tasks_list():
+    When(getting_all_tasks_lists)
+    Then(there_are_no_tasks_lists())
+
+
 def test_rename_tasks_list():
     Given(an_existing_tasks_list)
     When(renaming_a_tasks_list)

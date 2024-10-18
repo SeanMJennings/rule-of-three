@@ -8,6 +8,11 @@ def test_can_add_tasks_list():
     Then(the_tasks_list_is_added)
 
 
+def test_can_return_empty_list_when_no_tasks_lists():
+    When(listing_tasks_lists)
+    Then(the_tasks_lists_are_listed_empty)
+
+
 def test_can_list_tasks_lists():
     Given(a_tasks_list)
     And(another_tasks_list)

@@ -125,6 +125,12 @@ def all_tasks_lists_are_retrieved():
     assert tasks_lists[1].name == "Another Tasks List"
 
 
+def there_are_no_tasks_lists():
+    global tasks_list_service
+    tasks_lists = tasks_list_service.get_all()
+    assert len(tasks_lists) == 0
+
+
 def the_tasks_list_is_renamed():
     global tasks_list_service, tasks_list
     tasks_list = tasks_list_service.get("My Renamed Tasks List")

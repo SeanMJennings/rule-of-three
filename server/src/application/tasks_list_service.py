@@ -52,7 +52,8 @@ class TasksListService:
             query="SELECT * FROM c",
             enable_cross_partition_query=True,
         )
-        return convert_to_domain(TasksList, items)
+        task_lists = convert_to_domain(TasksList, items)
+        return task_lists if task_lists is not None else []
 
     def add_task(self, tasks_list_id: str, task: str):
         tasks_list = self.get_by_id(tasks_list_id)
