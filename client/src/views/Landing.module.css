@@ -8,7 +8,7 @@
     justify-content: center;
 
     > h1 {
-        font-size: 3em;
+        font-size: 225%;
         font-weight: 900;
         background: -webkit-linear-gradient(
                 var(--color-header),
@@ -16,5 +16,13 @@
         );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+
+        @media (min-width: 640px) {
+            font-size: 300%;
+        }
+    }
+    
+    span {
+        text-align: center;
     }
 }

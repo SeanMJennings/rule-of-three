@@ -74,8 +74,14 @@ body {
     background-color 0.5s;
     line-height: 1.6;
     font-family: Courier, monospace;
-    font-size: 15px;
+    font-size: 12px;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 640px) {
+    body {
+        font-size: 15px;
+    }
 }
