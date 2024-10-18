@@ -6,7 +6,7 @@ import {reactive, watch} from "vue";
 import styles from "./TasksForm.module.css";
 import {type EventFromLogic, type SnapshotFrom} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
-import {canCarryTask} from "@/state-machines/tasks.extensions";
+import {canCarryTask, getTasks} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 
@@ -53,14 +53,14 @@ const remove = (id: string | number) => {
     </div>
   </div>
   <div :class="`${_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) ? '' : `${styles.addMargin}`} ${styles.taskList}`">
-    <Task v-for="task in snapshot.context.tasks" :key="task.id + '.' + task.page" :carry="carry"
+    <Task v-for="task in getTasks(snapshot.context)" :key="task.id + '.' + task.page" :carry="carry"
           :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
           :remove="remove" :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
-          snapshot.context.tasks.find((n) => n.id === task.id && n.carried === false && canCarryTask(n)) !== undefined"
+          getTasks(snapshot.context).find((n) => n.id === task.id && !n.carried && canCarryTask(n)) !== undefined"
           :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
-        snapshot.context.tasks.find((n) => n.id === task.id && n.carried === false && n.ticked === false) !== undefined"
+        getTasks(snapshot.context).find((n) => n.id === task.id && !n.carried && !n.ticked) !== undefined"
           :show-tick-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) &&
-          snapshot.context.tasks.find((n) => n.id === task.id && n.ticked === false) !== undefined"
+          getTasks(snapshot.context).find((n) => n.id === task.id && !n.ticked) !== undefined"
           :task="task"
           :tick="tick"
     />

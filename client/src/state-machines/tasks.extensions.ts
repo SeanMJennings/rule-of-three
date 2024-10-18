@@ -1,4 +1,4 @@
-﻿import type {Task, Tasks, TasksList} from '@/types/types'
+﻿import type {Task, TasksList} from '@/types/types'
 import type {StateValue} from "xstate";
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import { inject } from 'vue';

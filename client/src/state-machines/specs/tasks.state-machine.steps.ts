@@ -23,8 +23,7 @@ beforeEach(() => {
     mockServer.reset();
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id })
-    mockServer.start()
-
+    mockServer.start();
     tasks = createActor(tasksMachine);
     tasks.start();
 });
