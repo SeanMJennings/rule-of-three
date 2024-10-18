@@ -17,6 +17,7 @@ export function createActor() {
     send = the_send
     actorRef = the_actorRef
     actorRef.start();
+    send({type: "reset"});
 }
 
 export function renderTasksView() {
@@ -30,6 +31,10 @@ export function unmountTasksView() {
 
 export function stopActor() {
     actorRef.stop();
+}
+
+export function the_status() {
+    return snapshot.value;
 }
 
 export function pageText() {

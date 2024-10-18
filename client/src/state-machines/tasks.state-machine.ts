@@ -9,11 +9,14 @@ export const tasksMachine = createMachine(
         types: {} as {
             context: { id: string; tasksLists: TasksList[] };
         },
-        context: {id: "", tasksLists: [] as TasksList[]},
+        context: {id: '', tasksLists: [] as TasksList[]},
         on: {
             reset: {
                 target: `.${TasksListMachineStates.empty}`,
-                actions: assign({id: "", tasksLists: [] as TasksList[]})
+                actions: assign({
+                    id: ({context}) => (context.id = ''),
+                    tasksLists: ({context}) => context.tasksLists = [] as TasksList[],
+                }),
             }
         },
         initial: TasksListMachineStates.empty,

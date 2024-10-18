@@ -36,7 +36,7 @@ import {
     tasksListInputCollapsed,
     tasksListSingleSelectCaretPointsDown,
     tasksListSingleSelectCollapsed,
-    taskTextShown,
+    taskTextShown, the_status,
     tickTask,
     tickTaskHidden,
     toggleTasksListInput,
