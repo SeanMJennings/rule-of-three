@@ -1,24 +1,19 @@
 ﻿import {assign, createMachine, fromPromise} from "xstate";
-import type {Task, Tasks, TasksList} from '@/types/types'
-import {
-    canCarryTask,
-    tasksAreEmpty,
-    tasksAreFull,
-    tasksHaveBeenCarried
-} from '@/state-machines/tasks.extensions'
+import type {Task, TasksList} from '@/types/types'
+import {canCarryTask, tasksAreEmpty, tasksAreFull, tasksHaveBeenCarried} from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
 import {addTask, addTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
 
 export const tasksMachine = createMachine(
     {
         types: {} as {
-            context: { id: string; name: string; tasks: Tasks, tasksLists: TasksList[] };
+            context: { id: string; tasksLists: TasksList[] };
         },
-        context: {id: "", name: "", tasks: [], tasksLists: [] as TasksList[]},
+        context: {id: "", tasksLists: [] as TasksList[]},
         on: {
             reset: {
                 target: `.${TasksListMachineStates.empty}`,
-                actions: assign({id: "", name: "", tasks: [], tasksLists: [] as TasksList[]})
+                actions: assign({id: "", tasksLists: [] as TasksList[]})
             }
         },
         initial: TasksListMachineStates.empty,
@@ -31,15 +26,7 @@ export const tasksMachine = createMachine(
                             id: ({
                                      context,
                                      event
-                                 }) => (context.name = event.output.length > 0 ? event.output[0].id : ''),
-                            name: ({
-                                       context,
-                                       event
-                                   }) => (context.name = event.output.length > 0 ? event.output[0].name : ''),
-                            tasks: ({
-                                        context,
-                                        event
-                                      }) => event.output.length > 0 ? context.tasks = event.output[0].tasks : context.tasks,
+                                 }) => (context.id = event.output.length > 0 ? event.output[0].id : ''),
                             tasksLists: ({
                                              context,
                                              event
@@ -71,8 +58,7 @@ export const tasksMachine = createMachine(
                     onDone: {
                         target: TasksListMachineStates.addingTasksLists,
                         actions: assign({
-                            id: ({context, event}) => (context.name = event.output.id),
-                            name: ({context, event}) => (context.name = event.output.name),
+                            id: ({context, event}) => (context.id = event.output.id),
                             tasksLists: ({context, event}) => context.tasksLists.concat({
                                 id: event.output.id,
                                 name: event.output.name,
@@ -89,7 +75,6 @@ export const tasksMachine = createMachine(
                     onDone: {
                         target: TasksListMachineStates.addingTasksLists,
                         actions: assign({
-                            name: ({context, event}) => (context.name = event.output.name),
                             tasksLists: ({context, event}) => context.tasksLists.map((list) => {
                                 if (list.id === event.output.id) {
                                     list.name = event.output.name;
@@ -114,13 +99,7 @@ export const tasksMachine = createMachine(
                             id: ({context, event}) => {
                                 if (context.tasksLists.find((list) => list.id === event.id) === undefined) return context.id;
                                 return (context.id = event.id)
-                            },
-                            name: ({context, event}) => {
-                                const name = context.tasksLists.find((list) => list.id === event.id)?.name;
-                                if (name === undefined) return context.name;
-                                return (context.name = name)
-                            },
-                            tasks: ({context, event}) => (context.tasks = context.tasksLists.find((list) => list.id === event.id)?.tasks || []),
+                            }
                         }),
                         target: TasksListMachineStates.assessingTasksList,
                     },
@@ -144,15 +123,19 @@ export const tasksMachine = createMachine(
                             onDone: {
                                 target: TasksMachineStates.addingTasks,
                                 actions: assign({
-                                    tasks: ({context, event}) =>
-                                        context.tasks.concat({
-                                            id: event.output.id,
-                                            content: event.output.content,
-                                            carried: false,
-                                            page: 0,
-                                            ticked: false
-                                        }),
-                                }),
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                            if (list.id === context.id) {
+                                                list.tasks.push({
+                                                    id: event.output.id,
+                                                    content: event.output.content,
+                                                    carried: false,
+                                                    page: 0,
+                                                    ticked: false
+                                                });
+                                            }
+                                            return list;
+                                        })
+                                    })
                             },
                         },
                     },
@@ -163,11 +146,13 @@ export const tasksMachine = createMachine(
                             },
                             tick: {
                                 actions: assign({
-                                    tasks: ({context, event}) => {
-                                        const task = context.tasks.find((task) => task.id === event.id) ?? ({} as Task);
-                                        task.ticked = true;
-                                        return context.tasks;
-                                    },
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                        if (list.id === context.id) {
+                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.id) ?? ({} as Task);
+                                            task.ticked = true;
+                                        }
+                                        return list;
+                                    })
                                 }),
                             },
                         },
@@ -180,22 +165,26 @@ export const tasksMachine = createMachine(
                         on: {
                             carry: {
                                 actions: assign({
-                                    tasks: ({context, event}) => {
-                                        const task = context.tasks.find((task) => task.id === event.id) ?? ({} as Task);
-                                        if (canCarryTask(task)) {
-                                            task.page += 1;
-                                            task.carried = true;
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                        if (list.id === context.id) {
+                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.id) ?? ({} as Task);
+                                            if (canCarryTask(task)) {
+                                                task.page += 1;
+                                                task.carried = true;
+                                            }
                                         }
-                                        return context.tasks;
-                                    },
+                                        return list;
+                                    })
                                 }),
                             },
                             remove: {
                                 actions: assign({
-                                    tasks: ({context, event}) => {
-                                        context.tasks = context.tasks.filter((task) => task.id !== event.id,);
-                                        return context.tasks;
-                                    },
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                        if (list.id === context.id) {
+                                            list.tasks = list.tasks.filter((task) => task.id !== event.id) ?? [];
+                                        }
+                                        return list;
+                                    })
                                 }),
                             },
                         },
@@ -205,10 +194,15 @@ export const tasksMachine = createMachine(
                         },
                         exit: [
                             (context) => {
-                                context.context.tasks = context.context.tasks.filter((task) => !task.ticked).map((task) => {
-                                    task.carried = false;
-                                    return task;
-                                });
+                                context.context.tasksLists.map((list) => {
+                                    if (list.id === context.context.id) {
+                                        list.tasks = list.tasks.filter((task) => !task.ticked).map((task) => {
+                                            task.carried = false;
+                                            return task;
+                                        });
+                                    }
+                                    return list;
+                                })
                             },
                         ],
                     },
