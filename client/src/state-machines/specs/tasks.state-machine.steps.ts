@@ -115,14 +115,16 @@ export async function adds_a_task() {
 }
 
 export async function lets_user_tick_off_task() {
-    tasks.send({type: "readyToAddFirstTaskList"});
+    tasks.send({type: "readyToAddFirstTaskList"})
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    tasks.send({type: "readyToAddFirstTask"});
+    tasks.send({type: "readyToAddFirstTask"})
     const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_id })
-    tasks.send({type: "add", content: "Task content"});
+    tasks.send({type: "add", content: "Task content"})
     await waitUntil(wait_for_add_task)
-    tasks.send({type: "tick", id: task_id});
+    const wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/tick`)
+    tasks.send({type: "tick", id: task_id})
+    await waitUntil(wait_for_tick_task)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(getTasks(tasks.getSnapshot().context)).toEqual([{
         id: task_id,
@@ -130,7 +132,7 @@ export async function lets_user_tick_off_task() {
         carried: false,
         page: 0,
         ticked: true
-    }]);
+    }])
 }
 
 export async function selects_a_different_tasks_list() {
@@ -185,8 +187,12 @@ export async function removes_ticked_tasks_when_all_tasks_are_carried() {
     await waitUntil(wait_for_create_tasks_list)
     tasks.send({type: "readyToAddFirstTask"});
     await add_all_tasks_except_one();
+    let wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_ids[0]}/tick`)
     tasks.send({type: "tick", id: task_ids[0]});
+    await waitUntil(wait_for_tick_task)
+    wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_ids[1]}/tick`)
     tasks.send({type: "tick", id: task_ids[1]});
+    await waitUntil(wait_for_tick_task)
     await add_last_task();
 
     carry_all_tasks();

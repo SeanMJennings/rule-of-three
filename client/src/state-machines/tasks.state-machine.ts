@@ -2,7 +2,7 @@
 import type {Task, TasksList} from '@/types/types'
 import {canCarryTask, tasksAreEmpty, tasksAreFull, tasksHaveBeenCarried} from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
-import {addTask, addTasksList, getTasksLists, updateTasksList} from "@/apis/tasks_list.api";
+import {addTask, addTasksList, getTasksLists, tickTask, updateTasksList} from "@/apis/tasks_list.api";
 
 export const tasksMachine = createMachine(
     {
@@ -135,6 +135,24 @@ export const tasksMachine = createMachine(
                                     })
                             },
                         },
+                    },                    
+                    tickingTheTask: {
+                        invoke: {
+                            input: ({ context, event}) => ({id: context.id, taskId: event.id}),
+                            src: fromPromise(async ({input: {id, taskId}}) => await tickTask(id, taskId)),
+                            onDone: {
+                                target: TasksMachineStates.addingTasks,
+                                actions: assign({
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                            if (list.id === context.id) {
+                                                const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
+                                                task.ticked = true;
+                                            }
+                                            return list;
+                                        })
+                                    })
+                            },
+                        },
                     },
                     addingTasks: {
                         on: {
@@ -142,15 +160,7 @@ export const tasksMachine = createMachine(
                                 target: TasksMachineStates.creatingTheTask,
                             },
                             tick: {
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                        if (list.id === context.id) {
-                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.id) ?? ({} as Task);
-                                            task.ticked = true;
-                                        }
-                                        return list;
-                                    })
-                                }),
+                                target: TasksMachineStates.tickingTheTask,
                             },
                         },
                         always: {

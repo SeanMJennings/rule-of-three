@@ -284,7 +284,10 @@ export async function lets_user_tick_tasks() {
     await add_all_tasks_except_one();
     for (const task_id of task_ids) {
         if (task_id !== task_ids[task_ids.length - 1]) {
+            const wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/tick`)
+            await waitUntil(() => !tickTaskHidden(task_id));
             await tickTask(task_id);
+            await waitUntil(wait_for_tick_task)
             expect(tickTaskHidden(task_id)).toBe(true);
         }
     }
@@ -375,7 +378,10 @@ export async function does_not_show_remove_or_carry_for_ticked_tasks() {
     await add_all_tasks_except_one();
     for (const task_id of task_ids) {
         if (task_id !== task_ids[task_ids.length - 1]) {
+            const wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/tick`)
+            await waitUntil(() => !tickTaskHidden(task_id));
             await tickTask(task_id);
+            await waitUntil(wait_for_tick_task)
         }
     }
     for (const task_id of task_ids) {

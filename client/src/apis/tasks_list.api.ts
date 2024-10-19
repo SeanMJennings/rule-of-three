@@ -29,3 +29,11 @@ export const addTask = async (tasksListId: any, content: any) => {
         content
     }
 }
+
+export const tickTask = async (tasksListId: any, taskId: any) => {
+    const response = await patch(`/tasks-lists/${tasksListId}/task/${taskId}/tick`, {});
+    return {
+        ...(response),
+        taskId: taskId
+    }
+}
