@@ -8,7 +8,7 @@ import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machin
 import type {Id} from "@/types/types";
 import {faList, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
-
+import commonStyle from './Tasks.common.module.css'
 let subscription: Subscription;
 
 type TasksListModel = { name: string };
@@ -70,23 +70,25 @@ onUnmounted(() => {
     <div v-if="snapshot.value === TasksMachineCombinedStates.empty" id="add-task-list-placeholder" :class="style.placeholder" v-on:click="onClick()">
       <span>Create your first task list</span>
     </div>
-    <div v-if="snapshot.value !== TasksMachineCombinedStates.empty" :class="style.header">
-      <ButtonIcon :class="style.button" :icon="faPlusCircle" :iconStyle="style.icon"/>
-      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-input-caret" v-on:click="toggleTasksList()"/>
+    <div v-if="snapshot.value !== TasksMachineCombinedStates.empty" :class="style.header" v-on:click="toggleTasksList()">
+      <ButtonIcon :class="commonStyle.button" :icon="faPlusCircle" :iconStyle="commonStyle.icon"/>
+      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-input-caret"/>
     </div>
-    <div v-if="snapshot.value !== TasksMachineCombinedStates.empty && !tasksListInputCollapsedModel.collapsed" :class="style.addTaskList">
-      <label :class="style.label" for="add-task-list-input">Add Tasks List</label>
-      <input id="add-task-list-input" v-model="tasksListModel.name" :class="style.input" type="text"/>
-      <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? style.disabled : ''} ${style.addTaskListIcon}`" the_id="add-task-list-submit" v-on:click="submit()"/>
-      <span id="tasks-list-character-count" :class="style.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
+    <div v-if="snapshot.value !== TasksMachineCombinedStates.empty && !tasksListInputCollapsedModel.collapsed" :class="commonStyle.formSection">
+      <label :class="commonStyle.label" for="add-task-list-input">Add Tasks List</label>
+      <div :class="commonStyle.inputContainer">
+        <input id="add-task-list-input" v-model="tasksListModel.name" :class="commonStyle.input" type="text"/>
+        <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-list-submit" v-on:click="submit()"/>
+      </div>
+      <span id="tasks-list-character-count" :class="commonStyle.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
     </div>
-    <div v-if="snapshot.context.tasksLists.length > 1" :class="style.header">
-      <ButtonIcon :class="style.button" :icon="faList" :iconStyle="style.icon"/>
-      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" v-on:click="toggleTasksSelect()"/>
+    <div v-if="snapshot.context.tasksLists.length > 1" :class="style.header" v-on:click="toggleTasksSelect()">
+      <ButtonIcon :class="commonStyle.button" :icon="faList" :iconStyle="commonStyle.icon"/>
+      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" />
     </div>
-    <div v-if="snapshot.context.tasksLists.length > 1 && !tasksListSelectCollapsedModel.collapsed" :class="style.selectTasksList">
-      <label :class="style.label" for="task-list-single-select">Select Tasks List</label>
-      <select id="task-list-single-select" ref="selectedTasksList.id" :class="style.input">
+    <div v-if="snapshot.context.tasksLists.length > 1 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
+      <label :class="commonStyle.label" for="task-list-single-select">Select Tasks List</label>
+      <select id="task-list-single-select" ref="selectedTasksList.id" :class="style.selectInput">
         <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :selected="index === 0" :value="option.id">
           {{ option.name }}
         </option>

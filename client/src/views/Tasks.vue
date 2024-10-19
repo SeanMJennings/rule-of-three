@@ -4,11 +4,8 @@ import styles from "./Tasks.module.css";
 import TasksCounter from "@/components/tasks/TasksCounter.vue";
 import TasksForm from "@/components/tasks/TasksForm.vue";
 import TasksList from "@/components/tasks/TasksList.vue";
-import {getTasks, ReadyToAddTasks} from "@/state-machines/tasks.extensions";
+import {getTasks, ReadyToAddTasks, taskLimit} from "@/state-machines/tasks.extensions";
 import {Actor, type EventFromLogic, type SnapshotFrom} from 'xstate'
-import { inject } from 'vue';
-
-const taskLimit = inject('taskLimit') as number
 
 const props = defineProps<{
   tasksMachineProvider: () => {
@@ -25,7 +22,7 @@ const {snapshot, send, actorRef} = props.tasksMachineProvider();
   <main>
     <div :class="styles.container">
       <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot"/>
-      <TasksCounter :max-tasks="taskLimit" :task-count="getTasks(snapshot.context).length"/>
+      <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
       <TasksForm v-if="ReadyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
     </div>
   </main>

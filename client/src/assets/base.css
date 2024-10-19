@@ -48,6 +48,7 @@
         --color-background-soft: var(--vt-c-black-soft);
         --color-background-mute: var(--vt-c-black-mute);
         --color-icon-fill: var(--vt-c-white);
+        --color-icon-fill-disabled: var(--vt-c-divider-dark-1);
         --color-border: var(--vt-c-divider-dark-2);
         --color-border-hover: var(--vt-c-divider-dark-1);
 
@@ -78,6 +79,10 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+path {
+    fill: var(--color-icon-fill);
 }
 
 @media (min-width: 640px) {

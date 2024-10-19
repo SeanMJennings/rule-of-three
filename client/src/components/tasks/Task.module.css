@@ -1,21 +1,19 @@
 ﻿.div {
-    padding: 0 20px;
+    padding: 0 10px;
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 .marker {
     text-align: start;
-    width: 5%;
 }
 
 .task {
-    width: 90%;
     align-self: stretch;
     text-align: start;
     word-break: break-word;
-    padding-right: 10px;
-    margin-right: 15px;
+    flex-grow: 1;
 }
 
 .taskTicked {
@@ -28,26 +26,22 @@
 }
 
 .page {
-    margin-right: 10px;
 }
 
 .spacer {
-    margin-right: 14.5px;
+    width: 11.66px;
 }
 
 .largeSpacer {
-    margin-right: 38.5px;
+    width: 31px;
 }
 
 .icon {
     cursor: pointer;
-    width: 15px;
 }
 
 .carryActionHidden {
-    margin-left: 23.5px;
 }
 
 .carryActionShown {
-    margin-left: 10px;
 }

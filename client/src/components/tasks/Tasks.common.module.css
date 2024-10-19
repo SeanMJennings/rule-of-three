@@ -1,0 +1,49 @@
+﻿.label {
+    display: block;
+    text-align: start;
+}
+
+.formSection {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px 10px;
+    border-bottom: solid 1px var(--color-border);
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
+.input {
+    flex-grow: 1;
+}
+
+.button {
+    margin-right: auto;
+}
+
+.icon {
+    margin-left: 10px;
+}
+
+.disabled {
+    path {
+        fill: var(--color-icon-fill-disabled);
+    }
+}
+
+.characterCount {
+    font-size: 14px;
+    text-align: left;
+    line-height: 21px;
+    min-height: 21px;
+}
+
+.addIcon {
+    font-size: 21px;
+    cursor: pointer;
+}

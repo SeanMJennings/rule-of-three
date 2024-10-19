@@ -9,6 +9,7 @@ import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import {canCarryTask, getTasks} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
+import commonStyle from './Tasks.common.module.css'
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
@@ -43,9 +44,11 @@ const remove = (id: string | number) => {
       Add your first task
     </div>
     <div v-if="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty)" id="add-task" :class="styles.addTask">
-      <input id="add-task-input" v-model="model.taskText" :class="styles.input" type="text"/>
-      <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? styles.disabled : ''} ${styles.addTaskIcon}`" the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>
-      <span id="character-count" :class="styles.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
+      <div :class="commonStyle.inputContainer">
+        <input id="add-task-input" v-model="model.taskText" :class="commonStyle.input" type="text"/>
+        <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>
+      </div>
+      <span id="character-count" :class="commonStyle.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
     </div>
   </div>
   <div :class="`${_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) ? '' : `${styles.addMargin}`} ${styles.taskList}`">
@@ -54,7 +57,7 @@ const remove = (id: string | number) => {
           :remove="remove" :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
           getTasks(snapshot.context).find((n) => n.id === task.id && !n.carried && canCarryTask(n)) !== undefined"
           :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
-        getTasks(snapshot.context).find((n) => n.id === task.id && !n.carried && !n.ticked) !== undefined"
+          getTasks(snapshot.context).find((n) => n.id === task.id && !n.carried && !n.ticked) !== undefined"
           :show-tick-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) &&
           getTasks(snapshot.context).find((n) => n.id === task.id && !n.ticked) !== undefined"
           :task="task"

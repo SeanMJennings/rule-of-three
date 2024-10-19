@@ -3,7 +3,7 @@ import style from "./TasksCounter.module.css";
 
 const props = defineProps<{
   taskCount: number;
-  maxTasks: number;
+  maxTasks: number | string;
 }>();
 </script>
 

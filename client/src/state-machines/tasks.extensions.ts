@@ -1,9 +1,7 @@
 ﻿import type {Task, TasksList} from '@/types/types'
 import type {StateValue} from "xstate";
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
-import { inject } from 'vue';
-
-const taskLimit = inject('taskLimit') as number || 5;
+export const taskLimit = (import.meta.env.TASK_LIMIT as number) || 22;
 
 export const ReadyToAddTasks = (value: StateValue) => {
     return (value !== TasksMachineCombinedStates.empty && value !== TasksMachineCombinedStates.readyToAddTasksLists);
