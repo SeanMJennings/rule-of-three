@@ -10,7 +10,6 @@ import {canCarryTask, getTasks} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
