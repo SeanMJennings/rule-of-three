@@ -10,16 +10,13 @@ header {
     height: 10vh;
 }
 
-body {
-    overflow: hidden;
-}
-
 main {
+    overflow: hidden;
     min-height: 80vh;
+    max-height: 80vh;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: center;
 }
 
 footer {

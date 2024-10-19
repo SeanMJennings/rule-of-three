@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-bottom: 60px;
+    max-height: inherit;
 
     > div {
         text-align: center;
