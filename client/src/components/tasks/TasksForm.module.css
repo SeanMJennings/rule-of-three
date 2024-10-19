@@ -18,3 +18,11 @@
     scrollbar-width: thin;
     scrollbar-color: var(--vt-c-divider-dark-1) var(--vt-c-black);
 }
+
+.placeholder {
+    margin-left: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

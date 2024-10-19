@@ -10,6 +10,7 @@ import {canCarryTask, getTasks} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
+import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
@@ -40,7 +41,7 @@ const remove = (id: string | number) => {
 
 <template>
   <div :class="styles.container">
-    <div v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty,)" id="add-first-task" v-on:click="send({ type: 'readyToAddFirstTask' })">
+    <div :class="styles.placeholder" v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty,)" id="add-first-task" v-on:click="send({ type: 'readyToAddFirstTask' })">
       Add your first task
     </div>
     <div v-if="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty)" id="add-task" :class="styles.addTask">
