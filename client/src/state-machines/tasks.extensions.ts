@@ -1,10 +1,15 @@
 ﻿import type {Task, TasksList} from '@/types/types'
 import type {StateValue} from "xstate";
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
+import * as _ from "lodash";
 export const taskLimit = Number(import.meta.env.TASK_LIMIT || 22);
 
-export const ReadyToAddTasks = (value: StateValue) => {
+export const readyToAddTasks = (value: StateValue) => {
     return (value !== TasksMachineCombinedStates.empty && value !== TasksMachineCombinedStates.readyToAddTasksLists);
+};
+
+export const showTickTasks = (value: StateValue) => {
+    return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAddingTasks) || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask);
 };
 
 export const tasksAreFull = function (context: { id: string, tasksLists: TasksList[]; }) {

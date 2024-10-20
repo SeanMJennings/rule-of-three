@@ -23,6 +23,8 @@ export const TasksMachineCombinedStates = {
     readyToAddTasksLists: TasksListMachineStates.readyToAddTasksLists,
     addingTasksListsEmpty: {addingTasksLists: TasksMachineStates.empty},
     addingTasksListsCreatingTheTask: {addingTasksLists: TasksMachineStates.creatingTheTask},
+    addingTasksListTickingTheTask: {addingTasksLists: TasksMachineStates.tickingTheTask},
     addingTasksListsAddingTasks: {addingTasksLists: TasksMachineStates.addingTasks,},
     addingTasksListsChoosingTasksToCarry: {addingTasksLists: TasksMachineStates.choosingTasksToCarry,},
+    addingTasksListsCarryingTheTask: {addingTasksLists: TasksMachineStates.carryingTheTask,},
 };

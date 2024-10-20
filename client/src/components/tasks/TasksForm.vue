@@ -6,7 +6,7 @@ import {reactive, watch} from 'vue'
 import styles from "./TasksForm.module.css";
 import {type EventFromLogic, type SnapshotFrom} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
-import {canCarryTask, canRemoveTask, getTasks} from "@/state-machines/tasks.extensions";
+import {canCarryTask, canRemoveTask, getTasks, showTickTasks} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
@@ -60,9 +60,9 @@ const remove = (id: string | number) => {
           :remove="remove"
           :tick="tick"
           :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
-          :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && getTasks(snapshot.context).find((t) => t.id === task.id && canCarryTask(t)) !== undefined"
-          :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && getTasks(snapshot.context).find((t) => t.id === task.id && canRemoveTask(t)) !== undefined"
-          :show-tick-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) && getTasks(snapshot.context).find((t) => t.id === task.id && !t.ticked) !== undefined"
+          :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && canCarryTask(task)"
+          :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && canRemoveTask(task)"
+          :show-tick-action="showTickTasks(snapshot.value) && !task.ticked"
     />
   </div>
 </template>
