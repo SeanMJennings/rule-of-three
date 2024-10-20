@@ -105,7 +105,7 @@ class RemoveTaskHandler(MethodView):
 
     @staticmethod
     def route():
-        return "/tasks-lists/<tasks_list_id>/task/<task_id>"
+        return "/tasks-lists/<tasks_list_id>/task/<task_id>/remove"
 
     @staticmethod
     def name():
@@ -114,7 +114,7 @@ class RemoveTaskHandler(MethodView):
     def __init__(self, tasks_list_service: TasksListService):
         self.tasks_list_service = tasks_list_service
 
-    def delete(self, tasks_list_id, task_id):
+    def patch(self, tasks_list_id, task_id):
         self.tasks_list_service.remove_task(tasks_list_id, task_id)
         return no_content_response()
 

@@ -109,6 +109,7 @@ export async function adds_a_task() {
         id: task_id,
         content: "Task content",
         carried: false,
+        removed: false,
         page: 0,
         ticked: false
     }]);
@@ -130,6 +131,7 @@ export async function lets_user_tick_off_task() {
         id: task_id,
         content: "Task content",
         carried: false,
+        removed: false,
         page: 0,
         ticked: true
     }])
@@ -209,7 +211,7 @@ export async function lets_user_remove_tasks() {
     await waitUntil(wait_for_create_tasks_list)
     tasks.send({type: "readyToAddFirstTask"});
     await add_all_tasks();
-    remove_all_tasks();
+    await remove_all_tasks();
     expect(getTasks(tasks.getSnapshot().context).length).toEqual(0);
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
 }
@@ -270,9 +272,11 @@ async function add_all_tasks_for_another_task_list() {
     }
 }
 
-function remove_all_tasks() {
+async function remove_all_tasks() {
     for (const task_id of task_ids) {
+        const wait_for_remove_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/remove`)
         tasks.send({type: "remove", id: task_id});
+        await waitUntil(wait_for_remove_task)
     }
 }
 

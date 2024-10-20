@@ -37,3 +37,11 @@ export const tickTask = async (tasksListId: any, taskId: any) => {
         taskId: taskId
     }
 }
+
+export const removeTask = async (tasksListId: any, taskId: any) => {
+    const response = await patch(`/tasks-lists/${tasksListId}/task/${taskId}/remove`, {});
+    return {
+        ...(response),
+        taskId: taskId
+    }
+}

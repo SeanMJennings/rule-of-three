@@ -12,6 +12,7 @@ export const enum TasksMachineStates {
     creatingTheTask = "creatingTheTask",
     tickingTheTask = "tickingTheTask",
     addingTasks = "addingTasks",
+    removingTheTask = "removingTheTask",
     choosingTasksToCarry = "choosingTasksToCarry",
 }
 

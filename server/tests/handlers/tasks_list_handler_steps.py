@@ -93,7 +93,7 @@ def ticking_a_task_in_tasks_list():
 def removing_a_task_from_tasks_list():
     global response
     task_id = json.loads(response.data)["id"]
-    response = client.delete(task_url_with_id(tasks_list_id, task_id))
+    response = client.patch(remove_task_url(tasks_list_id, task_id))
 
 
 def carrying_a_task_in_tasks_list():

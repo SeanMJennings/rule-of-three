@@ -8,5 +8,6 @@ export type Task = Id & {
     content: string;
     ticked: boolean;
     carried: boolean;
+    removed: boolean;
     page: number;
 };

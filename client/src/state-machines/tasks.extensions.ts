@@ -20,7 +20,7 @@ export const tasksAreEmpty = function (context: { id: string, tasksLists: TasksL
 };
 
 export const tasksHaveBeenCarried = function (context: { id: string, tasksLists: TasksList[]; }): boolean {
-    return context.tasksLists.find((list) => list.id === context.id)?.tasks.filter((n) => !n.carried && !n.ticked).length === 0;
+    return context.tasksLists.find((list) => list.id === context.id)?.tasks.filter((n) => !n.carried && !n.ticked && !n.removed).length === 0;
 };
 
 export const canCarryTask = function (task: Task): boolean {

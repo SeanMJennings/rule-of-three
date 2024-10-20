@@ -2,7 +2,7 @@
 import type {Task, TasksList} from '@/types/types'
 import {canCarryTask, tasksAreEmpty, tasksAreFull, tasksHaveBeenCarried} from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
-import {addTask, addTasksList, getTasksLists, tickTask, updateTasksList} from "@/apis/tasks_list.api";
+import {addTask, addTasksList, getTasksLists, removeTask, tickTask, updateTasksList} from "@/apis/tasks_list.api";
 
 export const tasksMachine = createMachine(
     {
@@ -113,47 +113,6 @@ export const tasksMachine = createMachine(
                             target: TasksMachineStates.addingTasks,
                         },
                     },
-                    creatingTheTask: {
-                        invoke: {
-                            input: ({ context, event}) => ({id: context.id, content: event.content}),
-                            src: fromPromise(async ({input: {id, content}}) => await addTask(id, content)),
-                            onDone: {
-                                target: TasksMachineStates.addingTasks,
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                            if (list.id === context.id) {
-                                                list.tasks.push({
-                                                    id: event.output.id,
-                                                    content: event.output.content,
-                                                    carried: false,
-                                                    page: 0,
-                                                    ticked: false
-                                                });
-                                            }
-                                            return list;
-                                        })
-                                    })
-                            },
-                        },
-                    },                    
-                    tickingTheTask: {
-                        invoke: {
-                            input: ({ context, event}) => ({id: context.id, taskId: event.id}),
-                            src: fromPromise(async ({input: {id, taskId}}) => await tickTask(id, taskId)),
-                            onDone: {
-                                target: TasksMachineStates.addingTasks,
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                            if (list.id === context.id) {
-                                                const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
-                                                task.ticked = true;
-                                            }
-                                            return list;
-                                        })
-                                    })
-                            },
-                        },
-                    },
                     addingTasks: {
                         on: {
                             add: {
@@ -166,6 +125,48 @@ export const tasksMachine = createMachine(
                         always: {
                             guard: "tasksAreFull",
                             target: TasksMachineStates.choosingTasksToCarry,
+                        },
+                    },
+                    creatingTheTask: {
+                        invoke: {
+                            input: ({ context, event}) => ({id: context.id, content: event.content}),
+                            src: fromPromise(async ({input: {id, content}}) => await addTask(id, content)),
+                            onDone: {
+                                target: TasksMachineStates.addingTasks,
+                                actions: assign({
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                        if (list.id === context.id) {
+                                            list.tasks.push({
+                                                id: event.output.id,
+                                                content: event.output.content,
+                                                carried: false,
+                                                removed: false,
+                                                page: 0,
+                                                ticked: false
+                                            });
+                                        }
+                                        return list;
+                                    })
+                                })
+                            },
+                        },
+                    },
+                    tickingTheTask: {
+                        invoke: {
+                            input: ({ context, event}) => ({id: context.id, taskId: event.id}),
+                            src: fromPromise(async ({input: {id, taskId}}) => await tickTask(id, taskId)),
+                            onDone: {
+                                target: TasksMachineStates.addingTasks,
+                                actions: assign({
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                        if (list.id === context.id) {
+                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
+                                            task.ticked = true;
+                                        }
+                                        return list;
+                                    })
+                                })
+                            },
                         },
                     },
                     choosingTasksToCarry: {
@@ -185,14 +186,7 @@ export const tasksMachine = createMachine(
                                 }),
                             },
                             remove: {
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                        if (list.id === context.id) {
-                                            list.tasks = list.tasks.filter((task) => task.id !== event.id) ?? [];
-                                        }
-                                        return list;
-                                    })
-                                }),
+                                target: TasksMachineStates.removingTheTask,
                             },
                         },
                         always: {
@@ -203,7 +197,7 @@ export const tasksMachine = createMachine(
                             (context) => {
                                 context.context.tasksLists.map((list) => {
                                     if (list.id === context.context.id) {
-                                        list.tasks = list.tasks.filter((task) => !task.ticked).map((task) => {
+                                        list.tasks = list.tasks.filter((task) => !task.ticked && !task.removed).map((task) => {
                                             task.carried = false;
                                             return task;
                                         });
@@ -212,6 +206,24 @@ export const tasksMachine = createMachine(
                                 })
                             },
                         ],
+                    },
+                    removingTheTask: {
+                        invoke: {
+                            input: ({context, event}) => ({id: context.id, taskId: event.id}),
+                            src: fromPromise(async ({input: {id, taskId}}) => await removeTask(id, taskId)),
+                            onDone: {
+                                target: TasksMachineStates.choosingTasksToCarry,
+                                actions: assign({
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                        if (list.id === context.id) {
+                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
+                                            task.removed = true;
+                                        }
+                                        return list;
+                                    })
+                                })
+                            },
+                        },
                     },
                 },
             },

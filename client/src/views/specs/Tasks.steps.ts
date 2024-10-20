@@ -319,10 +319,7 @@ export async function lets_user_remove_tasks() {
     await typeTask(testTaskText);
     await add_all_tasks();
     await waitUntil( () => !removeTaskHidden(task_ids[0]));
-    for (const task_id of task_ids) {
-        await removeTask(task_id);
-        expect(removeTaskHidden(task_id)).toBe(true);
-    }
+    await remove_all_tasks();
 }
 
 export async function displays_page_number_of_tasks() {
@@ -411,5 +408,15 @@ async function add_all_tasks() {
         if (task_id !== task_ids[task_ids.length - 1]) {
             await waitUntil(() => !addTaskDisabled());
         }
+    }
+}
+
+async function remove_all_tasks() {
+    for (const task_id of task_ids) {
+        const wait_for_remove_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/remove`);
+        await waitUntil(() => !removeTaskHidden(task_id));
+        await removeTask(task_id);
+        await waitUntil(wait_for_remove_task);
+        expect(removeTaskHidden(task_id)).toBe(true);
     }
 }
