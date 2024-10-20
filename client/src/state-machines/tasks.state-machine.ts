@@ -1,4 +1,4 @@
-﻿import {assign, createMachine, fromPromise} from "xstate";
+﻿import {type AnyEventObject, assign, createMachine, fromPromise} from "xstate";
 import type {Task, TasksList} from '@/types/types'
 import {
     tasksAreEmpty,
@@ -15,17 +15,18 @@ import {
     updateTasksList
 } from "@/apis/tasks_list.api";
 
-export type tasksMachineContext = {
+export type TasksMachineContext = {
     id: string;
     tasksLists: TasksList[];
 };
 
-type tasksMachineNestedContext = {
-    context: tasksMachineContext;
+type TasksMachineNestedContext = {
+    context: TasksMachineContext;
 };
 
+type TasksMachineContextAndEvent = {context: TasksMachineContext, event: AnyEventObject};
 
-const assessingTasksExit = (context: tasksMachineNestedContext)=> {
+const assessingTasksExit = (context: TasksMachineNestedContext)=> {
     context.context.tasksLists.map((list) => {
         if (list.id === context.context.id && tasksAreReadyForNewPage(list)) {
             list.tasks = list.tasks.filter((task) => !task.ticked && !task.removed && (task.page <= 1 || (task.page == 2 && task.carried))).map((task) => {
@@ -35,12 +36,12 @@ const assessingTasksExit = (context: tasksMachineNestedContext)=> {
         }
         return list;
     });
-};
+}
 
 export const tasksMachine = createMachine(
     {
         types: {} as {
-            context: tasksMachineContext;
+            context: TasksMachineContext;
         },
         context: {id: '', tasksLists: [] as TasksList[]},
         on: {
@@ -89,11 +90,7 @@ export const tasksMachine = createMachine(
                         target: TasksListMachineStates.addingTasksLists,
                         actions: assign({
                             id: ({context, event}) => (context.id = event.output.id),
-                            tasksLists: ({context, event}) => context.tasksLists.concat({
-                                id: event.output.id,
-                                name: event.output.name,
-                                tasks: [],
-                            }),
+                            tasksLists: taskList(),
                         }),
                     },
                 },
@@ -104,14 +101,7 @@ export const tasksMachine = createMachine(
                     src: fromPromise(async ({input: {id, name}}) => await updateTasksList(id, name)),
                     onDone: {
                         target: TasksListMachineStates.addingTasksLists,
-                        actions: assign({
-                            tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                if (list.id === event.output.id) {
-                                    list.name = event.output.name;
-                                }
-                                return list;
-                            })
-                        }),
+                        actions: assign({ tasksLists: taskListWithUpdatedName() }),
                     },
                 },
             },
@@ -166,21 +156,7 @@ export const tasksMachine = createMachine(
                             src: fromPromise(async ({input: {id, content}}) => await addTask(id, content)),
                             onDone: {
                                 target: TasksMachineStates.addingTasks,
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                        if (list.id === context.id) {
-                                            list.tasks.push({
-                                                id: event.output.id,
-                                                content: event.output.content,
-                                                carried: false,
-                                                removed: false,
-                                                page: 0,
-                                                ticked: false
-                                            });
-                                        }
-                                        return list;
-                                    })
-                                })
+                                actions: assign({ tasksLists: taskListWithCreatedTask() })
                             },
                         },
                     },
@@ -190,15 +166,7 @@ export const tasksMachine = createMachine(
                             src: fromPromise(async ({input: {id, taskId}}) => await tickTask(id, taskId)),
                             onDone: {
                                 target: TasksMachineStates.addingTasks,
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                        if (list.id === context.id) {
-                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
-                                            task.ticked = true;
-                                        }
-                                        return list;
-                                    })
-                                })
+                                actions: assign({ tasksLists: taskListWithTickedTask() })
                             },
                         },
                     },
@@ -222,15 +190,7 @@ export const tasksMachine = createMachine(
                             src: fromPromise(async ({input: {id, taskId}}) => await removeTask(id, taskId)),
                             onDone: {
                                 target: TasksMachineStates.assessingTasks,
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                        if (list.id === context.id) {
-                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
-                                            task.removed = true;
-                                        }
-                                        return list;
-                                    })
-                                })
+                                actions: assign({ tasksLists: taskListWithRemovedTask()})
                             },
                         }
                     },
@@ -240,16 +200,7 @@ export const tasksMachine = createMachine(
                             src: fromPromise(async ({input: {id, taskId}}) => await carryTask(id, taskId)),
                             onDone: {
                                 target: TasksMachineStates.assessingTasks,
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                        if (list.id === context.id) {
-                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId && task.page <= 1) ?? ({} as Task);
-                                            task.carried = true;
-                                            task.page += 1;
-                                        }
-                                        return list;
-                                    })
-                                })
+                                actions: assign({ tasksLists: taskListWithCarriedTask()})
                             },
                         },
                     },
@@ -290,3 +241,67 @@ export const tasksMachine = createMachine(
         },
     },
 );
+
+function taskList() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.concat({
+        id: event.output.id,
+        name: event.output.name,
+        tasks: [],
+    });
+}
+
+function taskListWithUpdatedName() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
+        if (list.id === event.output.id) {
+            list.name = event.output.name;
+        }
+        return list;
+    });
+}
+
+function taskListWithRemovedTask() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
+        if (list.id === context.id) {
+            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
+            task.removed = true;
+        }
+        return list;
+    });
+}
+
+function taskListWithTickedTask() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
+        if (list.id === context.id) {
+            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
+            task.ticked = true;
+        }
+        return list;
+    });
+}
+
+function taskListWithCreatedTask() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
+        if (list.id === context.id) {
+            list.tasks.push({
+                id: event.output.id,
+                content: event.output.content,
+                carried: false,
+                removed: false,
+                page: 0,
+                ticked: false
+            });
+        }
+        return list;
+    });
+}
+
+function taskListWithCarriedTask() {
+    return ({ context, event } : {context: TasksMachineContext, event: AnyEventObject}) => context.tasksLists.map((list) => {
+        if (list.id === context.id) {
+            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId && task.page <= 1) ?? ({} as Task);
+            task.carried = true;
+            task.page += 1;
+        }
+        return list;
+    });
+}
