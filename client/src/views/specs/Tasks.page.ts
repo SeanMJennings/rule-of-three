@@ -16,16 +16,20 @@ export function createActor() {
     send = the_send
     actorRef = the_actorRef
     actorRef.start();
-    send({type: "reset"});
+    resetActor();
 }
 
 export function renderTasksView() {
     page = mountTasksView();
 }
 
+export function resetActor() {
+    send({type: "reset"});
+}
+
 export function unmountTasksView() {
     page.unmount();
-    send({type: "reset"});
+    resetActor();
 }
 
 export function stopActor() {
@@ -62,6 +66,11 @@ export function taskListSingleSelectHidden() {
 
 export function taskListSingleSelectChosenValue() {
     return elements.taskListSingleSelect.value;
+}
+
+export async function selectOptionFromTaskListSingleSelect(index: number) {
+    const options = elements.taskListSingleSelectOptions
+    await options.at(index)?.setValue()
 }
 
 export function taskListSingleSelectIndex() {
@@ -229,6 +238,9 @@ const elements = {
     },
     get taskListSingleSelect() {
         return page.find("#task-list-single-select").element as HTMLSelectElement;
+    },
+    get taskListSingleSelectOptions() {
+        return page.find("#task-list-single-select").findAll('option')
     },
     queryTaskListSingleSelect() {
         return page.find("#task-list-single-select");

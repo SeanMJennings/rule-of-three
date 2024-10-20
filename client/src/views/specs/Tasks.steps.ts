@@ -18,7 +18,7 @@ import {
     pageText,
     removeTask,
     removeTaskHidden,
-    renderTasksView,
+    renderTasksView, resetActor, selectOptionFromTaskListSingleSelect,
     stopActor,
     task_list_id,
     task_list_name,
@@ -49,6 +49,7 @@ import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 
 const testTaskText = "Hello, world!";
+const anotherTestTaskText = "Goodbye, world!";
 const testTaskTextMoreThan150Chars =
     "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa";
 const mockServer = MockServer.New();
@@ -140,18 +141,14 @@ export async function lets_user_expand_tasks_list_single_select() {
 }
 
 export async function selects_first_of_multiple_lists() {
+    const wait_for_get_task_lists = mockServer.get("/tasks-lists", [
+        {id: task_list_id, name: task_list_name, tasks: []},
+        {id: another_task_list_id, name: another_task_list_name, tasks: []}
+    ])
     renderTasksView();
-    await addATaskList();
-    await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name
-    })
-    await waitUntil(() => !addTaskListSubmitDisabled());
-    await addAnotherTaskList();
-    await waitUntil(wait_for_create_tasks_list)
-    await waitUntil(() => !addTaskListSubmitDisabled());
-    expect(taskListSingleSelectIndex()).toBe(0);
+    resetActor();
+    await waitUntil(wait_for_get_task_lists)
+    expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
 }
 
 export async function lets_user_add_a_task_list() {
@@ -385,6 +382,35 @@ export async function does_not_show_remove_or_carry_for_ticked_tasks() {
     }
 }
 
+export async function shows_correct_tasks_when_selecting_a_different_list() {
+    const wait_for_get_task_lists = mockServer.get("/tasks-lists", [
+        {id: task_list_id, name: task_list_name, tasks: [
+            {
+                id: task_ids[0],
+                content: testTaskText,
+                is_ticked: false,
+                is_carried: false,
+                is_removed: false,
+                page_count: 0
+            }]},
+        {id: another_task_list_id, name: another_task_list_name, tasks: [
+            {
+                id: task_ids[1],
+                content: anotherTestTaskText,
+                is_ticked: false,
+                is_carried: false,
+                is_removed: false,
+                page_count: 0
+            }]}
+    ])
+    renderTasksView();
+    resetActor();
+    await waitUntil(wait_for_get_task_lists)
+    await selectOptionFromTaskListSingleSelect(1);
+    await waitUntil(() => !tickTaskHidden(task_ids[1]));
+    expect(taskTextShown(task_ids[1], anotherTestTaskText)).toBe(true);
+    
+}
 async function add_all_tasks_except_one() {
     for (const task_id of task_ids) {
         const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})

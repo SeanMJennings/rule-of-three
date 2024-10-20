@@ -23,7 +23,7 @@ watch(tasksListModel, (newValue: TasksListModel, oldValue: TasksListModel) => {
   newValue.name = oldValue.name.slice(0, 50);
 });
 
-let selectedTasksList: { id: string } = reactive({id: props.snapshot.context.id});
+let selectedTasksList: { id: string } = reactive({id: ''});
 watch(selectedTasksList, (newValue: Id) => {
   if (props.snapshot.context.tasksLists.length === 1) return;
   props.send({type: "selectTasksList", id: newValue.id});
@@ -53,7 +53,7 @@ const toggleTasksSelect = () => {
 
 onMounted(() => {
   subscription = props.actorRef.subscribe((s) => {
-    if (s.context.tasksLists.length === 1) {
+    if (s.context.tasksLists.length > 1 && selectedTasksList.id === '') {
       selectedTasksList.id = s.context.tasksLists[0].id;
     }
   });
@@ -88,7 +88,7 @@ onUnmounted(() => {
     </div>
     <div v-if="snapshot.context.tasksLists.length > 1 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="task-list-single-select">Select Tasks List</label>
-      <select id="task-list-single-select" ref="selectedTasksList.id" :class="style.selectInput">
+      <select id="task-list-single-select" v-model="selectedTasksList.id" :class="style.selectInput">
         <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :selected="index === 0" :value="option.id">
           {{ option.name }}
         </option>
