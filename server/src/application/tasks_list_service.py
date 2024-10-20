@@ -1,6 +1,6 @@
 ﻿from azure.cosmos import ContainerProxy
 from src.domain.tasks_list import TasksList
-from src.persistence.converters import convert_to_domain
+from src.persistence.converters import convert_to_domain, convert_to_domain_list
 from src.application.validation_exception import ValidationException
 
 
@@ -52,8 +52,7 @@ class TasksListService:
             query="SELECT * FROM c",
             enable_cross_partition_query=True,
         )
-        task_lists = convert_to_domain(TasksList, items)
-        return task_lists if task_lists is not None else []
+        return convert_to_domain_list(TasksList, items)
 
     def add_task(self, tasks_list_id: str, task: str):
         tasks_list = self.get_by_id(tasks_list_id)
