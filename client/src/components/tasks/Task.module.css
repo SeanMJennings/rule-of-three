@@ -21,8 +21,13 @@
     color: var(--color-success-text);
 }
 
-.taskKept {
-    color: var(--color-success-text);
+.taskRemoved {
+    text-decoration: line-through;
+    color: var(--color-danger-text);
+}
+
+.taskCarried {
+    color: var(--color-warning-text);
 }
 
 .page {

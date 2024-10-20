@@ -2,7 +2,7 @@
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import Task from "@/components/tasks/Task.vue";
-import {reactive, watch} from "vue";
+import {reactive, watch} from 'vue'
 import styles from "./TasksForm.module.css";
 import {type EventFromLogic, type SnapshotFrom} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
@@ -36,6 +36,7 @@ const carry = (id: string | number) => {
 const remove = (id: string | number) => {
   props.send({type: "remove", id: id});
 };
+
 </script>
 
 <template>
@@ -52,16 +53,16 @@ const remove = (id: string | number) => {
     </div>
   </div>
   <div :class="styles.taskList">
-    <Task v-for="task in getTasks(snapshot.context)" :key="task.id + '.' + task.page" :carry="carry"
-          :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
-          :remove="remove" :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
-          getTasks(snapshot.context).find((t) => t.id === task.id && canCarryTask(t)) !== undefined"
-          :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
-          getTasks(snapshot.context).find((t) => t.id === task.id && canRemoveTask(t)) !== undefined"
-          :show-tick-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) &&
-          getTasks(snapshot.context).find((t) => t.id === task.id && !t.ticked) !== undefined"
+    <Task v-for="task in getTasks(snapshot.context)"
           :task="task"
+          :key="task.id + '.' + task.page" 
+          :carry="carry"
+          :remove="remove"
           :tick="tick"
+          :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
+          :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && getTasks(snapshot.context).find((t) => t.id === task.id && canCarryTask(t)) !== undefined"
+          :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && getTasks(snapshot.context).find((t) => t.id === task.id && canRemoveTask(t)) !== undefined"
+          :show-tick-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) && getTasks(snapshot.context).find((t) => t.id === task.id && !t.ticked) !== undefined"
     />
   </div>
 </template>

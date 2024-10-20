@@ -7,18 +7,18 @@
 }
 
 header {
-    height: 10vh;
+    height: 7.5vh;
 }
 
 main {
     overflow: hidden;
-    min-height: 80vh;
-    max-height: 80vh;
+    min-height: 85vh;
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
 footer {
-    height: 10vh;
+    height: 7.5vh;
 }

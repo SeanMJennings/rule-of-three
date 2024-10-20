@@ -38,6 +38,7 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-1);
     --color-warning-text: var(--vt-c-yellow);
+    --color-danger-text: var(--vt-c-red);
     --color-success-text: var(--vt-c-success);
 }
 

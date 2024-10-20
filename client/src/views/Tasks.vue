@@ -23,7 +23,7 @@ const {snapshot, send, actorRef} = props.tasksMachineProvider();
     <div :class="styles.container">
       <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot"/>
       <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
-      <TasksForm v-if="ReadyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
+      <TasksForm v-if="ReadyToAddTasks(snapshot.value)" :actorRef="actorRef" :send="send" :snapshot="snapshot"/>
     </div>
   </main>
 </template>
