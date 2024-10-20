@@ -23,3 +23,7 @@ def start_and_wait_for_cosmos(connection_string):
 @retry_on_service_request_error
 def __connect_to_cosmos(connection_string):
     return CosmosClient.from_connection_string(connection_string)
+
+
+if __name__ == "__main__":
+    print("Hello, World!")

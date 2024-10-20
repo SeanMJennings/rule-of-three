@@ -3,7 +3,7 @@ import urllib3
 from pathlib import Path
 import yaml
 import os
-from tests.run_windows_cosmos import start_and_wait_for_cosmos
+from src.persistence.run_windows_cosmos import start_and_wait_for_cosmos
 
 from src.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
 
