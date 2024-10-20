@@ -46,6 +46,14 @@ export const removeTask = async (tasksListId: any, taskId: any) => {
     }
 }
 
+export const carryTask = async (tasksListId: any, taskId: any) => {
+    const response = await patch(`/tasks-lists/${tasksListId}/task/${taskId}/carry`, {});
+    return {
+        ...(response),
+        taskId: taskId
+    }
+}
+
 const taskListApiMapper = (taskList: any[]) => {
     return taskList.map((taskList) => {
         return {

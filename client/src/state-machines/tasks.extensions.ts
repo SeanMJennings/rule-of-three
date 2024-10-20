@@ -1,7 +1,7 @@
 ﻿import type {Task, TasksList} from '@/types/types'
 import type {StateValue} from "xstate";
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
-export const taskLimit = (import.meta.env.TASK_LIMIT as number) || 22;
+export const taskLimit = Number(import.meta.env.TASK_LIMIT || 22);
 
 export const ReadyToAddTasks = (value: StateValue) => {
     return (value !== TasksMachineCombinedStates.empty && value !== TasksMachineCombinedStates.readyToAddTasksLists);
@@ -22,6 +22,10 @@ export const tasksAreEmpty = function (context: { id: string, tasksLists: TasksL
 export const tasksHaveBeenCarried = function (context: { id: string, tasksLists: TasksList[]; }): boolean {
     return context.tasksLists.find((list) => list.id === context.id)?.tasks.filter((n) => !n.carried && !n.ticked && !n.removed).length === 0;
 };
+
+export const tasksAreReadyForNewPage = function (tasksList: TasksList): boolean {
+    return tasksList.tasks.filter((n) => n.carried || n.ticked || n.removed).length === taskLimit;
+}
 
 export const canCarryTask = function (task: Task): boolean {
     return task.page <= 1 && !task.ticked;

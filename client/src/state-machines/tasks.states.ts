@@ -13,7 +13,9 @@ export const enum TasksMachineStates {
     tickingTheTask = "tickingTheTask",
     addingTasks = "addingTasks",
     removingTheTask = "removingTheTask",
+    carryingTheTask = "carryingTheTask",
     choosingTasksToCarry = "choosingTasksToCarry",
+    assessingTasks = "assessingTasks",
 }
 
 export const TasksMachineCombinedStates = {

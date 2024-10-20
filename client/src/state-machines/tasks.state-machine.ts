@@ -1,8 +1,19 @@
 ﻿import {assign, createMachine, fromPromise} from "xstate";
 import type {Task, TasksList} from '@/types/types'
-import {canCarryTask, tasksAreEmpty, tasksAreFull, tasksHaveBeenCarried} from '@/state-machines/tasks.extensions'
+import {
+    tasksAreEmpty,
+    tasksAreFull, tasksAreReadyForNewPage, tasksHaveBeenCarried,
+} from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
-import {addTask, addTasksList, getTasksLists, removeTask, tickTask, updateTasksList} from "@/apis/tasks_list.api";
+import {
+    addTask,
+    addTasksList,
+    carryTask,
+    getTasksLists,
+    removeTask,
+    tickTask,
+    updateTasksList
+} from "@/apis/tasks_list.api";
 
 export const tasksMachine = createMachine(
     {
@@ -172,18 +183,7 @@ export const tasksMachine = createMachine(
                     choosingTasksToCarry: {
                         on: {
                             carry: {
-                                actions: assign({
-                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
-                                        if (list.id === context.id) {
-                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.id) ?? ({} as Task);
-                                            if (canCarryTask(task)) {
-                                                task.page += 1;
-                                                task.carried = true;
-                                            }
-                                        }
-                                        return list;
-                                    })
-                                }),
+                                target: TasksMachineStates.carryingTheTask,
                             },
                             remove: {
                                 target: TasksMachineStates.removingTheTask,
@@ -193,26 +193,13 @@ export const tasksMachine = createMachine(
                             guard: "tasksHaveAllBeenCarried",
                             target: TasksMachineStates.addingTasks,
                         },
-                        exit: [
-                            (context) => {
-                                context.context.tasksLists.map((list) => {
-                                    if (list.id === context.context.id) {
-                                        list.tasks = list.tasks.filter((task) => !task.ticked && !task.removed).map((task) => {
-                                            task.carried = false;
-                                            return task;
-                                        });
-                                    }
-                                    return list;
-                                })
-                            },
-                        ],
                     },
                     removingTheTask: {
                         invoke: {
                             input: ({context, event}) => ({id: context.id, taskId: event.id}),
                             src: fromPromise(async ({input: {id, taskId}}) => await removeTask(id, taskId)),
                             onDone: {
-                                target: TasksMachineStates.choosingTasksToCarry,
+                                target: TasksMachineStates.assessingTasks,
                                 actions: assign({
                                     tasksLists: ({context, event}) => context.tasksLists.map((list) => {
                                         if (list.id === context.id) {
@@ -223,14 +210,51 @@ export const tasksMachine = createMachine(
                                     })
                                 })
                             },
+                        }
+                    },
+                    carryingTheTask: {
+                        invoke: {
+                            input: ({context, event}) => ({id: context.id, taskId: event.id}),
+                            src: fromPromise(async ({input: {id, taskId}}) => await carryTask(id, taskId)),
+                            onDone: {
+                                target: TasksMachineStates.assessingTasks,
+                                actions: assign({
+                                    tasksLists: ({context, event}) => context.tasksLists.map((list) => {
+                                        if (list.id === context.id) {
+                                            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId && task.page <= 1) ?? ({} as Task);
+                                            task.carried = true;
+                                            task.page += 1;
+                                        }
+                                        return list;
+                                    })
+                                })
+                            },
                         },
+                    },
+                    assessingTasks: {
+                        always: {
+                            target: TasksMachineStates.addingTasks,
+                        },
+                        exit: [
+                            (context) => {
+                                context.context.tasksLists.map((list) => {
+                                    if (list.id === context.context.id && tasksAreReadyForNewPage(list)) {
+                                        list.tasks = list.tasks.filter((task) => !task.ticked && !task.removed && (task.page <= 1 || (task.page == 2 && task.carried))).map((task) => {
+                                            task.carried = false;
+                                            return task;
+                                        });
+                                    }
+                                    return list;
+                                })
+                            },
+                        ],
                     },
                 },
             },
             assessingTasksList: {
                 always: {
                     target: TasksListMachineStates.addingTasksLists,
-                },
+                }
             },
             success: {
                 always: {

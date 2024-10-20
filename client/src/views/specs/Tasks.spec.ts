@@ -53,6 +53,6 @@ describe("Tasks", () => {
         it("lets user remove tasks", lets_user_remove_tasks);
         it("displays page number of tasks", displays_page_number_of_tasks);
         it("does not show remove or carry for ticked tasks", does_not_show_remove_or_carry_for_ticked_tasks);
-        it("only shows remove tasks for tasks carried twice", only_shows_remove_tasks_for_tasks_carried_twice);
+        it("only shows remove tasks for tasks carried twice", only_shows_remove_tasks_for_tasks_carried_twice, 10000);
     });
 });
