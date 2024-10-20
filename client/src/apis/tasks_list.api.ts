@@ -2,7 +2,7 @@
 import type {TasksList} from "@/types/types";
 
 export const getTasksLists = async () => {
-    return await get<TasksList[]>(`/tasks-lists`);
+    return await get<TasksList[]>(`/tasks-lists`, taskListApiMapper);
 }
 
 export const addTasksList = async (name: any) => {
@@ -44,4 +44,23 @@ export const removeTask = async (tasksListId: any, taskId: any) => {
         ...(response),
         taskId: taskId
     }
+}
+
+const taskListApiMapper = (taskList: any[]) => {
+    return taskList.map((taskList) => {
+        return {
+            id: taskList.id,
+            name: taskList.name,
+            tasks: taskList.tasks.map((task: any) => {
+                return {
+                    id: task.id,
+                    content: task.content,
+                    carried: task.is_carried,
+                    removed: task.is_removed,
+                    ticked: task.is_ticked,
+                    page: task.page_count
+                }
+            })
+        }
+    });
 }

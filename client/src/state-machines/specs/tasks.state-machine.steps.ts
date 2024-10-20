@@ -43,12 +43,14 @@ export async function adds_a_task_list() {
 }
 
 export async function loads_a_task_list() {
-    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [{
-        id: task_id,
-        content: "Task content",
-        carried: false,
-        page: 0,
-        ticked: false
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
+        {
+            id: task_id,
+            content: "Task content",
+            is_carried: false,
+            is_removed: false,
+            page_count: 0,
+            is_ticked: false
         }]}])
     tasks.send({type: "reset"})
     await waitUntil(wait_for_get_tasks_list)
@@ -59,6 +61,7 @@ export async function loads_a_task_list() {
         id: task_id,
         content: "Task content",
         carried: false,
+        removed: false,
         page: 0,
         ticked: false
     }]);
