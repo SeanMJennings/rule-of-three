@@ -15,10 +15,32 @@ import {
     updateTasksList
 } from "@/apis/tasks_list.api";
 
+export type tasksMachineContext = {
+    id: string;
+    tasksLists: TasksList[];
+};
+
+type tasksMachineNestedContext = {
+    context: tasksMachineContext;
+};
+
+
+const assessingTasksExit = (context: tasksMachineNestedContext)=> {
+    context.context.tasksLists.map((list) => {
+        if (list.id === context.context.id && tasksAreReadyForNewPage(list)) {
+            list.tasks = list.tasks.filter((task) => !task.ticked && !task.removed && (task.page <= 1 || (task.page == 2 && task.carried))).map((task) => {
+                task.carried = false;
+                return task;
+            });
+        }
+        return list;
+    });
+};
+
 export const tasksMachine = createMachine(
     {
         types: {} as {
-            context: { id: string; tasksLists: TasksList[] };
+            context: tasksMachineContext;
         },
         context: {id: '', tasksLists: [] as TasksList[]},
         on: {
@@ -235,19 +257,7 @@ export const tasksMachine = createMachine(
                         always: {
                             target: TasksMachineStates.addingTasks,
                         },
-                        exit: [
-                            (context) => {
-                                context.context.tasksLists.map((list) => {
-                                    if (list.id === context.context.id && tasksAreReadyForNewPage(list)) {
-                                        list.tasks = list.tasks.filter((task) => !task.ticked && !task.removed && (task.page <= 1 || (task.page == 2 && task.carried))).map((task) => {
-                                            task.carried = false;
-                                            return task;
-                                        });
-                                    }
-                                    return list;
-                                })
-                            },
-                        ],
+                        exit: [assessingTasksExit],
                     },
                 },
             },

@@ -6,7 +6,7 @@ import {reactive, watch} from "vue";
 import styles from "./TasksForm.module.css";
 import {type EventFromLogic, type SnapshotFrom} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
-import {canCarryTask, getTasks} from "@/state-machines/tasks.extensions";
+import {canCarryTask, canRemoveTask, getTasks} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
@@ -55,11 +55,11 @@ const remove = (id: string | number) => {
     <Task v-for="task in getTasks(snapshot.context)" :key="task.id + '.' + task.page" :carry="carry"
           :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
           :remove="remove" :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
-          getTasks(snapshot.context).find((n) => n.id === task.id && !n.carried && canCarryTask(n)) !== undefined"
+          getTasks(snapshot.context).find((t) => t.id === task.id && canCarryTask(t)) !== undefined"
           :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) &&
-          getTasks(snapshot.context).find((n) => n.id === task.id && !n.carried && !n.ticked) !== undefined"
+          getTasks(snapshot.context).find((t) => t.id === task.id && canRemoveTask(t)) !== undefined"
           :show-tick-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks) &&
-          getTasks(snapshot.context).find((n) => n.id === task.id && !n.ticked) !== undefined"
+          getTasks(snapshot.context).find((t) => t.id === task.id && !t.ticked) !== undefined"
           :task="task"
           :tick="tick"
     />

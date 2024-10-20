@@ -28,8 +28,12 @@ export const tasksAreReadyForNewPage = function (tasksList: TasksList): boolean 
 }
 
 export const canCarryTask = function (task: Task): boolean {
-    return task.page <= 1 && !task.ticked;
+    return task.page <= 1 && !task.ticked && !task.removed && !task.carried;
 };
+
+export const canRemoveTask = function (task: Task): boolean {
+    return !task.carried && !task.ticked && !task.removed
+}
 
 export const getTasks = function (context: { id: string, tasksLists: TasksList[]; }): Task[] {
     return context.tasksLists.find((list) => list.id === context.id)?.tasks ?? [];
