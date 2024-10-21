@@ -1,12 +1,21 @@
 ﻿.div {
     padding: 0 10px;
     display: flex;
-    align-items: center;
     gap: 10px;
+}
+
+.actionsContainer {
+    display: flex;
+    gap: 10px;
+    min-width: 50px;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
 }
 
 .marker {
     text-align: start;
+    vertical-align: top;
 }
 
 .task {
@@ -31,18 +40,16 @@
 }
 
 .page {
-}
-
-.spacer {
-    width: 11.66px;
-}
-
-.largeSpacer {
-    width: 31px;
+    height: fit-content;
+    margin-right: auto;
 }
 
 .icon {
     cursor: pointer;
+}
+
+.button {
+    height: fit-content;
 }
 
 .carryActionHidden {
