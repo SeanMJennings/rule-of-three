@@ -6,7 +6,13 @@ import {reactive, watch} from 'vue'
 import styles from "./TasksForm.module.css";
 import {type EventFromLogic, type SnapshotFrom} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
-import {canCarryTask, canRemoveTask, getTasks, showTickTasks} from "@/state-machines/tasks.extensions";
+import {
+  canCarryTask,
+  canRemoveTask,
+  getTasks,
+  showAddFirstTask,
+  showTickTasks
+} from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
@@ -41,10 +47,10 @@ const remove = (id: string | number) => {
 
 <template>
   <div :class="styles.container">
-    <div :class="styles.placeholder" v-if="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty,)" id="add-first-task" v-on:click="send({ type: 'readyToAddFirstTask' })">
+    <div :class="styles.placeholder" v-if="showAddFirstTask(snapshot.value)" id="add-first-task" v-on:click="send({ type: 'readyToAddFirstTask' })">
       Add your first task
     </div>
-    <div v-if="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsEmpty)" id="add-task" :class="styles.addTask">
+    <div v-if="!showAddFirstTask(snapshot.value)" id="add-task" :class="styles.addTask">
       <div :class="commonStyle.inputContainer">
         <input id="add-task-input" v-model="model.taskText" :class="commonStyle.input" type="text"/>
         <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>

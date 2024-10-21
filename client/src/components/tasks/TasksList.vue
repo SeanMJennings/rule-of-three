@@ -9,6 +9,7 @@ import type {Id} from "@/types/types";
 import {faList, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
+import {notEmpty, showCreateTasksList} from "@/state-machines/tasks.extensions";
 let subscription: Subscription;
 
 type TasksListModel = { name: string };
@@ -68,14 +69,14 @@ onUnmounted(() => {
 
 <template>
   <div :class="style.container">
-    <div v-if="snapshot.value === TasksMachineCombinedStates.empty" id="add-task-list-placeholder" :class="style.placeholder" v-on:click="onClick()">
+    <div v-if="showCreateTasksList(snapshot.value)" id="add-task-list-placeholder" :class="style.placeholder" v-on:click="onClick()">
       <span>Create your first task list</span>
     </div>
-    <div v-if="snapshot.value !== TasksMachineCombinedStates.empty" :class="style.header" v-on:click="toggleTasksList()">
+    <div v-if="notEmpty(snapshot.value)" :class="style.header" v-on:click="toggleTasksList()">
       <ButtonIcon :class="commonStyle.button" :icon="faPlusCircle" :iconStyle="commonStyle.icon"/>
       <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-input-caret"/>
     </div>
-    <div v-if="snapshot.value !== TasksMachineCombinedStates.empty && !tasksListInputCollapsedModel.collapsed" :class="commonStyle.formSection">
+    <div v-if="notEmpty(snapshot.value) && !tasksListInputCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="add-task-list-input">Add Tasks List</label>
       <div :class="commonStyle.inputContainer">
         <input id="add-task-list-input" v-model="tasksListModel.name" :class="commonStyle.input" type="text"/>

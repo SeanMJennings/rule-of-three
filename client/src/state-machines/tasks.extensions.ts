@@ -8,6 +8,18 @@ export const readyToAddTasks = (value: StateValue) => {
     return (value !== TasksMachineCombinedStates.empty && value !== TasksMachineCombinedStates.readyToAddTasksLists);
 };
 
+export const showCreateTasksList = (value: StateValue) => {
+    return value === TasksMachineCombinedStates.empty;
+}
+
+export const notEmpty = (value: StateValue) => {
+    return value !== TasksMachineCombinedStates.empty;
+}
+
+export const showAddFirstTask = (value: StateValue) => {
+    return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsEmpty);
+}
+
 export const showTickTasks = (value: StateValue) => {
     return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAddingTasks) || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask);
 };
