@@ -1,4 +1,5 @@
 ﻿export const enum TasksListMachineStates {
+    loading = "loading",
     empty = "empty",
     readyToAddTasksLists = "readyToAddTasksLists",
     creatingTheTasksList = "creatingTheTasksList",

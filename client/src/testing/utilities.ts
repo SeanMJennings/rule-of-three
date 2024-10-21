@@ -8,3 +8,7 @@ export function waitUntil(condition_function: () => boolean) {
 
     return new Promise(poll);
 }
+
+export const delay = (millis: number) => new Promise((resolve) => {
+    setTimeout(_ => resolve(_), millis)
+});

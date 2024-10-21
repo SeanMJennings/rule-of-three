@@ -14,7 +14,7 @@ import {
     characterCountHidden,
     clickAddFirstTask,
     clickAddTaskListPlaceholder,
-    createActor,
+    createActor, loadingSpinnerExists,
     pageText,
     removeTask,
     removeTaskHidden,
@@ -74,20 +74,30 @@ afterAll(() => {
 
 export async function renders_tasks() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
     expect(pageText()).toContain("Add your first task");
 }
 
+export async function displays_loading_spinner_until_task_lists_are_loaded() {
+    mockServer.get("/tasks-lists", [], 1000)
+    renderTasksView();
+    resetActor();
+    expect(loadingSpinnerExists()).toBe(true);
+}
+
 export async function asks_user_to_create_first_task_list() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     expect(pageText()).toContain("Create your first task list");
     expect(pageText()).not.toContain("Add your first task");
 }
 
 export async function shows_task_list_single_select_when_there_is_one_list() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
@@ -103,6 +113,7 @@ export async function shows_task_list_single_select_when_there_is_one_list() {
 
 export async function lets_user_collapse_tasks_list_single_select() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
@@ -120,6 +131,7 @@ export async function lets_user_collapse_tasks_list_single_select() {
 
 export async function lets_user_expand_tasks_list_single_select() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
@@ -143,17 +155,20 @@ export async function selects_first_of_multiple_lists() {
     ])
     renderTasksView();
     resetActor();
+    await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists)
     expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
 }
 
 export async function lets_user_add_a_task_list() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
 }
 
 export async function displays_list_character_count_limit() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await clickAddTaskListPlaceholder();
     await typeTaskListName(testTaskTextMoreThan150Chars);
     expect(taskListCharacterCount()).toBe("50/50");
@@ -161,12 +176,14 @@ export async function displays_list_character_count_limit() {
 
 export async function list_character_count_limit_hidden_when_input_is_empty() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await clickAddTaskListPlaceholder();
     expect(taskListCharacterCountHidden()).toBe(true);
 }
 
 export async function lets_user_collapse_tasks_list_input() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await toggleTasksListInput();
@@ -180,6 +197,7 @@ export async function ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded(
     ])
     renderTasksView();
     resetActor();
+    await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists);
     await waitUntil(() => tasksListCaretExists());
     expect(tasksListInputCollapsed()).toBe(true);
@@ -188,6 +206,7 @@ export async function ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded(
 
 export async function lets_user_expand_tasks_list_input() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await toggleTasksListInput();
@@ -198,6 +217,7 @@ export async function lets_user_expand_tasks_list_input() {
 
 export async function removes_add_first_task_placeholder_on_click() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -208,6 +228,7 @@ export async function removes_add_first_task_placeholder_on_click() {
 
 export async function shows_task_count_if_there_are_tasks() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -223,6 +244,7 @@ export async function shows_task_count_if_there_are_tasks() {
 
 export async function disables_add_task_button_when_input_is_empty() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -233,6 +255,7 @@ export async function disables_add_task_button_when_input_is_empty() {
 
 export async function adds_and_lists_a_task() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -247,6 +270,7 @@ export async function adds_and_lists_a_task() {
 
 export async function limits_task_length_to_150_characters() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -261,6 +285,7 @@ export async function limits_task_length_to_150_characters() {
 
 export async function displays_character_count_limit() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -271,6 +296,7 @@ export async function displays_character_count_limit() {
 
 export async function character_count_limit_hidden_when_input_is_empty() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -280,6 +306,7 @@ export async function character_count_limit_hidden_when_input_is_empty() {
 
 export async function lets_user_tick_tasks() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -300,6 +327,7 @@ export async function lets_user_tick_tasks() {
 
 export async function lets_user_carry_tasks() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -312,6 +340,7 @@ export async function lets_user_carry_tasks() {
 
 export async function lets_user_remove_tasks() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -324,6 +353,7 @@ export async function lets_user_remove_tasks() {
 
 export async function displays_page_number_of_tasks() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -341,6 +371,7 @@ export async function displays_page_number_of_tasks() {
 
 export async function only_shows_remove_tasks_for_tasks_carried_twice() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -359,6 +390,7 @@ export async function only_shows_remove_tasks_for_tasks_carried_twice() {
 
 export async function does_not_show_remove_or_carry_for_ticked_tasks() {
     renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -405,6 +437,7 @@ export async function shows_correct_tasks_when_selecting_a_different_list() {
     ])
     renderTasksView();
     resetActor();
+    await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists)
     await selectOptionFromTaskListSingleSelect(1);
     await waitUntil(() => !tickTaskHidden(task_ids[1]));
@@ -457,4 +490,8 @@ async function carry_a_task(task_id: string) {
     await waitUntil(() => !carryTaskHidden(task_id));
     await carryTask(task_id);
     await waitUntil(wait_for_carry_task);
+}
+
+async function waitForLoadingSpinnerToDisappear() {
+    await waitUntil(() => !loadingSpinnerExists());
 }

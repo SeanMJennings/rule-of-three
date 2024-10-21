@@ -25,6 +25,7 @@
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
+    "vue3-spinners": "^1.2.2",
     "xstate": "^5.13.0"
   },
   "devDependencies": {

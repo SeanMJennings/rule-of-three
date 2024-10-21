@@ -40,6 +40,10 @@ export function pageText() {
     return page.text();
 }
 
+export function loadingSpinnerExists() {
+    return elements.loadingSpinner.exists();
+}
+
 export function clickAddTaskListPlaceholder() {
     return elements.addTaskListPlaceholder.trigger("click");
 }
@@ -215,6 +219,9 @@ function mountTasksView() {
 }
 
 const elements = {
+    get loadingSpinner() {
+        return page.find("#loadingSpinner");
+    },
     get addTaskListPlaceholder() {
         return page.find("#add-task-list-placeholder");
     },

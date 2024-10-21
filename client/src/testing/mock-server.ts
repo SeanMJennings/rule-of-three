@@ -1,5 +1,6 @@
 ﻿import {setupServer, SetupServerApi} from "msw/node";
 import {http, HttpResponse} from "msw";
+import {delay} from "@/testing/utilities";
 
 export class MockServer {
     private server: SetupServerApi;
@@ -20,10 +21,13 @@ export class MockServer {
         this.server.resetHandlers();
     }
 
-    public get(url: string, response: any) {
+    public get(url: string, response: any, delayValue?: number) {
         let called = false;
         const was_called = () => called;
-        this.server.use(http.get(url, () => {
+        this.server.use(http.get(url, async () => {
+            if (delayValue) {
+                await delay(delayValue)
+            }
             called = true;
             return HttpResponse.json(response, {status: 200})
         }));

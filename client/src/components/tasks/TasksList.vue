@@ -4,7 +4,7 @@ import {onMounted, onUnmounted, reactive, watch} from 'vue'
 import {faCaretSquareDown, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from 'xstate'
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
-import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machines/tasks.states";
+import {TasksListMachineStates} from "@/state-machines/tasks.states";
 import type {Id} from "@/types/types";
 import {faList, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
@@ -24,7 +24,7 @@ watch(tasksListModel, (newValue: TasksListModel, oldValue: TasksListModel) => {
   newValue.name = oldValue.name.slice(0, 50);
 });
 
-let selectedTasksList: { id: string } = reactive({id: ''});
+let selectedTasksList: { id: string } = reactive({id: props.snapshot.context.id});
 watch(selectedTasksList, (newValue: Id) => {
   if (props.snapshot.context.tasksLists.length === 1) return;
   props.send({type: "selectTasksList", id: newValue.id});

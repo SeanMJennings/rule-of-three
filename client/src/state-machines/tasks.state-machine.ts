@@ -44,27 +44,30 @@ export const tasksMachine = createMachine(
             context: TasksMachineContext;
         },
         context: {id: '', tasksLists: [] as TasksList[]},
+        initial: TasksListMachineStates.loading,
         on: {
             reset: {
-                target: `.${TasksListMachineStates.empty}`,
+                target: `.${TasksListMachineStates.loading}`,
                 actions: assign({
                     id: ({context}) => (context.id = ''),
                     tasksLists: ({context}) => context.tasksLists = [] as TasksList[],
                 }),
             }
         },
-        initial: TasksListMachineStates.empty,
         states: {
-            empty: {
+            loading: {
                 invoke: {
                     src: fromPromise(async () => await getTasksLists()),
                     onDone: {
+                        target: TasksListMachineStates.empty,
                         actions: assign({
                             id: ({context, event}) => (context.id = event.output.length > 0 ? event.output[0].id : ''),
                             tasksLists: ({context, event}) => event.output.length > 0 ? context.tasksLists = event.output : context.tasksLists,
                         }),
                     },
                 },
+            },
+            empty: {
                 on: {
                     readyToAddFirstTaskList: {
                         target: TasksListMachineStates.readyToAddTasksLists,

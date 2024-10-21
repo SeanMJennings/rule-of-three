@@ -1,8 +1,12 @@
 ﻿import type {Task, TasksList} from '@/types/types'
 import type {StateValue} from "xstate";
-import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
+import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import * as _ from "lodash";
 export const taskLimit = Number(import.meta.env.TASK_LIMIT || 22);
+
+export const loading = (value: StateValue) => {
+    return value === TasksListMachineStates.loading;
+}
 
 export const readyToAddTasks = (value: StateValue) => {
     return (value !== TasksMachineCombinedStates.empty && value !== TasksMachineCombinedStates.readyToAddTasksLists);
