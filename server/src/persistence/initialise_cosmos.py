@@ -3,6 +3,7 @@ from src.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
 import urllib3
 from pathlib import Path
 import yaml
+import os
 from src.persistence.run_windows_cosmos import start_and_wait_for_cosmos
 
 path = Path(__file__).parent / "../config.yaml"
@@ -10,7 +11,10 @@ config = yaml.safe_load(open(path))
 
 urllib3.disable_warnings()
 
-start_and_wait_for_cosmos(config["connection_string"])
+client = None
+if os.name == "nt" and os.getenv("AZURE_EXTENSION_DIR") is None:
+    start_and_wait_for_cosmos(config["connection_string"])
+
 client = CosmosClient.from_connection_string(config["connection_string"])
 
 database = client.create_database_if_not_exists(
