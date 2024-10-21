@@ -1,7 +1,7 @@
 ﻿import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {afterEach, beforeEach, expect} from 'vitest'
 import {type Actor, createActor} from 'xstate'
-import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
+import {TasksListMachineStates, TasksMachineCombinedStates, TasksMachineStates} from "@/state-machines/tasks.states";
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 import {getName, getTasks} from "@/state-machines/tasks.extensions";
@@ -33,6 +33,7 @@ afterEach(() => {
 });
 
 export async function adds_a_task_list() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -53,6 +54,7 @@ export async function loads_a_task_list() {
             is_ticked: false
         }]}])
     tasks.send({type: "reset"})
+    await waitForLoadingToFinish();
     await waitUntil(wait_for_get_tasks_list)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
@@ -68,6 +70,7 @@ export async function loads_a_task_list() {
 }
 
 export async function adds_two_task_lists() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -86,6 +89,7 @@ export async function adds_two_task_lists() {
 }
 
 export async function updates_a_task_list_name() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -100,6 +104,7 @@ export async function updates_a_task_list_name() {
 }
 
 export async function adds_a_task() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -117,6 +122,7 @@ export async function adds_a_task() {
 }
 
 export async function lets_user_tick_off_task() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"})
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -135,6 +141,7 @@ export async function lets_user_tick_off_task() {
 }
 
 export async function selects_a_different_tasks_list() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -159,6 +166,7 @@ export async function selects_a_different_tasks_list() {
 }
 
 export async function adds_maximum_tasks_and_then_refuses_subsequent_tasks() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -169,6 +177,7 @@ export async function adds_maximum_tasks_and_then_refuses_subsequent_tasks() {
 }
 
 export async function lets_user_carry_tasks() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -181,6 +190,7 @@ export async function lets_user_carry_tasks() {
 }
 
 export async function removes_ticked_tasks_when_all_tasks_are_carried() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -200,6 +210,7 @@ export async function removes_ticked_tasks_when_all_tasks_are_carried() {
 }
 
 export async function lets_user_remove_tasks() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -211,6 +222,7 @@ export async function lets_user_remove_tasks() {
 }
 
 export async function cannot_carry_tasks_past_two_pages() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -227,6 +239,7 @@ export async function cannot_carry_tasks_past_two_pages() {
 }
 
 export async function selecting_a_different_tasks_list_retrieves_correct_tasks() {
+    await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
@@ -251,6 +264,10 @@ export async function selecting_a_different_tasks_list_retrieves_correct_tasks()
     tasks.send({type: "selectTasksList", id: another_task_list_id});
     expect(getTasks(tasks.getSnapshot().context).length).toEqual(reducedTaskLimit);
     expect(getTasks(tasks.getSnapshot().context)[0].id).toEqual(another_set_of_task_ids[0]);
+}
+
+async function waitForLoadingToFinish() {
+    await waitUntil(() => tasks.getSnapshot().value !== TasksListMachineStates.loading);
 }
 
 
