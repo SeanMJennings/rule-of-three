@@ -12,6 +12,8 @@ config = yaml.safe_load(open(path))
 urllib3.disable_warnings()
 
 client = None
+
+# Only want to run if in local Windows environment
 if os.name == "nt" and os.getenv("AZURE_EXTENSION_DIR") is None:
     start_and_wait_for_cosmos(config["connection_string"])
 
