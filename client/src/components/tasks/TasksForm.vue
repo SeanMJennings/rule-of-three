@@ -8,7 +8,7 @@ import {type EventFromLogic, type SnapshotFrom} from 'xstate'
 import {TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import {
   canCarryTask,
-  canRemoveTask,
+  canRemoveTask, carryingOrRemovingTasks,
   getTasks,
   showAddFirstTask,
   showTickTasks
@@ -65,9 +65,8 @@ const remove = (id: string | number) => {
           :carry="carry"
           :remove="remove"
           :tick="tick"
-          :choosing-tasks-to-carry="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry)"
-          :show-carry-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && canCarryTask(task)"
-          :show-remove-action="_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) && canRemoveTask(task)"
+          :show-carry-action="carryingOrRemovingTasks(snapshot.value) && canCarryTask(task)"
+          :show-remove-action="carryingOrRemovingTasks(snapshot.value) && canRemoveTask(task)"
           :show-tick-action="showTickTasks(snapshot.value) && !task.ticked"
     />
   </div>

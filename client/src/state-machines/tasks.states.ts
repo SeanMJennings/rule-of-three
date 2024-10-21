@@ -27,4 +27,6 @@ export const TasksMachineCombinedStates = {
     addingTasksListsAddingTasks: {addingTasksLists: TasksMachineStates.addingTasks,},
     addingTasksListsChoosingTasksToCarry: {addingTasksLists: TasksMachineStates.choosingTasksToCarry,},
     addingTasksListsCarryingTheTask: {addingTasksLists: TasksMachineStates.carryingTheTask,},
+    addingTasksListsRemovingTheTask: {addingTasksLists: TasksMachineStates.removingTheTask,},
+    addingTasksListsAssessingTasks: {addingTasksLists: TasksMachineStates.assessingTasks,},
 };

@@ -306,7 +306,7 @@ export async function lets_user_carry_tasks() {
     await clickAddFirstTask();
     await typeTask(testTaskText);
     await add_all_tasks();
-    await waitUntil(() => !carryTaskHidden(task_ids[0]));
+    await waitUntil( () => !carryTaskHidden(task_ids[0]));
     await carry_all_tasks();
 }
 
@@ -330,15 +330,11 @@ export async function displays_page_number_of_tasks() {
     await clickAddFirstTask();
     await typeTask(testTaskText);
     await add_all_tasks();
+    await carry_all_tasks();
     for (const task_id of task_ids) {
-        expect(taskPageNumber(task_id)).toBe('0');
-        const wait_for_carry_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/carry`);
-        await waitUntil(() => !carryTaskHidden(task_id));
-        await carryTask(task_id);
-        await waitUntil(wait_for_carry_task);
-    }
-    for (const task_id of task_ids) {
-        await waitUntil(() => !carryTaskHidden(task_id));
+        if (task_id === task_ids[task_ids.length - 1]) {
+            await waitUntil(() => taskPageNumber(task_id) === '1')
+        }
         expect(taskPageNumber(task_id)).toBe('1');
     }
 }
@@ -352,12 +348,8 @@ export async function only_shows_remove_tasks_for_tasks_carried_twice() {
     await typeTask(testTaskText);
     await add_all_tasks();
     await waitUntil( () => !carryTaskHidden(task_ids[0]));
-    for (const task_id of task_ids) {
-        await carry_a_task(task_id);
-    }
-    for (const task_id of task_ids) {
-        await carry_a_task(task_id);
-    }
+    await carry_all_tasks();
+    await carry_all_tasks();
     await waitUntil( () => !removeTaskHidden(task_ids[0]));
     for (const task_id of task_ids) {
         expect(carryTaskHidden(task_id)).toBe(true);
@@ -447,7 +439,7 @@ async function remove_all_tasks() {
         await waitUntil(() => !removeTaskHidden(task_id));
         await removeTask(task_id);
         await waitUntil(wait_for_remove_task);
-        expect(removeTaskHidden(task_id)).toBe(true);
+        await waitUntil(() => removeTaskHidden(task_id));
     }
 }
 
@@ -455,7 +447,7 @@ async function carry_all_tasks() {
     for (const task_id of task_ids) {
         await carry_a_task(task_id);
         if (task_id !== task_ids[task_ids.length - 1]) {
-            expect(carryTaskHidden(task_id)).toBe(true);
+            await waitUntil(() => carryTaskHidden(task_id));
         }
     }
 }

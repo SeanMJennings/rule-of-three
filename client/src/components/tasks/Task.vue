@@ -9,7 +9,6 @@ defineProps<{
   showTickAction: boolean;
   showCarryAction: boolean;
   showRemoveAction: boolean;
-  choosingTasksToCarry: boolean;
   tick: (id: string | number) => void;
   carry: (id: string | number) => void;
   remove: (id: string | number) => void;

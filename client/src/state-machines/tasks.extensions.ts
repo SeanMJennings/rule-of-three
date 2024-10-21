@@ -21,8 +21,17 @@ export const showAddFirstTask = (value: StateValue) => {
 }
 
 export const showTickTasks = (value: StateValue) => {
-    return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAddingTasks) || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask);
+    return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAddingTasks) 
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsCreatingTheTask);
 };
+
+export const carryingOrRemovingTasks = (value: StateValue) => {
+    return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry) 
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsCarryingTheTask) 
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsRemovingTheTask)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAssessingTasks);
+}
 
 export const tasksAreFull = function (context: { id: string, tasksLists: TasksList[]; }) {
     const numberOfTasks = context.tasksLists.find((list) => list.id === context.id)?.tasks.length;
