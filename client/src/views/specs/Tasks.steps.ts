@@ -87,17 +87,14 @@ export async function asks_user_to_create_first_task_list() {
     expect(pageText()).not.toContain("Add your first task");
 }
 
-export async function shows_task_list_single_select_when_there_are_two_lists() {
+export async function shows_task_list_single_select_when_there_is_one_list() {
     renderTasksView();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name
+        id: task_list_id,
+        name: task_list_name
     })
-    await waitUntil(() => !addTaskListSubmitDisabled());
-    await addAnotherTaskList();
-    await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
     expect(taskListSingleSelectHidden()).toBe(false);
     expect(pageText()).not.toContain("Create your first task list");

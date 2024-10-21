@@ -23,7 +23,7 @@ import {
     renders_tasks,
     selects_first_of_multiple_lists, shows_correct_tasks_when_selecting_a_different_list,
     shows_task_count_if_there_are_tasks,
-    shows_task_list_single_select_when_there_are_two_lists
+    shows_task_list_single_select_when_there_is_one_list
 } from '@/views/specs/Tasks.steps'
 
 describe("Tasks", () => {
@@ -34,7 +34,7 @@ describe("Tasks", () => {
         it("list character count limit hidden when input is empty", list_character_count_limit_hidden_when_input_is_empty);
         it('lets user collapse tasks list input', lets_user_collapse_tasks_list_input);
         it('lets user expand tasks list input', lets_user_expand_tasks_list_input);
-        it("shows task list single select when there are two lists", shows_task_list_single_select_when_there_are_two_lists);
+        it("shows task list single select when there is one list", shows_task_list_single_select_when_there_is_one_list);
         it('lets user collapse tasks list single select', lets_user_collapse_tasks_list_single_select);
         it('lets user expand tasks list single select', lets_user_expand_tasks_list_single_select);
         it('selects first of multiple lists', selects_first_of_multiple_lists);

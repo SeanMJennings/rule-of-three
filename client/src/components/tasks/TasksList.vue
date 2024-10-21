@@ -53,7 +53,7 @@ const toggleTasksSelect = () => {
 
 onMounted(() => {
   subscription = props.actorRef.subscribe((s) => {
-    if (s.context.tasksLists.length > 1 && selectedTasksList.id === '') {
+    if (s.context.tasksLists.length > 0 && selectedTasksList.id === '') {
       selectedTasksList.id = s.context.tasksLists[0].id;
     }
   });
@@ -82,11 +82,11 @@ onUnmounted(() => {
       </div>
       <span id="tasks-list-character-count" :class="commonStyle.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
     </div>
-    <div v-if="snapshot.context.tasksLists.length > 1" :class="style.header" v-on:click="toggleTasksSelect()">
+    <div v-if="snapshot.context.tasksLists.length > 0" :class="style.header" v-on:click="toggleTasksSelect()">
       <ButtonIcon :class="commonStyle.button" :icon="faList" :iconStyle="commonStyle.icon"/>
       <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" />
     </div>
-    <div v-if="snapshot.context.tasksLists.length > 1 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
+    <div v-if="snapshot.context.tasksLists.length > 0 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="task-list-single-select">Select Tasks List</label>
       <select id="task-list-single-select" v-model="selectedTasksList.id" :class="style.selectInput">
         <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :selected="index === 0" :value="option.id">
