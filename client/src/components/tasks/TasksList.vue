@@ -29,11 +29,12 @@ watch(selectedTasksList, (newValue: Id) => {
   props.send({type: "selectTasksList", id: newValue.id});
 });
 
-const tasksListInputCollapsedModel: { collapsed: boolean } = reactive({collapsed: false});
+const tasksListInputCollapsedModel: { collapsed: boolean } = reactive({collapsed: true});
 const tasksListSelectCollapsedModel: { collapsed: boolean } = reactive({collapsed: false});
 
 const onClick = () => {
   props.send({type: "readyToAddFirstTaskList"});
+  tasksListInputCollapsedModel.collapsed = false;
 };
 const disabled = () => tasksListModel.name.length === 0;
 const submit = () => {

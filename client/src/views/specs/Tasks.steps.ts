@@ -29,8 +29,7 @@ import {
     taskListNameInputText,
     taskListSingleSelectChosenValue,
     taskListSingleSelectHidden,
-    taskListSingleSelectIndex,
-    taskPageNumber,
+    taskPageNumber, tasksListCaretExists,
     tasksListInputCaretPointsDown,
     tasksListInputCaretPointsUp,
     tasksListInputCollapsed,
@@ -171,6 +170,18 @@ export async function lets_user_collapse_tasks_list_input() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await toggleTasksListInput();
+    expect(tasksListInputCollapsed()).toBe(true);
+    expect(tasksListInputCaretPointsDown()).toBe(true);
+}
+
+export async function ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded() {
+    const wait_for_get_task_lists = mockServer.get("/tasks-lists", [
+        {id: task_list_id, name: task_list_name, tasks: []}
+    ])
+    renderTasksView();
+    resetActor();
+    await waitUntil(wait_for_get_task_lists);
+    await waitUntil(() => tasksListCaretExists());
     expect(tasksListInputCollapsed()).toBe(true);
     expect(tasksListInputCaretPointsDown()).toBe(true);
 }

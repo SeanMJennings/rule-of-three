@@ -48,6 +48,10 @@ export function clickTasksListCaret() {
     return elements.tasksListCaret.trigger("click");
 }
 
+export function tasksListCaretExists() {
+    return elements.tasksListCaret.exists();
+}
+
 export function clickTasksListSingleSelectCaret() {
     return elements.tasksListSelectCaret.trigger("click");
 }
@@ -71,10 +75,6 @@ export function taskListSingleSelectChosenValue() {
 export async function selectOptionFromTaskListSingleSelect(index: number) {
     const options = elements.taskListSingleSelectOptions
     await options.at(index)?.setValue()
-}
-
-export function taskListSingleSelectIndex() {
-    return elements.taskListSingleSelect.selectedIndex;
 }
 
 export function addTaskListSubmit() {
