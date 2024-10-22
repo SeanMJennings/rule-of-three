@@ -1,14 +1,16 @@
 ﻿import {type AnyEventObject, assign, createMachine, fromPromise} from "xstate";
 import type {Task, TasksList} from '@/types/types'
 import {
-    tasksAreEmpty,
-    tasksAreFull, tasksAreReadyForNewPage, tasksHaveBeenCarried,
+    tasksAreFull,
+    tasksAreReadyForNewPage,
+    tasksHaveBeenCarried,
 } from '@/state-machines/tasks.extensions'
 import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/tasks.states";
 import {
     addTask,
     addTasksList,
-    carryTask, deleteTasksList,
+    carryTask,
+    deleteTasksList,
     getTasksLists,
     removeTask,
     tickTask,
@@ -122,7 +124,7 @@ export const tasksMachine = createMachine(
                 },
             },
             addingTasksLists: {
-                initial: TasksMachineStates.empty,
+                initial: TasksMachineStates.addingTasks,
                 on: {
                     addTasksList: {
                         target: TasksListMachineStates.creatingTheTasksList,
@@ -144,17 +146,6 @@ export const tasksMachine = createMachine(
                     },
                 },
                 states: {
-                    empty: {
-                        on: {
-                            readyToAddFirstTask: {
-                                target: TasksMachineStates.addingTasks,
-                            },
-                        },
-                        always: {
-                            guard: "tasksAreNotEmpty",
-                            target: TasksMachineStates.addingTasks,
-                        },
-                    },
                     addingTasks: {
                         on: {
                             add: {
@@ -252,11 +243,8 @@ export const tasksMachine = createMachine(
                 return tasksAreFull(context);
             },
             tasksListsExist: ({context}) => {
-                return context.id !== "";
-            },
-            tasksAreNotEmpty: ({context}) => {
-                return !tasksAreEmpty(context);
-            },
+                return context.tasksLists.length > 0;
+            }
         },
     },
 );

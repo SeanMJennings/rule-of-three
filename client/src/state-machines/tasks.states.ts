@@ -10,10 +10,9 @@
 }
 
 export const enum TasksMachineStates {
-    empty = "empty",
+    addingTasks = "addingTasks",
     creatingTheTask = "creatingTheTask",
     tickingTheTask = "tickingTheTask",
-    addingTasks = "addingTasks",
     removingTheTask = "removingTheTask",
     carryingTheTask = "carryingTheTask",
     choosingTasksToCarry = "choosingTasksToCarry",
@@ -23,7 +22,6 @@ export const enum TasksMachineStates {
 export const TasksMachineCombinedStates = {
     empty: TasksListMachineStates.empty,
     readyToAddTasksLists: TasksListMachineStates.readyToAddTasksLists,
-    addingTasksListsEmpty: {addingTasksLists: TasksMachineStates.empty},
     addingTasksListsCreatingTheTask: {addingTasksLists: TasksMachineStates.creatingTheTask},
     addingTasksListTickingTheTask: {addingTasksLists: TasksMachineStates.tickingTheTask},
     addingTasksListsAddingTasks: {addingTasksLists: TasksMachineStates.addingTasks,},

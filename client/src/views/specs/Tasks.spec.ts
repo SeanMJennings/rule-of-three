@@ -19,7 +19,6 @@ import {
     limits_task_length_to_150_characters,
     list_character_count_limit_hidden_when_input_is_empty,
     only_shows_remove_tasks_for_tasks_carried_twice,
-    removes_add_first_task_placeholder_on_click,
     renders_tasks,
     selects_first_of_multiple_lists, shows_correct_tasks_when_selecting_a_different_list,
     shows_task_count_if_there_are_tasks,
@@ -44,7 +43,6 @@ describe("Tasks", () => {
     });
     describe("Tasks", () => {
         it("renders tasks", renders_tasks);
-        it("removes add first task placeholder on click", removes_add_first_task_placeholder_on_click);
         it("disables add task button when input is empty", disables_add_task_button_when_input_is_empty);
         it("adds and lists a task", adds_and_lists_a_task);
         it("shows task count if there are tasks", shows_task_count_if_there_are_tasks);

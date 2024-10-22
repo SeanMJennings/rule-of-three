@@ -37,7 +37,7 @@ export async function adds_a_task_list() {
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
     expect(getName(tasks.getSnapshot().context)).toEqual(task_list_name);
     expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
@@ -101,7 +101,7 @@ export async function adds_two_task_lists() {
     })
     tasks.send({type: "addTasksList", name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(tasks.getSnapshot().context.tasksLists).toEqual([{
         id: task_list_id,
         name: task_list_name,
@@ -117,7 +117,7 @@ export async function updates_a_task_list_name() {
     const wait_for_update_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}`)
     tasks.send({type: "updateTasksList", id: task_list_id, name: new_task_list_name});
     await waitUntil(wait_for_update_tasks_list)
-    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
     expect(getName(tasks.getSnapshot().context)).toEqual(new_task_list_name);
     expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
@@ -175,7 +175,7 @@ export async function selects_a_different_tasks_list() {
     await waitUntil(wait_for_create_tasks_list)
     
     tasks.send({type: "selectTasksList", id: another_task_list_id});
-    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsEmpty);
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
 
     expect(tasks.getSnapshot().context.id).toEqual(another_task_list_id);
     expect(getName(tasks.getSnapshot().context)).toEqual(another_task_list_name);

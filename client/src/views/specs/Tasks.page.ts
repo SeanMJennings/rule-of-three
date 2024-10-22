@@ -93,10 +93,6 @@ export function addTaskListSubmitDisabled() {
     return (elements.addTaskListSubmit.element as HTMLButtonElement).disabled;
 }
 
-export async function clickAddFirstTask() {
-    await elements.addFirstTask.trigger("click");
-}
-
 export async function addATaskList() {
     await clickAddTaskListPlaceholder();
     await typeTaskListName(task_list_name);
@@ -134,10 +130,6 @@ export function tasksListInputCaretPointsDown() {
 
 export function tasksListInputCaretPointsUp() {
     return !tasksListInputCaretPointsDown();
-}
-
-export function addFirstTaskHidden() {
-    return !elements.addFirstTask.exists();
 }
 
 export function taskCountHidden() {
@@ -258,9 +250,6 @@ const elements = {
     },
     queryTaskListSingleSelect() {
         return page.find("#task-list-single-select");
-    },
-    get addFirstTask() {
-        return page.find("#add-first-task");
     },
     get taskCount() {
         return page.find("#task-count");
