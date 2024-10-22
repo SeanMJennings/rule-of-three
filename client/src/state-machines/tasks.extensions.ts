@@ -21,7 +21,9 @@ export const notEmpty = (value: StateValue) => {
 }
 
 export const showAddTask = (value: StateValue) => {
-    return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAddingTasks);
+    return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAddingTasks)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsCreatingTheTask);
 }
 
 export const showTickTasks = (value: StateValue) => {
