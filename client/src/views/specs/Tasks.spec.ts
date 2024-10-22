@@ -11,7 +11,7 @@ import {
     lets_user_add_a_task_list,
     lets_user_carry_tasks,
     lets_user_collapse_tasks_list_input,
-    lets_user_collapse_tasks_list_single_select,
+    lets_user_collapse_tasks_list_single_select, lets_user_delete_a_task_list,
     lets_user_expand_tasks_list_input,
     lets_user_expand_tasks_list_single_select,
     lets_user_remove_tasks,
@@ -37,6 +37,7 @@ describe("Tasks", () => {
         it('ensures add tasks list is closed if a task list is loaded', ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded);
         it('lets user expand tasks list input', lets_user_expand_tasks_list_input);
         it("shows task list single select when there is one list", shows_task_list_single_select_when_there_is_one_list);
+        it("lets user delete a task list", lets_user_delete_a_task_list);
         it('lets user collapse tasks list single select', lets_user_collapse_tasks_list_single_select);
         it('lets user expand tasks list single select', lets_user_expand_tasks_list_single_select);
         it('selects first of multiple lists', selects_first_of_multiple_lists);

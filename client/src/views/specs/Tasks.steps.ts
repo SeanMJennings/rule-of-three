@@ -14,7 +14,7 @@ import {
     characterCountHidden,
     clickAddFirstTask,
     clickAddTaskListPlaceholder,
-    createActor, loadingSpinnerExists,
+    createActor, deleteTaskList, loadingSpinnerExists,
     pageText,
     removeTask,
     removeTaskHidden,
@@ -109,6 +109,23 @@ export async function shows_task_list_single_select_when_there_is_one_list() {
     expect(pageText()).not.toContain("Create your first task list");
     expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
     expect(taskListNameInputText()).toBe("");
+}
+
+export async function lets_user_delete_a_task_list() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        id: task_list_id,
+        name: task_list_name
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    const wait_for_delete_tasks_list = mockServer.delete(`/tasks-lists/${task_list_id}`)
+    await deleteTaskList()
+    await waitUntil(wait_for_delete_tasks_list);
+    await waitUntil(() => taskListSingleSelectHidden());
+    expect(pageText()).toContain("Create your first task list");
 }
 
 export async function lets_user_collapse_tasks_list_single_select() {

@@ -85,6 +85,10 @@ export function addTaskListSubmit() {
     return elements.addTaskListSubmit.trigger("click");
 }
 
+export function deleteTaskList() {
+    return elements.deleteTaskListSubmit.trigger("click");
+}
+
 export function addTaskListSubmitDisabled() {
     return (elements.addTaskListSubmit.element as HTMLButtonElement).disabled;
 }
@@ -242,6 +246,9 @@ const elements = {
     },
     get addTaskListSubmit() {
         return page.find("#add-task-list-submit");
+    },
+    get deleteTaskListSubmit() {
+        return page.find("#delete-task-list-submit");
     },
     get taskListSingleSelect() {
         return page.find("#task-list-single-select").element as HTMLSelectElement;

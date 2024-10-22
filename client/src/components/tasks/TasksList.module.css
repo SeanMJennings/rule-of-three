@@ -35,5 +35,12 @@
 
 .selectInput {
     flex-grow: 1;
-    margin-bottom: 21px;
+}
+
+.selectInputContainer {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    padding-bottom: 21px;
 }

@@ -6,7 +6,7 @@ import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from '
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {TasksListMachineStates} from "@/state-machines/tasks.states";
 import type {Id} from "@/types/types";
-import {faList, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
+import {faList, faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
 import {notEmpty, showCreateTasksList} from "@/state-machines/tasks.extensions";
@@ -33,16 +33,21 @@ watch(selectedTasksList, (newValue: Id) => {
 const tasksListInputCollapsedModel: { collapsed: boolean } = reactive({collapsed: true});
 const tasksListSelectCollapsedModel: { collapsed: boolean } = reactive({collapsed: false});
 
-const onClick = () => {
+const readyToCreateFirstTaskList = () => {
   props.send({type: "readyToAddFirstTaskList"});
   tasksListInputCollapsedModel.collapsed = false;
 };
 const disabled = () => tasksListModel.name.length === 0;
-const submit = () => {
+const addTaskList = () => {
   if (disabled()) return;
   props.send({type: "addTasksList", name: tasksListModel.name});
   tasksListModel.name = "";
 };
+
+const deleteTaskList = () => {
+  props.send({type: "deleteTasksList", id: selectedTasksList.id});
+};
+
 const disableAddTaskListButton = () => props.snapshot.value === TasksListMachineStates.creatingTheTasksList || props.snapshot.value === TasksListMachineStates.updatingTheTasksList;
 
 const toggleTasksList = () => {
@@ -69,7 +74,7 @@ onUnmounted(() => {
 
 <template>
   <div :class="style.container">
-    <div v-if="showCreateTasksList(snapshot.value)" id="add-task-list-placeholder" :class="style.placeholder" v-on:click="onClick()">
+    <div v-if="showCreateTasksList(snapshot.value)" id="add-task-list-placeholder" :class="style.placeholder" v-on:click="readyToCreateFirstTaskList()">
       <span>Create your first task list</span>
     </div>
     <div v-if="notEmpty(snapshot.value)" :class="style.header" v-on:click="toggleTasksList()">
@@ -80,7 +85,7 @@ onUnmounted(() => {
       <label :class="commonStyle.label" for="add-task-list-input">Add Tasks List</label>
       <div :class="commonStyle.inputContainer">
         <input id="add-task-list-input" v-model="tasksListModel.name" :class="commonStyle.input" type="text"/>
-        <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-list-submit" v-on:click="submit()"/>
+        <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-list-submit" v-on:click="addTaskList()"/>
       </div>
       <span id="tasks-list-character-count" :class="commonStyle.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
     </div>
@@ -90,11 +95,14 @@ onUnmounted(() => {
     </div>
     <div v-if="snapshot.context.tasksLists.length > 0 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="task-list-single-select">Select Tasks List</label>
-      <select id="task-list-single-select" v-model="selectedTasksList.id" :class="style.selectInput">
-        <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :selected="index === 0" :value="option.id">
-          {{ option.name }}
-        </option>
-      </select>
+      <div :class="style.selectInputContainer">
+        <select id="task-list-single-select" v-model="selectedTasksList.id" :class="style.selectInput">
+          <option v-for="(option, index) in snapshot.context.tasksLists" :key="option.id" :selected="index === 0" :value="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+        <ButtonIcon id="delete-task-list-submit" :class="commonStyle.button" :icon="faTrash" :iconStyle="commonStyle.icon" v-on:click="deleteTaskList()"/>
+      </div>
     </div>
   </div>
 </template>
