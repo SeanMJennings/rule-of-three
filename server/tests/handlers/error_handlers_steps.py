@@ -44,7 +44,7 @@ def catching_the_error():
 
 
 def the_validation_error_is_handled():
-    assert response.status_code == http.client.INTERNAL_SERVER_ERROR
+    assert response.status_code == http.client.UNPROCESSABLE_ENTITY
     assert json.loads(response.data)["error"] == "wibble"
 
 
