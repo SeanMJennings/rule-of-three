@@ -152,8 +152,12 @@ export function addTask() {
     return elements.addTaskSubmit.trigger("click");
 }
 
+export function addTaskExists() {
+    return elements.addTaskSubmit.exists();
+}
+
 export function addTaskDisabled() {
-    return (elements.addTaskSubmit.element as HTMLButtonElement).disabled;
+    return (elements.addTaskSubmit?.element as HTMLButtonElement)?.disabled;
 }
 
 export function taskTextShown(taskId: string | number, task: string) {

@@ -117,7 +117,7 @@ export const tasksMachine = createMachine(
                     onDone: {
                         target: TasksListMachineStates.empty,
                         actions: assign({ 
-                            id: ({context, event}) => (context.id = context.id === event.output.id ? '' : context.id),
+                            id: ({context, event }) => (context.id = context.tasksLists.length > 1 ? context.tasksLists.filter((list) => list.id !== event.output.id)[0]?.id : ''),
                             tasksLists: ({context, event}) => context.tasksLists.filter((list) => list.id !== event.output.id),
                         }),
                     },

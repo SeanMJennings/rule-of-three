@@ -24,9 +24,9 @@ watch(tasksListModel, (newValue: TasksListModel, oldValue: TasksListModel) => {
   newValue.name = oldValue.name.slice(0, 50);
 });
 
-let selectedTasksList: { id: string } = reactive({id: props.snapshot.context.id});
+let selectedTasksList: { id: string } = reactive({id: props.snapshot.context.id });
 watch(selectedTasksList, (newValue: Id) => {
-  if (props.snapshot.context.tasksLists.length === 1) return;
+  if (props.snapshot.context.tasksLists.length === 1 || newValue.id === '') return;
   props.send({type: "selectTasksList", id: newValue.id});
 });
 
@@ -60,9 +60,7 @@ const toggleTasksSelect = () => {
 
 onMounted(() => {
   subscription = props.actorRef.subscribe((s) => {
-    if (s.context.tasksLists.length > 0 && selectedTasksList.id === '') {
-      selectedTasksList.id = s.context.tasksLists[0].id;
-    }
+      selectedTasksList.id = s.context.id;
   });
 });
 
