@@ -10,7 +10,7 @@ import {
   canCarryTask,
   canRemoveTask, carryingOrRemovingTasks,
   getTasks,
-  showAddFirstTask,
+  showAddTask,
   showTickTasks
 } from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
@@ -47,10 +47,7 @@ const remove = (id: string | number) => {
 
 <template>
   <div :class="styles.container">
-    <div :class="styles.placeholder" v-if="showAddFirstTask(snapshot.value)" id="add-first-task" v-on:click="send({ type: 'readyToAddFirstTask' })">
-      Add your first task
-    </div>
-    <div v-if="!showAddFirstTask(snapshot.value)" id="add-task" :class="styles.addTask">
+    <div v-if="showAddTask(snapshot.value)" id="add-task" :class="styles.addTask">
       <label :class="commonStyle.label" for="add-task-input">Add a Task</label>
       <div :class="commonStyle.inputContainer">
         <input id="add-task-input" v-model="model.taskText" :class="commonStyle.input" type="text"/>
