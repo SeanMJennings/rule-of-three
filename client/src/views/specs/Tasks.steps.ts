@@ -2,7 +2,7 @@
 import {
     addAnotherTaskList,
     addATaskList,
-    addTask, addTaskDisabled, addTaskExists,
+    addTask, addTaskDisabled,
     addTaskListSubmitDisabled,
     addTaskVisible,
     another_task_list_id,
@@ -241,7 +241,7 @@ export async function shows_task_count_if_there_are_tasks() {
     await typeTask(testTaskText);
     await addTask();
     await waitUntil(wait_for_add_task)
-    await waitUntil(() => addTaskExists());
+    await waitUntil(() => !addTaskDisabled());
     expect(taskCount()).toBe(`1/${reducedTaskLimit} tasks`);
 }
 
@@ -265,7 +265,7 @@ export async function adds_and_lists_a_task() {
     await typeTask(testTaskText);
     await addTask();
     await waitUntil(wait_for_add_task)
-    await waitUntil(() => addTaskExists());
+    await waitUntil(() => !addTaskDisabled());
     expect(taskTextShown(task_ids[0], testTaskText)).toBe(true);
 }
 
@@ -279,7 +279,7 @@ export async function limits_task_length_to_150_characters() {
     await typeTask(testTaskTextMoreThan150Chars);
     await addTask();
     await waitUntil(wait_for_add_task)
-    await waitUntil(() => addTaskExists());
+    await waitUntil(() => !addTaskDisabled());
     expect(taskTextShown(task_ids[0], testTaskTextMoreThan150Chars.slice(0, 150))).toBe(true);
 }
 
@@ -442,7 +442,7 @@ async function add_all_tasks_except_one() {
         if (task_id !== task_ids[task_ids.length - 1]) {
             await addTask();
             await waitUntil(wait_for_add_task)
-            await waitUntil(() => addTaskExists());
+            await waitUntil(() => !addTaskDisabled());
         }
     }
 }
@@ -453,7 +453,7 @@ async function add_all_tasks() {
         await addTask();
         await waitUntil(wait_for_add_task)
         if (task_id !== task_ids[task_ids.length - 1]) {
-            await waitUntil(() => addTaskExists());
+            await waitUntil(() => !addTaskDisabled());
         }
     }
 }
