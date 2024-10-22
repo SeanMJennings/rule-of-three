@@ -7,7 +7,7 @@
 .actionsContainer {
     display: flex;
     gap: 10px;
-    min-width: 50px;
+    min-width: 51px;
     height: fit-content;
     align-items: center;
     justify-content: center;
