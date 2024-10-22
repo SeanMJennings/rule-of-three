@@ -1,4 +1,4 @@
-﻿import {get, patch, post} from '@/common/http'
+﻿import {del, get, patch, post} from '@/common/http'
 import type {TasksList} from "@/types/types";
 
 export const getTasksLists = async () => {
@@ -19,6 +19,14 @@ export const updateTasksList = async (id: any, name: any) => {
         ...(response),
         id,
         name
+    }
+}
+
+export const deleteTasksList = async (id: any) => {
+    const response = await del(`/tasks-lists/${id}`);
+    return {
+        ...(response),
+        id
     }
 }
 

@@ -37,6 +37,18 @@ export async function patch(url: string, body: any): Promise<any | HttpError> {
         });
 }
 
+export async function del(url: string): Promise<any | HttpError> {
+    return await fetch(api + url, {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"}
+    })
+        .then(response => response.json())
+        .catch(error => {
+            error.error;
+            error.code;
+        });
+}
+
 export type HttpError = {
     error: string;
     code: number;

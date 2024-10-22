@@ -1,7 +1,7 @@
 ﻿import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {afterEach, beforeEach, expect} from 'vitest'
 import {type Actor, createActor} from 'xstate'
-import {TasksListMachineStates, TasksMachineCombinedStates, TasksMachineStates} from "@/state-machines/tasks.states";
+import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 import {getName, getTasks} from "@/state-machines/tasks.extensions";
@@ -67,6 +67,27 @@ export async function loads_a_task_list() {
         page: 0,
         ticked: false
     }]);
+}
+
+export async function deletes_a_task_list() {
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
+        {
+            id: task_id,
+            content: "Task content",
+            is_carried: false,
+            is_removed: false,
+            page_count: 0,
+            is_ticked: false
+        }]}])
+    tasks.send({type: "reset"})
+    await waitForLoadingToFinish();
+    await waitUntil(wait_for_get_tasks_list)
+    const wait_for_delete_tasks_list = mockServer.delete(`/tasks-lists/${task_list_id}`)
+    tasks.send({type: "deleteTasksList", id: task_list_id});
+    await waitUntil(wait_for_delete_tasks_list)
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.empty);
+    expect(tasks.getSnapshot().context.id).toEqual('');
+    expect(tasks.getSnapshot().context.tasksLists).toEqual([]);
 }
 
 export async function adds_two_task_lists() {

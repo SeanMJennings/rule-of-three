@@ -8,7 +8,7 @@ import {TasksListMachineStates, TasksMachineStates,} from "@/state-machines/task
 import {
     addTask,
     addTasksList,
-    carryTask,
+    carryTask, deleteTasksList,
     getTasksLists,
     removeTask,
     tickTask,
@@ -108,6 +108,19 @@ export const tasksMachine = createMachine(
                     },
                 },
             },
+            deletingTheTasksList: {
+                invoke: {
+                    input: ({context}) => ({id: context.id}),
+                    src: fromPromise(async ({input: {id}}) => await deleteTasksList(id)),
+                    onDone: {
+                        target: TasksListMachineStates.empty,
+                        actions: assign({ 
+                            id: ({context, event}) => (context.id = context.id === event.output.id ? '' : context.id),
+                            tasksLists: ({context, event}) => context.tasksLists.filter((list) => list.id !== event.output.id),
+                        }),
+                    },
+                },
+            },
             addingTasksLists: {
                 initial: TasksMachineStates.empty,
                 on: {
@@ -116,6 +129,9 @@ export const tasksMachine = createMachine(
                     },
                     updateTasksList: {
                         target: TasksListMachineStates.updatingTheTasksList,
+                    },
+                    deleteTasksList: {
+                        target: TasksListMachineStates.deletingTheTasksList,
                     },
                     selectTasksList: {
                         actions: assign({

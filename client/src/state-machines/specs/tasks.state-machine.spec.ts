@@ -11,13 +11,14 @@ import {
     removes_ticked_tasks_when_all_tasks_are_carried,
     selecting_a_different_tasks_list_retrieves_correct_tasks,
     selects_a_different_tasks_list,
-    updates_a_task_list_name, cannot_carry_tasks_past_two_pages
+    updates_a_task_list_name, cannot_carry_tasks_past_two_pages, deletes_a_task_list
 } from '@/state-machines/specs/tasks.state-machine.steps'
 
 describe("Tasks state machine", () => {
     describe("Tasks lists", () => {
         it("adds a task list", adds_a_task_list);
         it("loads a task list", loads_a_task_list);
+        it("delete a task list", deletes_a_task_list);
         it("adds two task lists", adds_two_task_lists);
         it("updates a task list name", updates_a_task_list_name);
         it("selects a different tasks list", selects_a_different_tasks_list);

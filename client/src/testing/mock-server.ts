@@ -56,4 +56,14 @@ export class MockServer {
         }));
         return was_called
     }
+    
+    public delete(url: string) {
+        let called = false;
+        const was_called = () => called;
+        this.server.use(http.delete(url, () => {
+            called = true;
+            return HttpResponse.json({}, {status: 204})
+        }));
+        return was_called
+    }
 }

@@ -4,6 +4,7 @@
     readyToAddTasksLists = "readyToAddTasksLists",
     creatingTheTasksList = "creatingTheTasksList",
     updatingTheTasksList = "updatingTheTasksList",
+    deletingTheTasksList = "deletingTheTasksList",
     addingTasksLists = "addingTasksLists",
     assessingTasksList = "assessingTasksList",
 }
