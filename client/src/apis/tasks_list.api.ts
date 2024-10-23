@@ -6,60 +6,69 @@ export const getTasksLists = async () => {
 }
 
 export const addTasksList = async (name: any) => {
-    const response = await post(`/tasks-lists`, {name});
-    return {
-        id: response.id,
-        name: name
-    }
+    return post(`/tasks-lists`, {name})
+        .then((response) => {
+            return {
+                id: response.id,
+                name
+            }
+    });
 }
 
 export const updateTasksList = async (id: any, name: any) => {
-    const response = await patch(`/tasks-lists/${id}`, {name});
-    return {
-        ...(response),
-        id,
-        name
-    }
+    return patch(`/tasks-lists/${id}`, {name})
+        .then(() => {
+            return {
+                id,
+                name
+            }
+    });
 }
 
 export const deleteTasksList = async (id: any) => {
-    const response = await del(`/tasks-lists/${id}`);
-    return {
-        ...(response),
-        id
-    }
+    return del(`/tasks-lists/${id}`)
+        .then(() => {
+        return {
+            id
+        }
+    });
 }
 
 export const addTask = async (tasksListId: any, content: any) => {
-    const response = await post(`/tasks-lists/${tasksListId}/task`, {content});
-    return {
-        id: response.id,
-        content
-    }
+    return post(`/tasks-lists/${tasksListId}/task`, {content})
+        .then((response) => {
+            return {
+                id: response.id,
+                content
+            }
+    });
 }
 
 export const tickTask = async (tasksListId: any, taskId: any) => {
-    const response = await patch(`/tasks-lists/${tasksListId}/task/${taskId}/tick`, {});
-    return {
-        ...(response),
-        taskId: taskId
-    }
+    return patch(`/tasks-lists/${tasksListId}/task/${taskId}/tick`, {})
+        .then(() => {
+            return {
+                taskId
+            }
+    });
 }
 
 export const removeTask = async (tasksListId: any, taskId: any) => {
-    const response = await patch(`/tasks-lists/${tasksListId}/task/${taskId}/remove`, {});
-    return {
-        ...(response),
-        taskId: taskId
-    }
+    return patch(`/tasks-lists/${tasksListId}/task/${taskId}/remove`, {})
+        .then(() => {
+            return {
+                taskId
+            }
+    });
 }
 
 export const carryTask = async (tasksListId: any, taskId: any) => {
-    const response = await patch(`/tasks-lists/${tasksListId}/task/${taskId}/carry`, {});
-    return {
-        ...(response),
-        taskId: taskId
-    }
+    return patch(`/tasks-lists/${tasksListId}/task/${taskId}/carry`, {})
+        .then(() => {
+            return {
+                taskId
+            }
+    });
 }
 
 const taskListApiMapper = (taskList: any[]) => {
