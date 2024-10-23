@@ -21,14 +21,13 @@ export class MockServer {
         this.server.resetHandlers();
     }
 
-    public get(url: string, response: any, delayValue?: number) {
+    public get(url: string, response: any, delayValue?: number, success = true): () => boolean {
         let called = false;
         const was_called = () => called;
         this.server.use(http.get(url, async () => {
-            if (delayValue) {
-                await delay(delayValue)
-            }
+            if (delayValue) await delay(delayValue)
             called = true;
+            if (!success) return HttpResponse.json(response, {status: 422})
             return HttpResponse.json(response, {status: 200})
         }));
         return was_called
@@ -39,9 +38,7 @@ export class MockServer {
         const was_called = () => called;
         this.server.use(http.post(url, () => {
             called = true;
-            if (response) {
-                return HttpResponse.json(response, {status: 201})
-            }
+            if (response) return HttpResponse.json(response, {status: 201})
             return HttpResponse.json({}, {status: 204})
         }));
         return was_called

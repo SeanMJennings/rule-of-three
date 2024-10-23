@@ -4,8 +4,8 @@ export async function get<T>(url: string, mapper?: (r: any) => T): Promise<T> {
     return fetch(api + url)
         .then(async response => {
             if (!response.ok) {
-                throw  {
-                    error: response.json(),
+                throw {
+                    error: (await response.json()).error,
                     code: response.status
                 };
             }
@@ -47,4 +47,9 @@ function handleResponse(): ((value: Response) => any) | null | undefined {
         }
         return response.json();
     };
+}
+
+export type HttpError = {
+    error: string,
+    code: number
 }

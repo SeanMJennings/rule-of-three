@@ -1,4 +1,4 @@
-﻿import {type AnyEventObject, assign, createMachine, fromPromise} from "xstate";
+﻿import {type AnyEventObject, assign, createMachine, emit, fromPromise} from "xstate";
 import type {Task, TasksList} from '@/types/types'
 import {
     tasksAreFull,
@@ -16,6 +16,7 @@ import {
     tickTask,
     updateTasksList
 } from "@/apis/tasks_list.api";
+import type {HttpError} from "@/common/http";
 
 export type TasksMachineContext = {
     id: string;
@@ -67,6 +68,10 @@ export const tasksMachine = createMachine(
                             tasksLists: ({context, event}) => event.output.length > 0 ? context.tasksLists = event.output : context.tasksLists,
                         }),
                     },
+                    onError: {
+                        target: TasksListMachineStates.empty,
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                    }
                 },
             },
             empty: {

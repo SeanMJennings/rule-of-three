@@ -43,6 +43,18 @@ export async function adds_a_task_list() {
     expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
 }
 
+export async function notifies_when_failing_to_load_a_task_list() {
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", {
+        error: "Failed to load tasks list",
+    }, undefined, false)
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    tasks.send({type: "reset"})
+    await waitForLoadingToFinish();
+    await waitUntil(wait_for_get_tasks_list)
+    expect(the_error).toEqual({error: "Failed to load tasks list", type: "error"});
+}
+
 export async function loads_a_task_list() {
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
         {

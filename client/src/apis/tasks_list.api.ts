@@ -2,7 +2,7 @@
 import type {TasksList} from "@/types/types";
 
 export const getTasksLists = async () => {
-    return await get<TasksList[]>(`/tasks-lists`, taskListApiMapper);
+    return get<TasksList[]>(`/tasks-lists`, taskListApiMapper);
 }
 
 export const addTasksList = async (name: any) => {
@@ -28,9 +28,9 @@ export const updateTasksList = async (id: any, name: any) => {
 export const deleteTasksList = async (id: any) => {
     return del(`/tasks-lists/${id}`)
         .then(() => {
-        return {
-            id
-        }
+            return {
+                id
+            }
     });
 }
 
