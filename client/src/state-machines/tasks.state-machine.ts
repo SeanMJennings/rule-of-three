@@ -135,7 +135,7 @@ export const tasksMachine = createMachine(
                         }),
                     },
                     onError: {
-                        target: TasksListMachineStates.addingTasksLists,
+                        target: TasksListMachineStates.empty,
                         actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
                     }
                 },

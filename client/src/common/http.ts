@@ -10,7 +10,7 @@ export async function get<T>(url: string, mapper?: (r: any) => T): Promise<T> {
                 };
             }
             if (mapper) return mapper(await response.json());
-            return response.json();
+            return (await response.json());
         });
 }
 
@@ -45,7 +45,7 @@ function handleResponse(): ((value: Response) => any) | null | undefined {
                 code: response.status
             };
         }
-        return response.json();
+        return (await response.json());
     };
 }
 
