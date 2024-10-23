@@ -103,6 +103,10 @@ export const tasksMachine = createMachine(
                             tasksLists: taskList(),
                         }),
                     },
+                    onError: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                    }
                 },
             },
             updatingTheTasksList: {
@@ -113,6 +117,10 @@ export const tasksMachine = createMachine(
                         target: TasksListMachineStates.addingTasksLists,
                         actions: assign({ tasksLists: taskListWithUpdatedName() }),
                     },
+                    onError: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                    }
                 },
             },
             deletingTheTasksList: {
@@ -126,6 +134,10 @@ export const tasksMachine = createMachine(
                             tasksLists: ({context, event}) => context.tasksLists.filter((list) => list.id !== event.output.id),
                         }),
                     },
+                    onError: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                    }
                 },
             },
             addingTasksLists: {

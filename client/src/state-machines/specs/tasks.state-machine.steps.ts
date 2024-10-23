@@ -32,17 +32,6 @@ afterEach(() => {
     tasks.send({type: "reset"})
 });
 
-export async function adds_a_task_list() {
-    await waitForLoadingToFinish();
-    tasks.send({type: "readyToAddFirstTaskList"});
-    tasks.send({type: "addTasksList", name: task_list_name});
-    await waitUntil(wait_for_create_tasks_list)
-    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
-    expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
-    expect(getName(tasks.getSnapshot().context)).toEqual(task_list_name);
-    expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
-}
-
 export async function notifies_when_failing_to_load_a_task_list() {
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", {
         error: "Failed to load tasks list",
@@ -81,6 +70,30 @@ export async function loads_a_task_list() {
     }]);
 }
 
+export async function adds_a_task_list() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"});
+    tasks.send({type: "addTasksList", name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
+    expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
+    expect(getName(tasks.getSnapshot().context)).toEqual(task_list_name);
+    expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
+}
+
+export async function notifies_when_failing_to_add_a_task_list() {
+    await waitForLoadingToFinish();
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        error: "Failed to add tasks list",
+    }, false)
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    tasks.send({type: "readyToAddFirstTaskList"});
+    tasks.send({type: "addTasksList", name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    expect(the_error).toEqual({error: "Failed to add tasks list", type: "error"});
+}
+
 export async function deletes_a_task_list() {
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
         {
@@ -100,6 +113,40 @@ export async function deletes_a_task_list() {
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.empty);
     expect(tasks.getSnapshot().context.id).toEqual('');
     expect(tasks.getSnapshot().context.tasksLists).toEqual([]);
+}
+
+export async function notifies_when_failing_to_delete_a_task_list() {
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
+        {
+            id: task_id,
+            content: "Task content",
+            is_carried: false,
+            is_removed: false,
+            page_count: 0,
+            is_ticked: false
+        }]}])    
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    tasks.send({type: "reset"})
+    await waitForLoadingToFinish();
+    await waitUntil(wait_for_get_tasks_list)
+    const wait_for_delete_tasks_list = mockServer.delete(`/tasks-lists/${task_list_id}`, false)
+    tasks.send({type: "deleteTasksList", id: task_list_id});
+    await waitUntil(wait_for_delete_tasks_list)
+    expect(the_error).toEqual({error: "An error occurred", type: "error"});
+}
+
+export async function notifies_when_failing_to_update_a_task_list_name() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"});
+    tasks.send({type: "addTasksList", name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    const wait_for_update_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}`, false)
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    tasks.send({type: "updateTasksList", id: task_list_id, name: new_task_list_name});
+    await waitUntil(wait_for_update_tasks_list)
+    expect(the_error).toEqual({error: "An error occurred", type: "error"});
 }
 
 export async function adds_two_task_lists() {
