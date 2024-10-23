@@ -185,6 +185,10 @@ export const tasksMachine = createMachine(
                                 target: TasksMachineStates.addingTasks,
                                 actions: assign({ tasksLists: taskListWithCreatedTask() })
                             },
+                            onError: {
+                                target: TasksMachineStates.addingTasks,
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                            }
                         },
                     },
                     tickingTheTask: {
@@ -195,6 +199,10 @@ export const tasksMachine = createMachine(
                                 target: TasksMachineStates.addingTasks,
                                 actions: assign({ tasksLists: taskListWithTickedTask() })
                             },
+                            onError: {
+                                target: TasksMachineStates.addingTasks,
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                            }
                         },
                     },
                     choosingTasksToCarry: {
@@ -219,6 +227,10 @@ export const tasksMachine = createMachine(
                                 target: TasksMachineStates.assessingTasks,
                                 actions: assign({ tasksLists: taskListWithRemovedTask()})
                             },
+                            onError: {
+                                target: TasksMachineStates.addingTasks,
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                            }
                         }
                     },
                     carryingTheTask: {
@@ -229,6 +241,10 @@ export const tasksMachine = createMachine(
                                 target: TasksMachineStates.assessingTasks,
                                 actions: assign({ tasksLists: taskListWithCarriedTask()})
                             },
+                            onError: {
+                                target: TasksMachineStates.addingTasks,
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                            }
                         },
                     },
                     assessingTasks: {

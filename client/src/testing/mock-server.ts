@@ -45,24 +45,24 @@ export class MockServer {
         return was_called
     }
 
-    public patch(url: string, success = true) {
+    public patch(url: string, response = {}, success = true) {
         let called = false;
         const was_called = () => called;
         this.server.use(http.patch(url, () => {
             called = true;
-            if (!success) return HttpResponse.json({error: "An error occurred"}, {status: 422})
-            return HttpResponse.json({}, {status: 200})
+            if (!success) return HttpResponse.json(response, {status: 422})
+            return HttpResponse.json(response, {status: 200})
         }));
         return was_called
     }
     
-    public delete(url: string, success = true) {
+    public delete(url: string, response = {}, success = true) {
         let called = false;
         const was_called = () => called;
         this.server.use(http.delete(url, () => {
             called = true;
-            if (!success) return HttpResponse.json({error: "An error occurred"}, {status: 422})
-            return HttpResponse.json({}, {status: 200})
+            if (!success) return HttpResponse.json(response, {status: 422})
+            return HttpResponse.json(response, {status: 200})
         }));
         return was_called
     }
