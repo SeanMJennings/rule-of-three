@@ -37,6 +37,13 @@ export async function renderTasks() {
     return app;
 }
 
+export async function renderUnknownRoute() {
+    app = mountApp();
+    await router.push("/unknown");
+    return app;
+
+}
+
 function mountApp() {
     return mount(App, {
         global: {

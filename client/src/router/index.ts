@@ -19,6 +19,10 @@ export const routes: RouteRecordRaw[] = [
             }
         }
     },
+    {
+        path:  "/:pathMatch(.*)*",
+        component: Landing,
+    }
 ];
 
 const router = createRouter({
