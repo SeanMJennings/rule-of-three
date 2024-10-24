@@ -1,5 +1,5 @@
 ﻿import {expect} from "vitest";
-import {renderLanding, renderTasks, renderUnknownRoute} from "@/specs/App.page";
+import {renderLanding, renderTasks, renderUnknownRoute, the_route} from "@/specs/App.page";
 
 export async function renders_landing_page() {
     const wrapper = await renderLanding();
@@ -14,4 +14,5 @@ export async function render_tasks_page() {
 export async function renders_landing_page_by_the_default() {
     const wrapper = await renderUnknownRoute();
     expect(wrapper.text()).toContain("I am a fake landing!");
+    expect(the_route()).toBe("/");
 }

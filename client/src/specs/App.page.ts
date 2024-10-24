@@ -41,7 +41,10 @@ export async function renderUnknownRoute() {
     app = mountApp();
     await router.push("/unknown");
     return app;
+}
 
+export function the_route() {
+    return router.currentRoute.value.fullPath;
 }
 
 function mountApp() {

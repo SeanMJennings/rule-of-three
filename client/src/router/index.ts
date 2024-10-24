@@ -22,6 +22,8 @@ export const routes: RouteRecordRaw[] = [
     {
         path:  "/:pathMatch(.*)*",
         component: Landing,
+        redirect: "/",
+        children: []
     }
 ];
 
