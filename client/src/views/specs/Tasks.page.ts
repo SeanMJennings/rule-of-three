@@ -99,6 +99,18 @@ export async function addATaskList() {
     await addTaskListSubmit();
 }
 
+export function errorOverlayExists() {
+    return elements.errorOverlay.exists();
+}
+
+export function errorOverlayText() {
+    return elements.errorOverlay.text();
+}
+
+export function closeErrorOverlay() {
+    return elements.errorOverlayClose.trigger("click");
+}
+
 export async function toggleTasksListInput() {
     await clickTasksListCaret();
 }
@@ -238,6 +250,12 @@ const elements = {
     },
     get addTaskListSubmit() {
         return page.find("#add-task-list-submit");
+    },
+    get errorOverlay() {
+        return page.find("#error-overlay");
+    },
+    get errorOverlayClose() {
+        return page.find("#error-overlay-close");
     },
     get deleteTaskListSubmit() {
         return page.find("#delete-task-list-submit");

@@ -11,8 +11,8 @@ import {
     carryTaskHidden,
     characterCount,
     characterCountHidden,
-    clickAddTaskListPlaceholder,
-    createActor, deleteTaskList, loadingSpinnerExists,
+    clickAddTaskListPlaceholder, closeErrorOverlay,
+    createActor, deleteTaskList, errorOverlayExists, errorOverlayText, loadingSpinnerExists,
     pageText,
     removeTask,
     removeTaskHidden,
@@ -173,6 +173,27 @@ export async function selects_first_of_multiple_lists() {
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists)
     expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
+}
+
+export async function displays_overlay_modal_for_validation_errors() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", { error: "Name is required" }, false);
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(errorOverlayExists);
+    expect(errorOverlayText()).toContain("Name is required");
+}
+
+export async function lets_user_close_overlay_modal_for_validation_errors() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", { error: "Name is required" }, false);
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(errorOverlayExists);
+    await closeErrorOverlay();
+    expect(errorOverlayExists()).toBe(false);
 }
 
 export async function lets_user_add_a_task_list() {

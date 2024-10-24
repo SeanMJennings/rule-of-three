@@ -5,13 +5,17 @@ import {
     character_count_limit_hidden_when_input_is_empty,
     disables_add_task_button_when_input_is_empty,
     displays_character_count_limit,
-    displays_list_character_count_limit, displays_loading_spinner_until_task_lists_are_loaded,
+    displays_list_character_count_limit,
+    displays_loading_spinner_until_task_lists_are_loaded,
+    displays_overlay_modal_for_validation_errors,
     displays_page_number_of_tasks,
-    does_not_show_remove_or_carry_for_ticked_tasks, ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded,
+    does_not_show_remove_or_carry_for_ticked_tasks,
+    ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded,
     lets_user_add_a_task_list,
-    lets_user_carry_tasks,
+    lets_user_carry_tasks, lets_user_close_overlay_modal_for_validation_errors,
     lets_user_collapse_tasks_list_input,
-    lets_user_collapse_tasks_list_single_select, lets_user_delete_a_task_list,
+    lets_user_collapse_tasks_list_single_select,
+    lets_user_delete_a_task_list,
     lets_user_expand_tasks_list_input,
     lets_user_expand_tasks_list_single_select,
     lets_user_remove_tasks,
@@ -20,7 +24,8 @@ import {
     list_character_count_limit_hidden_when_input_is_empty,
     only_shows_remove_tasks_for_tasks_carried_twice,
     renders_tasks,
-    selects_first_of_multiple_lists, shows_correct_tasks_when_selecting_a_different_list,
+    selects_first_of_multiple_lists,
+    shows_correct_tasks_when_selecting_a_different_list,
     shows_task_count_if_there_are_tasks,
     shows_task_list_single_select_when_there_is_one_list
 } from '@/views/specs/Tasks.steps'
@@ -40,6 +45,8 @@ describe("Tasks", () => {
         it('lets user collapse tasks list single select', lets_user_collapse_tasks_list_single_select);
         it('lets user expand tasks list single select', lets_user_expand_tasks_list_single_select);
         it('selects first of multiple lists', selects_first_of_multiple_lists);
+        it("displays overlay modal for validation errors", displays_overlay_modal_for_validation_errors);
+        it("lets user close overlay modal for validation errors", lets_user_close_overlay_modal_for_validation_errors);
     });
     describe("Tasks", () => {
         it("renders tasks", renders_tasks);

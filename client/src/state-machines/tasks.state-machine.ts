@@ -23,6 +23,11 @@ export type TasksMachineContext = {
     tasksLists: TasksList[];
 };
 
+export type TasksMachineError = {
+    type: string;
+    error: string;
+};
+
 type TasksMachineNestedContext = {
     context: TasksMachineContext;
 };

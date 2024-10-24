@@ -7,7 +7,7 @@ const props = defineProps<{
   the_id?: string
   disabled?: boolean
   icon: IconDefinition
-  iconStyle: typeof styles
+  iconStyle?: typeof styles
 }>();
 </script>
 
