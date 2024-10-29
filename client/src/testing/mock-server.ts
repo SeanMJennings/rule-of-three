@@ -51,7 +51,7 @@ export class MockServer {
         this.server.use(http.patch(url, () => {
             called = true;
             if (!success) return HttpResponse.json(response, {status: 422})
-            return HttpResponse.json(response, {status: 200})
+            return HttpResponse.json({}, {status: 200})
         }));
         return was_called
     }
@@ -62,7 +62,7 @@ export class MockServer {
         this.server.use(http.delete(url, () => {
             called = true;
             if (!success) return HttpResponse.json(response, {status: 422})
-            return HttpResponse.json(response, {status: 200})
+            return HttpResponse.json({}, {status: 200})
         }));
         return was_called
     }

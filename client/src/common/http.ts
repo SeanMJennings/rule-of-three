@@ -45,6 +45,7 @@ function handleResponse(): ((value: Response) => any) | null | undefined {
                 code: response.status
             };
         }
+        if (response.status === 204) return;
         return (await response.json());
     };
 }
