@@ -17,7 +17,7 @@ defineProps<{
       <FontAwesomeIcon id="error-overlay-close" :class="styles.icon" :icon="faX" v-on:click="onClose"/>
     </div>
     <div :class="styles.body">
-      <span>{{ theError }}</span>
+      <span>{{ (theError !== undefined && theError !== '') ? theError : "The error is unknown" }}</span>
     </div>
   </div>
 </template>
