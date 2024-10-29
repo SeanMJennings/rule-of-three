@@ -109,7 +109,7 @@ export const tasksMachine = createMachine(
                         }),
                     },
                     onError: {
-                        target: TasksListMachineStates.readyToAddTasksLists,
+                        target: TasksListMachineStates.addingTasksLists,
                         actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
                     }
                 },
@@ -166,6 +166,10 @@ export const tasksMachine = createMachine(
                         }),
                         target: TasksListMachineStates.assessingTasksList,
                     },
+                },
+                always: {
+                    guard: "tasksListsAreEmpty",
+                    target: TasksListMachineStates.readyToAddTasksLists,
                 },
                 states: {
                     addingTasks: {
@@ -282,6 +286,9 @@ export const tasksMachine = createMachine(
             },
             tasksListsExist: ({context}) => {
                 return context.tasksLists.length > 0;
+            },
+            tasksListsAreEmpty: ({context}) => {
+                return context.tasksLists.length === 0;
             }
         },
     },

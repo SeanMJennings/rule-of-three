@@ -9,7 +9,7 @@ import type {Id} from "@/types/types";
 import {faList, faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
-import {notEmpty, showCreateTasksList} from "@/state-machines/tasks.extensions";
+import {notEmpty, readyToAddTasks, showCreateTasksList} from "@/state-machines/tasks.extensions";
 let subscription: Subscription;
 
 type TasksListModel = { name: string };
@@ -87,11 +87,11 @@ onUnmounted(() => {
       </div>
       <span id="tasks-list-character-count" :class="commonStyle.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
     </div>
-    <div v-if="snapshot.context.tasksLists.length > 0" :class="style.header" v-on:click="toggleTasksSelect()">
+    <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0" :class="style.header" v-on:click="toggleTasksSelect()">
       <ButtonIcon :class="commonStyle.button" :icon="faList" :iconStyle="commonStyle.icon"/>
       <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" />
     </div>
-    <div v-if="snapshot.context.tasksLists.length > 0 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
+    <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="task-list-single-select">Select Tasks List</label>
       <div :class="style.selectInputContainer">
         <select id="task-list-single-select" v-model="selectedTasksList.id" :class="style.selectInput">
