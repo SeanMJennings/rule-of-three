@@ -5,6 +5,7 @@ import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machin
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 import {getName, getTasks} from "@/state-machines/tasks.extensions";
+import type {HttpError} from "@/common/http";
 
 const mockServer = MockServer.New();
 let tasks = {} as Actor<typeof tasksMachine>;
@@ -41,7 +42,7 @@ export async function notifies_when_failing_to_load_a_task_list() {
     tasks.send({type: "reset"})
     await waitForLoadingToFinish();
     await waitUntil(wait_for_get_tasks_list)
-    expect(the_error).toEqual({error: "Failed to load tasks list", type: "error"});
+    expect(the_error).toEqual({error: "Failed to load tasks list", type: "error", code: 422});
 }
 
 export async function loads_a_task_list() {
@@ -91,7 +92,7 @@ export async function notifies_when_failing_to_add_a_task_list() {
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    expect(the_error).toEqual({error: "Failed to add tasks list", type: "error"});
+    expect(the_error).toEqual({error: "Failed to add tasks list", type: "error", code: 422});
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.readyToAddTasksLists);
 }
 
@@ -134,7 +135,7 @@ export async function notifies_when_failing_to_delete_a_task_list() {
     const wait_for_delete_tasks_list = mockServer.delete(`/tasks-lists/${task_list_id}`, { error: "Failed to delete task list" }, false)
     tasks.send({type: "deleteTasksList", id: task_list_id});
     await waitUntil(wait_for_delete_tasks_list)
-    expect(the_error).toEqual({error: "Failed to delete task list", type: "error"});
+    expect(the_error).toEqual({error: "Failed to delete task list", type: "error", code: 422});
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
 }
 
@@ -148,7 +149,7 @@ export async function notifies_when_failing_to_update_a_task_list_name() {
     tasks.on("error", (e) => the_error = e);
     tasks.send({type: "updateTasksList", id: task_list_id, name: new_task_list_name});
     await waitUntil(wait_for_update_tasks_list)
-    expect(the_error).toEqual({error: "Failed to update task list name", type: "error"});
+    expect(the_error).toEqual({error: "Failed to update task list name", type: "error", code: 422});
 }
 
 export async function adds_two_task_lists() {
@@ -215,7 +216,7 @@ export async function notifies_when_failing_to_add_a_task() {
     const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { error: "Failed to add a task" }, false);
     tasks.send({type: "add", content: "Task content"});
     await waitUntil(wait_for_add_task);
-    expect(the_error).toEqual({error: "Failed to add a task", type: "error"});
+    expect(the_error).toEqual({error: "Failed to add a task", type: "error", code: 422});
 }
 
 export async function notifies_when_failing_to_tick_off_a_task() {
@@ -231,7 +232,7 @@ export async function notifies_when_failing_to_tick_off_a_task() {
     const wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/tick`, { error: "Failed to tick a task" }, false);
     tasks.send({ type: "tick", id: task_id });
     await waitUntil(wait_for_tick_task);
-    expect(the_error).toEqual({error: "Failed to tick a task", type: "error"});
+    expect(the_error).toEqual({error: "Failed to tick a task", type: "error", code: 422});
 }
 
 export async function lets_user_tick_off_task() {
@@ -315,7 +316,7 @@ export async function notifies_when_failing_to_carry_a_task() {
     const wait_for_carry_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/carry`, { error: "Failed to carry a task" }, false)
     tasks.send({type: "carry", id: task_id});
     await waitUntil(wait_for_carry_task)
-    expect(the_error).toEqual({error: "Failed to carry a task", type: "error"});
+    expect(the_error).toEqual({error: "Failed to carry a task", type: "error", code: 422});
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry);
 }
 
@@ -363,7 +364,7 @@ export async function notifies_when_failing_to_remove_a_task() {
     const wait_for_remove_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/remove`, { error: "Failed to remove a task" }, false)
     tasks.send({type: "remove", id: task_id});
     await waitUntil(wait_for_remove_task)
-    expect(the_error).toEqual({error: "Failed to remove a task", type: "error"});
+    expect(the_error).toEqual({error: "Failed to remove a task", type: "error", code: 422});
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry);
 }
 

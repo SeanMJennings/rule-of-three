@@ -26,6 +26,7 @@ export type TasksMachineContext = {
 export type TasksMachineError = {
     type: string;
     error: string;
+    code: number;
 };
 
 type TasksMachineNestedContext = {
@@ -75,7 +76,7 @@ export const tasksMachine = createMachine(
                     },
                     onError: {
                         target: TasksListMachineStates.empty,
-                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                     }
                 },
             },
@@ -110,7 +111,7 @@ export const tasksMachine = createMachine(
                     },
                     onError: {
                         target: TasksListMachineStates.addingTasksLists,
-                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                     }
                 },
             },
@@ -124,7 +125,7 @@ export const tasksMachine = createMachine(
                     },
                     onError: {
                         target: TasksListMachineStates.addingTasksLists,
-                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                     }
                 },
             },
@@ -141,7 +142,7 @@ export const tasksMachine = createMachine(
                     },
                     onError: {
                         target: TasksListMachineStates.addingTasksLists,
-                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                     }
                 },
             },
@@ -196,7 +197,7 @@ export const tasksMachine = createMachine(
                             },
                             onError: {
                                 target: TasksMachineStates.addingTasks,
-                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                             }
                         },
                     },
@@ -210,7 +211,7 @@ export const tasksMachine = createMachine(
                             },
                             onError: {
                                 target: TasksMachineStates.addingTasks,
-                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                             }
                         },
                     },
@@ -238,7 +239,7 @@ export const tasksMachine = createMachine(
                             },
                             onError: {
                                 target: TasksMachineStates.choosingTasksToCarry,
-                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                             }
                         }
                     },
@@ -252,7 +253,7 @@ export const tasksMachine = createMachine(
                             },
                             onError: {
                                 target: TasksMachineStates.choosingTasksToCarry,
-                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
                             }
                         },
                     },

@@ -8,10 +8,11 @@ afterEach(() => {
     app.unmount();
 });
 
-export function mountOverlay() {
+export function mountOverlay(message: string = "", code: number = 422, ) {
     app = mount(Overlay,{
         props: {
-            theError: "",
+            theError: message,
+            code: code,
             onClose: () => {}
         }
     });

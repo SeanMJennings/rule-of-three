@@ -24,7 +24,12 @@ const {snapshot, send, actorRef} = props.tasksMachineProvider();
 const showLoading = ref(true)
 const showErrorModal = ref(false)
 const theError = ref("")
-const closeErrorModal = () => showErrorModal.value = false;
+const code = ref(0)
+const closeErrorModal = () => {
+  showErrorModal.value = false;
+  theError.value = "";
+  code.value = 0;
+}
 
 onMounted(() => {
   subscription = actorRef.subscribe((s) => {
@@ -32,6 +37,7 @@ onMounted(() => {
   });
   errorSubscription = actorRef.on('error', (e) => {
     theError.value = (e as TasksMachineError).error;
+    code.value = (e as TasksMachineError).code;
     showErrorModal.value = true;
   })
 });
@@ -44,7 +50,7 @@ onUnmounted(() => {
 
 <template>
   <main>
-    <Overlay v-if="showErrorModal" :the-error="theError" :on-close="closeErrorModal"></Overlay>
+    <Overlay v-if="showErrorModal" :the-error="theError" :code="code" :on-close="closeErrorModal"></Overlay>
     <div v-if="showLoading" :class="styles.container">
       <VueSpinner id="loadingSpinner" :class="styles.spinner" size="30" color="white" />
     </div>
