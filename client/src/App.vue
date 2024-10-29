@@ -2,10 +2,13 @@
 import {RouterView} from "vue-router";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import ErrorBoundary from "@/components/ErrorBoundary.vue";
 </script>
 
 <template>
   <Header/>
-  <RouterView/>
+  <ErrorBoundary>
+    <RouterView/>
+  </ErrorBoundary>
   <Footer/>
 </template>

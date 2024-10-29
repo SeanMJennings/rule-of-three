@@ -627,6 +627,18 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@lottiefiles/dotlottie-vue@^0.4.17":
+  version "0.4.17"
+  resolved "https://registry.yarnpkg.com/@lottiefiles/dotlottie-vue/-/dotlottie-vue-0.4.17.tgz#e9f104cbb8125437fd9bcf0bfbd4e72b8839c970"
+  integrity sha512-6S+0387HVltiFPZB3wfer3e+oKj5C1e7UGHZr2Q9UcEx/Dep+SUMB5gAvfGnclnhFXpOFwckQUlB49oXmC2HwA==
+  dependencies:
+    "@lottiefiles/dotlottie-web" "0.36.0"
+
+"@lottiefiles/dotlottie-web@0.36.0":
+  version "0.36.0"
+  resolved "https://registry.yarnpkg.com/@lottiefiles/dotlottie-web/-/dotlottie-web-0.36.0.tgz#ca2cf4d9c4dce6cfe79f36cb2d539f8469da1325"
+  integrity sha512-FVGlQnhT95+aKrf4OiyC4/fP6ESZa8YwYDyvfuAeWktHFdAT/7Gbt76ZmCZU/Bwera6FB7UgJuoAtK/duTFCZQ==
+
 "@mswjs/interceptors@^0.35.8":
   version "0.35.9"
   resolved "https://registry.yarnpkg.com/@mswjs/interceptors/-/interceptors-0.35.9.tgz#1e1488ff2f333683d374eccc8c0f4d5d851c6d3d"

@@ -3,9 +3,13 @@ import {afterEach, beforeEach, vi} from 'vitest'
 import App from "../App.vue";
 import {createRouter, createWebHistory, type Router} from "vue-router";
 import {routes} from "@/router";
+import ErroringComponent from "@/testing/ErroringComponent.vue";
 
 let router: Router = {} as Router;
 let app: VueWrapper;
+
+// @ts-ignore
+HTMLCanvasElement.prototype.getContext = () => {};
 
 vi.mock("../views/Landing.vue", () => {
     return {default: {template: "<div>I am a fake landing!</div>"}};
@@ -19,6 +23,10 @@ beforeEach(() => {
         history: createWebHistory(),
         routes: routes,
     });
+    router.addRoute(    {
+        path: "/wibble",
+        component: ErroringComponent,
+    },)
 });
 
 afterEach(() => {
@@ -43,6 +51,12 @@ export async function renderUnknownRoute() {
     return app;
 }
 
+export async function renders_erroring_app() {
+    app = mountApp();
+    await router.push("/wibble");
+    return app;
+}
+
 export function the_route() {
     return router.currentRoute.value.fullPath;
 }
@@ -50,7 +64,7 @@ export function the_route() {
 function mountApp() {
     return mount(App, {
         global: {
-            plugins: [router],
-        },
+            plugins: [router]
+        }
     });
 }
