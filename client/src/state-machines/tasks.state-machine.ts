@@ -109,7 +109,7 @@ export const tasksMachine = createMachine(
                         }),
                     },
                     onError: {
-                        target: TasksListMachineStates.addingTasksLists,
+                        target: TasksListMachineStates.readyToAddTasksLists,
                         actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
                     }
                 },
@@ -140,7 +140,7 @@ export const tasksMachine = createMachine(
                         }),
                     },
                     onError: {
-                        target: TasksListMachineStates.empty,
+                        target: TasksListMachineStates.addingTasksLists,
                         actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
                     }
                 },
@@ -233,7 +233,7 @@ export const tasksMachine = createMachine(
                                 actions: assign({ tasksLists: taskListWithRemovedTask()})
                             },
                             onError: {
-                                target: TasksMachineStates.addingTasks,
+                                target: TasksMachineStates.choosingTasksToCarry,
                                 actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
                             }
                         }
@@ -247,7 +247,7 @@ export const tasksMachine = createMachine(
                                 actions: assign({ tasksLists: taskListWithCarriedTask()})
                             },
                             onError: {
-                                target: TasksMachineStates.addingTasks,
+                                target: TasksMachineStates.choosingTasksToCarry,
                                 actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error }})
                             }
                         },

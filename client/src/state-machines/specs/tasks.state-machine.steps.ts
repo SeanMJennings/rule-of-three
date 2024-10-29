@@ -92,6 +92,7 @@ export async function notifies_when_failing_to_add_a_task_list() {
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     expect(the_error).toEqual({error: "Failed to add tasks list", type: "error"});
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.readyToAddTasksLists);
 }
 
 export async function deletes_a_task_list() {
@@ -134,6 +135,7 @@ export async function notifies_when_failing_to_delete_a_task_list() {
     tasks.send({type: "deleteTasksList", id: task_list_id});
     await waitUntil(wait_for_delete_tasks_list)
     expect(the_error).toEqual({error: "Failed to delete task list", type: "error"});
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
 }
 
 export async function notifies_when_failing_to_update_a_task_list_name() {
@@ -314,6 +316,7 @@ export async function notifies_when_failing_to_carry_a_task() {
     tasks.send({type: "carry", id: task_id});
     await waitUntil(wait_for_carry_task)
     expect(the_error).toEqual({error: "Failed to carry a task", type: "error"});
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry);
 }
 
 export async function removes_ticked_tasks_when_all_tasks_are_carried() {
@@ -361,6 +364,7 @@ export async function notifies_when_failing_to_remove_a_task() {
     tasks.send({type: "remove", id: task_id});
     await waitUntil(wait_for_remove_task)
     expect(the_error).toEqual({error: "Failed to remove a task", type: "error"});
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry);
 }
 
 export async function cannot_carry_tasks_past_two_pages() {
