@@ -8,6 +8,7 @@ from src._app import add_app_url
 
 class TasksListHandlerForGroups(MethodView):
     init_every_request = False
+    decorators = []
 
     @staticmethod
     def route():
@@ -30,6 +31,7 @@ class TasksListHandlerForGroups(MethodView):
 
 class TasksListHandlerForItems(MethodView):
     init_every_request = False
+    decorators = []
 
     @staticmethod
     def route():
@@ -62,6 +64,7 @@ class TasksListHandlerForItems(MethodView):
 
 class AddTasksHandler(MethodView):
     init_every_request = False
+    decorators = []
 
     @staticmethod
     def route():
@@ -83,6 +86,7 @@ class AddTasksHandler(MethodView):
 
 class TickTaskHandler(MethodView):
     init_every_request = False
+    decorators = []
 
     @staticmethod
     def route():
@@ -102,6 +106,7 @@ class TickTaskHandler(MethodView):
 
 class RemoveTaskHandler(MethodView):
     init_every_request = False
+    decorators = []
 
     @staticmethod
     def route():
@@ -121,6 +126,7 @@ class RemoveTaskHandler(MethodView):
 
 class CarryTaskHandler(MethodView):
     init_every_request = False
+    decorators = []
 
     @staticmethod
     def route():
