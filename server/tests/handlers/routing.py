@@ -1,4 +1,8 @@
-﻿def tasks_url():
+﻿def nonsense_url():
+    return "http://localhost:5000/api/nonsense"
+
+
+def tasks_url():
     return "http://localhost:5000/api/tasks-lists"
 
 

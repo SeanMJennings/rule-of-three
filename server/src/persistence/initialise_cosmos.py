@@ -4,7 +4,7 @@ import urllib3
 from pathlib import Path
 import yaml
 import os
-from src.persistence.run_windows_cosmos import start_and_wait_for_cosmos
+from src.persistence.run_cosmos import start_and_wait_for_cosmos
 
 path = Path(__file__).parent / "../config.yaml"
 config = yaml.safe_load(open(path))

@@ -1,5 +1,6 @@
 ﻿from flask.views import MethodView
 from flask import request
+
 from .requests import get_request_body_property
 from .responses import *
 from src.application.tasks_list_service import TasksListService

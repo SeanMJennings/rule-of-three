@@ -8,6 +8,8 @@ def success_response(item) -> Response:
         return Response(
             response=json.dumps([i.to_dict() for i in item]), status=http.client.OK
         )
+    if item is None:
+        return Response(status=http.client.OK)
     return Response(response=json.dumps(item.to_dict()), status=http.client.OK)
 
 

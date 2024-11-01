@@ -8,7 +8,11 @@ private_key = key.export_private()
 issuer = "https://wibblewobble.uk.auth0.com/"
 audience = issuer + "api/v2/"
 algorithm = "RS256"
-well_known_jwks_json = {"keys": [public_key.export()]}
+well_known_jwks_json = {"keys": [public_key]}
+
+
+def get_jwks():
+    return well_known_jwks_json
 
 
 def valid_payload():
@@ -38,7 +42,3 @@ def the_payload(the_token):
         algorithms=[audience],
         audience=audience,
     )
-
-
-print(private_key)
-print(public_key)
