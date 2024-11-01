@@ -1,7 +1,6 @@
-﻿import http
-import json
+﻿import json
 import pytest
-
+from http import HTTPStatus
 from src.app import create_app
 from src.application.validation_exception import ValidationException
 from tests.handlers.routing import tasks_url
@@ -44,10 +43,10 @@ def catching_the_error():
 
 
 def the_validation_error_is_handled():
-    assert response.status_code == http.client.UNPROCESSABLE_ENTITY
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     assert json.loads(response.data)["error"] == "wibble"
 
 
 def the_error_is_handled():
-    assert response.status_code == http.client.INTERNAL_SERVER_ERROR
+    assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
     assert json.loads(response.data)["error"] == "Internal server error"

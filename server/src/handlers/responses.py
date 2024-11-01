@@ -1,30 +1,30 @@
 ﻿from flask import Response
-import http
+from http import HTTPStatus
 import json
 
 
 def success_response(item) -> Response:
     if isinstance(item, list):
         return Response(
-            response=json.dumps([i.to_dict() for i in item]), status=http.client.OK
+            response=json.dumps([i.to_dict() for i in item]), status=HTTPStatus.OK
         )
     if item is None:
-        return Response(status=http.client.OK)
-    return Response(response=json.dumps(item.to_dict()), status=http.client.OK)
+        return Response(status=HTTPStatus.OK)
+    return Response(response=json.dumps(item.to_dict()), status=HTTPStatus.OK)
 
 
 def created_response(id) -> Response:
     if id is None:
-        return Response(status=http.client.CREATED)
-    return Response(response=json.dumps(id), status=http.client.CREATED)
+        return Response(status=HTTPStatus.CREATED)
+    return Response(response=json.dumps(id), status=HTTPStatus.CREATED)
 
 
 def not_found_response(error: str) -> Response:
     return Response(
         response=json.dumps({"error": error}),
-        status=http.client.NOT_FOUND,
+        status=HTTPStatus.NOT_FOUND,
     )
 
 
 def no_content_response() -> Response:
-    return Response(status=http.client.NO_CONTENT)
+    return Response(status=HTTPStatus.NO_CONTENT)

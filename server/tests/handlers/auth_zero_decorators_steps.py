@@ -4,7 +4,7 @@ from flask import Flask
 from flask.views import MethodView
 from flask_cors import CORS
 from flask.testing import FlaskClient
-
+from azure.cosmos.http_constants import HTTPStatus
 from src.handlers.auth_zero_decorators import requires_auth
 from src.handlers.exception_handlers import handle_exception
 from src.handlers.responses import *
@@ -17,6 +17,8 @@ from tests.auth_zero_tokens import (
     rs256_token,
     different_issuer_payload,
 )
+
+from http import HTTPStatus
 from tests.handlers.routing import nonsense_url
 
 response = None
@@ -113,12 +115,12 @@ def making_the_request():
 
 
 def an_authorised_header_is_expected():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert json.loads(response.data)["error"] == "Authorization header is expected"
 
 
 def authorised_header_must_start_with_bearer():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
         json.loads(response.data)["error"]
         == "Authorization header must start with: Bearer"
@@ -126,12 +128,12 @@ def authorised_header_must_start_with_bearer():
 
 
 def authorised_header_must_have_token():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert json.loads(response.data)["error"] == "Token not found"
 
 
 def authorised_header_must_only_have_bearer_and_token():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
         json.loads(response.data)["error"]
         == "Authorization header must be: Bearer token"
@@ -139,7 +141,7 @@ def authorised_header_must_only_have_bearer_and_token():
 
 
 def requires_rs_256_signed_jwt():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
         json.loads(response.data)["error"]
         == "Invalid header. Use an RS256 signed JWT Access Token"
@@ -147,12 +149,12 @@ def requires_rs_256_signed_jwt():
 
 
 def requires_an_unexpired_token():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert json.loads(response.data)["error"] == "Token is expired"
 
 
 def requires_correct_issuer():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
         json.loads(response.data)["error"]
         == "Incorrect claims, please check the audience and issuer"
@@ -160,12 +162,12 @@ def requires_correct_issuer():
 
 
 def requires_correct_key_id():
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert json.loads(response.data)["error"] == "Unable to find appropriate key"
 
 
 def allows_valid_token():
-    assert response.status_code == http.client.OK
+    assert response.status_code == HTTPStatus.OK
 
 
 def a_tasks_list_name():

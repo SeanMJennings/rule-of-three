@@ -1,5 +1,4 @@
 ﻿# Taken from https://github.com/auth0-samples/auth0-python-api-samples/blob/master/00-Starter-Seed/server.py
-import os
 from functools import wraps
 import json
 from typing import Dict
@@ -61,10 +60,6 @@ def requires_scope(required_scope: str) -> bool:
 def requires_auth(func):
     @wraps(func)
     def decorated(*args, **kwargs):
-        # Toggle off in prod for now
-        if os.getenv("AZURE_EXTENSION_DIR") is not None:
-            return func(*args, **kwargs)
-
         token = get_token_auth_header()
         jwks = get_jwks()
         try:

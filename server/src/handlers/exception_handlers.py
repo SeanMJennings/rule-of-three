@@ -1,15 +1,14 @@
 ﻿from flask import jsonify
 from src.application.validation_exception import ValidationException
-import http
-
 from src.handlers.auth_zero_decorators import AuthError
+from http import HTTPStatus
 
 
 def handle_exception(err):
     if type(err) is ValidationException:
-        return jsonify({"error": " ".join(err.args)}), http.client.UNPROCESSABLE_ENTITY
+        return jsonify({"error": " ".join(err.args)}), HTTPStatus.UNPROCESSABLE_ENTITY
     if type(err) is AuthError:
-        return jsonify({"error": " ".join(err.args)}), http.client.UNAUTHORIZED
+        return jsonify({"error": " ".join(err.args)}), HTTPStatus.UNAUTHORIZED
     else:
         response = {"error": "Internal server error"}
-    return jsonify(response), http.client.INTERNAL_SERVER_ERROR
+    return jsonify(response), HTTPStatus.INTERNAL_SERVER_ERROR
