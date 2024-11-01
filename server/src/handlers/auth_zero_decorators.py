@@ -95,7 +95,7 @@ def requires_auth(func):
                     issuer="https://" + AUTH0_DOMAIN + "/",
                 )
             except jwt.ExpiredSignatureError as expired_sign_error:
-                raise AuthError({"error": "Token is expired"}) from expired_sign_error
+                raise AuthError("Token is expired") from expired_sign_error
             except jwt.JWTClaimsError as jwt_claims_error:
                 raise AuthError(
                     "Incorrect claims, please check the audience and issuer"

@@ -3,16 +3,16 @@ requires-python = "==3.10.14"
 
 [[package]]
 name = "azure-core"
-version = "1.31.0"
+version = "1.32.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests" },
     { name = "six" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/03/7a/f79ad135a276a37e61168495697c14ba1721a52c3eab4dae2941929c79f8/azure_core-1.31.0.tar.gz", hash = "sha256:656a0dd61e1869b1506b7c6a3b31d62f15984b1a573d6326f6aa2f3e4123284b", size = 277147 }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/ee/668328306a9e963a5ad9f152cd98c7adad86c822729fd1d2a01613ad1e67/azure_core-1.32.0.tar.gz", hash = "sha256:22b3c35d6b2dae14990f6c1be2912bf23ffe50b220e708a28ab1bb92b1c730e5", size = 279128 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/01/8e/fcb6a77d3029d2a7356f38dbc77cf7daa113b81ddab76b5593d23321e44c/azure_core-1.31.0-py3-none-any.whl", hash = "sha256:22954de3777e0250029360ef31d80448ef1be13b80a459bff80ba7073379e2cd", size = 197399 },
+    { url = "https://files.pythonhosted.org/packages/39/83/325bf5e02504dbd8b4faa98197a44cdf8a325ef259b48326a2b6f17f8383/azure_core-1.32.0-py3-none-any.whl", hash = "sha256:eac191a0efb23bfa83fddf321b27b122b4ec847befa3091fa736a5c32c50d7b4", size = 198855 },
 ]
 
 [[package]]
@@ -843,12 +843,12 @@ wheels = [
 
 [[package]]
 name = "werkzeug"
-version = "3.0.6"
+version = "3.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markupsafe" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d4/f9/0ba83eaa0df9b9e9d1efeb2ea351d0677c37d41ee5d0f91e98423c7281c9/werkzeug-3.0.6.tar.gz", hash = "sha256:a8dd59d4de28ca70471a34cba79bed5f7ef2e036a76b3ab0835474246eb41f8d", size = 805170 }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/09/a3137f4decac87db077c9edd03a23f85462db89d898caa10223dad4d9af2/werkzeug-3.1.0.tar.gz", hash = "sha256:6f2a0d38f25ba5a75c36c45b4ae350c7a23b57e3b974e9eb2d6851f2c648c00d", size = 806386 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6c/69/05837f91dfe42109203ffa3e488214ff86a6d68b2ed6c167da6cdc42349b/werkzeug-3.0.6-py3-none-any.whl", hash = "sha256:1bc0c2310d2fbb07b1dd1105eba2f7af72f322e1e455f2f93c993bee8c8a5f17", size = 227979 },
+    { url = "https://files.pythonhosted.org/packages/2a/f5/4bda0c186b4503ab7df3eaf64c80bab2a230232e140bd83604d103244c39/werkzeug-3.1.0-py3-none-any.whl", hash = "sha256:208a2e31a4a54c8b3d2244f2079ca1d3851629a7a7d546646059c64fb746023a", size = 224367 },
 ]

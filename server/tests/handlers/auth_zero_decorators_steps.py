@@ -8,7 +8,13 @@ from flask.testing import FlaskClient
 from src.handlers.auth_zero_decorators import requires_auth
 from src.handlers.exception_handlers import handle_exception
 from src.handlers.responses import *
-from tests.auth_zero_tokens import get_jwks as mock_get_jwks
+from tests.auth_zero_tokens import (
+    get_jwks as mock_get_jwks,
+    valid_payload,
+    expired_payload,
+    hs256_token,
+    rs256_token,
+)
 from tests.handlers.routing import nonsense_url
 
 response = None
@@ -63,6 +69,21 @@ def a_request_with_authorisation_header_containing_extras():
     headers = {"Authorization": "Bearer token wibble"}
 
 
+def a_request_with_invalid_token():
+    global headers
+    headers = {"Authorization": "Bearer sillytoken"}
+
+
+def a_request_with_an_hs_256_signed_token():
+    global headers
+    headers = {"Authorization": "Bearer " + hs256_token(valid_payload())}
+
+
+def a_request_with_an_expired_token():
+    global headers
+    headers = {"Authorization": "Bearer " + rs256_token(expired_payload())}
+
+
 def an_api_that_requires_authorisation():
     return None
 
@@ -96,6 +117,19 @@ def authorised_header_must_only_have_bearer_and_token():
         json.loads(response.data)["error"]
         == "Authorization header must be: Bearer token"
     )
+
+
+def requires_rs_256_signed_jwt():
+    assert response.status_code == http.client.UNAUTHORIZED
+    assert (
+        json.loads(response.data)["error"]
+        == "Invalid header. Use an RS256 signed JWT Access Token"
+    )
+
+
+def requires_an_unexpired_token():
+    assert response.status_code == http.client.UNAUTHORIZED
+    assert json.loads(response.data)["error"] == "Token is expired"
 
 
 def a_tasks_list_name():

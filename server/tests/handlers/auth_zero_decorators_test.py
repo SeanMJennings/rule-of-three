@@ -32,3 +32,27 @@ def test_requires_authorisation_header_to_only_contain_bearer_and_token(mocker):
     And(an_api_that_requires_authorisation)
     When(making_the_request)
     Then(authorised_header_must_only_have_bearer_and_token)
+
+
+def test_requires_valid_token(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_request_with_invalid_token)
+    And(an_api_that_requires_authorisation)
+    When(making_the_request)
+    Then(requires_rs_256_signed_jwt)
+
+
+def test_does_not_allow_hs_256_signed_jwt(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_request_with_an_hs_256_signed_token)
+    And(an_api_that_requires_authorisation)
+    When(making_the_request)
+    Then(requires_rs_256_signed_jwt)
+
+
+def test_does_not_allow_expired_token(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_request_with_an_expired_token)
+    And(an_api_that_requires_authorisation)
+    When(making_the_request)
+    Then(requires_an_unexpired_token)

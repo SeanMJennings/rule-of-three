@@ -1,14 +1,19 @@
-﻿import jwt
-from jwcrypto import jwk
+﻿import json
 
+from jwcrypto import jwk, jwt
 
-key = jwk.JWK.generate(kty="RSA", size=2048, alg="RSA-OAEP-256", use="sig", kid="12345")
-public_key = key.export_public()
-private_key = key.export_private()
+kid = "12345"
+rs256_algorithm = "RS256"
+hs256_algorithm = "HS256"
+rs256_key = jwk.JWK.generate(
+    kty="RSA", size=2048, alg=rs256_algorithm, use="sig", kid=kid
+)
+hs256_key = jwk.JWK.generate(kty="oct", size=256, alg=hs256_algorithm, use="sig")
+public_key = rs256_key.export_public()
+private_key = rs256_key.export_private()
 issuer = "https://wibblewobble.uk.auth0.com/"
 audience = issuer + "api/v2/"
-algorithm = "RS256"
-well_known_jwks_json = {"keys": [public_key]}
+well_known_jwks_json = {"keys": [json.loads(public_key)]}
 
 
 def get_jwks():
@@ -27,18 +32,50 @@ def valid_payload():
     }
 
 
+def expired_payload():
+    return {
+        "iss": issuer,
+        "sub": "BvwjAUeDP0Y0EERDlJvs6JJHxPQsbRUw@clients",
+        "aud": audience,
+        "iat": 1730377646,
+        "exp": 1730377647,  # expired
+        "gty": "client-credentials",
+        "azp": "BvwjAUeEQSY0QGlDlJvs6JJHxPQsbRUw",
+    }
+
+
 def the_public_key():
     return public_key
 
 
-def token(payload):
-    return jwt.encode(payload, private_key, algorithm=algorithm)
+def rs256_token(payload):
+    jwt_token = jwt.JWT(
+        header={
+            "alg": rs256_algorithm,
+            "kid": kid,
+        },
+        claims=payload,
+    )
+    jwt_token.make_signed_token(rs256_key)
+    return jwt_token.serialize()
+
+
+def hs256_token(payload):
+    jwt_token = jwt.JWT(
+        header={
+            "alg": hs256_algorithm,
+            "kid": kid,
+        },
+        claims=payload,
+    )
+    jwt_token.make_signed_token(hs256_key)
+    return jwt_token.serialize()
 
 
 def the_payload(the_token):
     return jwt.decode(
         the_token,
         private_key.public_key(),
-        algorithms=[audience],
+        algorithms=[rs256_algorithm],
         audience=audience,
     )
