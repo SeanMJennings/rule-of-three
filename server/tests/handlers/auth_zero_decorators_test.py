@@ -56,3 +56,27 @@ def test_does_not_allow_expired_token(mocker):
     And(an_api_that_requires_authorisation)
     When(making_the_request)
     Then(requires_an_unexpired_token)
+
+
+def test_checks_audience(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_request_with_an_incorrect_audience)
+    And(an_api_that_requires_authorisation)
+    When(making_the_request)
+    Then(requires_correct_issuer)
+
+
+def test_requires_correct_jwks_key_id(mocker):
+    Given(an_app_with_an_incorrect_jwks_and_a(mocker))
+    And(a_valid_request)
+    And(an_api_that_requires_authorisation)
+    When(making_the_request)
+    Then(requires_correct_key_id)
+
+
+def test_recognises_valid_token(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_valid_request)
+    And(an_api_that_requires_authorisation)
+    When(making_the_request)
+    Then(allows_valid_token)

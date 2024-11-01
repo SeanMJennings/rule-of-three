@@ -10,10 +10,12 @@ from src.handlers.exception_handlers import handle_exception
 from src.handlers.responses import *
 from tests.auth_zero_tokens import (
     get_jwks as mock_get_jwks,
+    get_jwks_with_wrong_key_id,
     valid_payload,
     expired_payload,
     hs256_token,
     rs256_token,
+    different_issuer_payload,
 )
 from tests.handlers.routing import nonsense_url
 
@@ -49,6 +51,13 @@ def an_app_with_a(the_mocker: pytest_mock.MockerFixture):
     get_jwks_mock.return_value = mock_get_jwks()
 
 
+def an_app_with_an_incorrect_jwks_and_a(the_mocker: pytest_mock.MockerFixture):
+    global test_mocker
+    test_mocker = the_mocker
+    get_jwks_mock = test_mocker.patch("src.handlers.auth_zero_decorators.get_jwks")
+    get_jwks_mock.return_value = get_jwks_with_wrong_key_id()
+
+
 def a_request_without_authorisation_header():
     global headers
     headers = None
@@ -82,6 +91,16 @@ def a_request_with_an_hs_256_signed_token():
 def a_request_with_an_expired_token():
     global headers
     headers = {"Authorization": "Bearer " + rs256_token(expired_payload())}
+
+
+def a_request_with_an_incorrect_audience():
+    global headers
+    headers = {"Authorization": "Bearer " + rs256_token(different_issuer_payload())}
+
+
+def a_valid_request():
+    global headers
+    headers = {"Authorization": "Bearer " + rs256_token(valid_payload())}
 
 
 def an_api_that_requires_authorisation():
@@ -132,6 +151,23 @@ def requires_an_unexpired_token():
     assert json.loads(response.data)["error"] == "Token is expired"
 
 
+def requires_correct_issuer():
+    assert response.status_code == http.client.UNAUTHORIZED
+    assert (
+        json.loads(response.data)["error"]
+        == "Incorrect claims, please check the audience and issuer"
+    )
+
+
+def requires_correct_key_id():
+    assert response.status_code == http.client.UNAUTHORIZED
+    assert json.loads(response.data)["error"] == "Unable to find appropriate key"
+
+
+def allows_valid_token():
+    assert response.status_code == http.client.OK
+
+
 def a_tasks_list_name():
     return "My Tasks List"
 
@@ -149,4 +185,4 @@ class NonsenseHandler(MethodView):
         return "nonsense_handler"
 
     def get(self):
-        return success_response()
+        return success_response(None)

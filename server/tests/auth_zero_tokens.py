@@ -1,5 +1,4 @@
 ﻿import json
-
 from jwcrypto import jwk, jwt
 
 kid = "12345"
@@ -12,12 +11,19 @@ hs256_key = jwk.JWK.generate(kty="oct", size=256, alg=hs256_algorithm, use="sig"
 public_key = rs256_key.export_public()
 private_key = rs256_key.export_private()
 issuer = "https://wibblewobble.uk.auth0.com/"
+different_issuer = "https://wobble.uk.auth0.com/"
 audience = issuer + "api/v2/"
 well_known_jwks_json = {"keys": [json.loads(public_key)]}
 
 
 def get_jwks():
     return well_known_jwks_json
+
+
+def get_jwks_with_wrong_key_id():
+    the_json = json.loads(public_key)
+    the_json["kid"] = "54321"
+    return {"keys": [the_json]}
 
 
 def valid_payload():
@@ -39,6 +45,18 @@ def expired_payload():
         "aud": audience,
         "iat": 1730377646,
         "exp": 1730377647,  # expired
+        "gty": "client-credentials",
+        "azp": "BvwjAUeEQSY0QGlDlJvs6JJHxPQsbRUw",
+    }
+
+
+def different_issuer_payload():
+    return {
+        "iss": different_issuer,
+        "sub": "BvwjAUeDP0Y0EERDlJvs6JJHxPQsbRUw@clients",
+        "aud": audience,
+        "iat": 1730377646,
+        "exp": 4070908800,
         "gty": "client-credentials",
         "azp": "BvwjAUeEQSY0QGlDlJvs6JJHxPQsbRUw",
     }
@@ -70,12 +88,3 @@ def hs256_token(payload):
     )
     jwt_token.make_signed_token(hs256_key)
     return jwt_token.serialize()
-
-
-def the_payload(the_token):
-    return jwt.decode(
-        the_token,
-        private_key.public_key(),
-        algorithms=[rs256_algorithm],
-        audience=audience,
-    )
