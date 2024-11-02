@@ -1,13 +1,17 @@
-﻿import pytest
-import json
+﻿import json
 from http import HTTPStatus
-from src.application.tasks_list_service import TasksListService
+
+import pytest
+from flask.testing import FlaskClient
+
 from src.app import create_app
-from tests.handlers.routing import *
+from src.application.tasks_list_service import TasksListService
 from tests.database import setup_db, get_db_connection, clear_db
+from tests.handlers.mocking_utilities import the_headers
+from tests.handlers.routing import *
 
 response = None
-client = None
+client: FlaskClient = None
 tasks_list_id = None
 
 
@@ -35,13 +39,15 @@ def an_updated_tasks_list_name():
 
 def adding_a_tasks_list():
     global response, tasks_list_id
-    response = client.post(tasks_url(), json={"name": a_tasks_list_name()})
+    response = client.post(
+        tasks_url(), json={"name": a_tasks_list_name()}, headers=the_headers()
+    )
     tasks_list_id = json.loads(response.data)["id"]
 
 
 def listing_tasks_lists():
     global response
-    response = client.get(tasks_url())
+    response = client.get(tasks_url(), headers=the_headers())
 
 
 def a_tasks_list():
@@ -61,7 +67,9 @@ def a_tasks_list_full_of_tasks():
 
 def another_tasks_list():
     global response, tasks_list_id
-    response = client.post(tasks_url(), json={"name": another_tasks_list_name()})
+    response = client.post(
+        tasks_url(), json={"name": another_tasks_list_name()}, headers=the_headers()
+    )
     tasks_list_id = json.loads(response.data)["id"]
 
 
@@ -70,41 +78,52 @@ def updating_the_tasks_list():
     response = client.patch(
         tasks_list_url_with_id(tasks_list_id),
         json={"name": an_updated_tasks_list_name()},
+        headers=the_headers(),
     )
 
 
 def deleting_the_tasks_list():
     global response
-    response = client.delete(tasks_list_url_with_id(tasks_list_id))
+    response = client.delete(
+        tasks_list_url_with_id(tasks_list_id), headers=the_headers()
+    )
 
 
 def adding_a_task_to_tasks_list():
     global response
-    response = client.post(task_url(tasks_list_id), json={"content": "A Task"})
+    response = client.post(
+        task_url(tasks_list_id), json={"content": "A Task"}, headers=the_headers()
+    )
 
 
 def ticking_a_task_in_tasks_list():
     global response
     task_id = json.loads(response.data)["id"]
-    response = client.patch(tick_task_url(tasks_list_id, task_id))
+    response = client.patch(
+        tick_task_url(tasks_list_id, task_id), headers=the_headers()
+    )
 
 
 def removing_a_task_from_tasks_list():
     global response
     task_id = json.loads(response.data)["id"]
-    response = client.patch(remove_task_url(tasks_list_id, task_id))
+    response = client.patch(
+        remove_task_url(tasks_list_id, task_id), headers=the_headers()
+    )
 
 
 def carrying_a_task_in_tasks_list():
     global response
     task_id = json.loads(response.data)["id"]
-    response = client.patch(carry_task_url(tasks_list_id, task_id))
+    response = client.patch(
+        carry_task_url(tasks_list_id, task_id), headers=the_headers()
+    )
 
 
 def the_tasks_list_is_added():
     global response
     assert response.status_code == HTTPStatus.CREATED
-    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["name"] == a_tasks_list_name()
 
@@ -128,7 +147,7 @@ def the_tasks_lists_are_listed():
 def the_tasks_list_is_updated():
     global response
     assert response.status_code == HTTPStatus.NO_CONTENT
-    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["name"] == an_updated_tasks_list_name()
 
@@ -136,7 +155,7 @@ def the_tasks_list_is_updated():
 def the_tasks_list_is_deleted():
     global response
     assert response.status_code == HTTPStatus.NO_CONTENT
-    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert json.loads(response.data)["error"] == "Tasks list not found"
 
@@ -145,7 +164,7 @@ def the_task_is_added_to_the_tasks_list():
     global response
     assert response.status_code == HTTPStatus.CREATED
     task_id = json.loads(response.data)["id"]
-    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["tasks"][0]["id"] == task_id
     assert json.loads(response.data)["tasks"][0]["content"] == "A Task"
@@ -154,7 +173,7 @@ def the_task_is_added_to_the_tasks_list():
 def the_task_is_ticked_in_the_tasks_list():
     global response
     assert response.status_code == HTTPStatus.NO_CONTENT
-    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["tasks"][0]["is_ticked"] is True
 
@@ -162,7 +181,7 @@ def the_task_is_ticked_in_the_tasks_list():
 def the_task_is_removed_from_the_tasks_list():
     global response
     assert response.status_code == HTTPStatus.NO_CONTENT
-    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["tasks"][21]["is_removed"] is True
 
@@ -170,7 +189,7 @@ def the_task_is_removed_from_the_tasks_list():
 def the_task_is_carried_in_the_tasks_list():
     global response
     assert response.status_code == HTTPStatus.NO_CONTENT
-    response = client.get(tasks_list_url_with_id(tasks_list_id))
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["tasks"][21]["is_carried"] is True
     assert json.loads(response.data)["tasks"][21]["page_count"] == 1

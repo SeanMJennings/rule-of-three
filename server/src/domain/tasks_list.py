@@ -4,8 +4,11 @@ from src.domain.task import Task
 
 class TasksList:
 
-    def __init__(self, name: str, tasks: list[Task] = None, id: str = None):
+    def __init__(
+        self, name: str, owner_id: str, tasks: list[Task] = None, id: str = None
+    ):
         self.name = name
+        self.owner_id = owner_id
         if id is None:
             self.id = str(uuid.uuid4())
         else:
@@ -19,6 +22,7 @@ class TasksList:
     def from_dict(dictionary):
         return TasksList(
             dictionary["name"],
+            dictionary["owner_id"],
             [Task.from_dict(task) for task in dictionary["tasks"]],
             dictionary["id"],
         )
@@ -26,6 +30,7 @@ class TasksList:
     def to_dict(self):
         return {
             "name": self.name,
+            "owner_id": self.owner_id,
             "tasks": [task.to_dict() for task in self.tasks],
             "id": self.id,
         }

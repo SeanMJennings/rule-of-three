@@ -4,12 +4,14 @@ from tests.domain.tasks_list_steps import *
 
 def test_create_empty_tasks_list():
     Given(a_tasks_list_name)
+    And(an_owner_id)
     When(creating_a_tasks_list)
     Then(the_tasks_list_is_empty)
 
 
 def test_can_add_task_to_tasks_list():
     Given(a_tasks_list_name)
+    And(an_owner_id)
     And(creating_a_tasks_list)
     When(adding_a_task_to_tasks_list("My Task"))
     Then(the_tasks_list_contains_a_task_with_text("My Task"))

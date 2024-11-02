@@ -1,2 +1,2 @@
 ﻿CONTAINER_ID = "tasks_lists"
-PARTITIONKEYPATH = "/id"
+PARTITIONKEYPATH = "/owner_id"

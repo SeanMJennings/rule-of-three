@@ -1,29 +1,23 @@
 ﻿import pytest
-import pytest_mock
 from flask import Flask
+from flask.testing import FlaskClient
 from flask.views import MethodView
 from flask_cors import CORS
-from flask.testing import FlaskClient
-from azure.cosmos.http_constants import HTTPStatus
+
 from src.handlers.auth_zero_decorators import requires_auth
 from src.handlers.exception_handlers import handle_exception
 from src.handlers.responses import *
 from tests.auth_zero_tokens import (
-    get_jwks as mock_get_jwks,
-    get_jwks_with_wrong_key_id,
     valid_payload,
     expired_payload,
     hs256_token,
     rs256_token,
     different_issuer_payload,
 )
-
-from http import HTTPStatus
 from tests.handlers.routing import nonsense_url
 
 response = None
 client: FlaskClient = None
-test_mocker = None
 headers = None
 
 
@@ -44,20 +38,6 @@ def an_app():
     )
     app.errorhandler(Exception)(handle_exception)
     return app
-
-
-def an_app_with_a(the_mocker: pytest_mock.MockerFixture):
-    global test_mocker
-    test_mocker = the_mocker
-    get_jwks_mock = test_mocker.patch("src.handlers.auth_zero_decorators.get_jwks")
-    get_jwks_mock.return_value = mock_get_jwks()
-
-
-def an_app_with_an_incorrect_jwks_and_a(the_mocker: pytest_mock.MockerFixture):
-    global test_mocker
-    test_mocker = the_mocker
-    get_jwks_mock = test_mocker.patch("src.handlers.auth_zero_decorators.get_jwks")
-    get_jwks_mock.return_value = get_jwks_with_wrong_key_id()
 
 
 def a_request_without_authorisation_header():

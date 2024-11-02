@@ -1,12 +1,16 @@
 ﻿import json
-import pytest
 from http import HTTPStatus
+
+import pytest
+from flask.testing import FlaskClient
+
 from src.app import create_app
 from src.application.validation_exception import ValidationException
+from tests.handlers.mocking_utilities import the_headers
 from tests.handlers.routing import tasks_url
 
 response = None
-client = None
+client: FlaskClient = None
 fake_task_list_service = None
 
 
@@ -18,12 +22,12 @@ def setup_and_teardown():
 
 
 class FakeTaskListServiceWithValidationException:
-    def add(self, name: str):
+    def add(self, name: str, owner_id: str):
         raise ValidationException("wibble")
 
 
 class FakeTaskListServiceWithException:
-    def add(self, name: str):
+    def add(self, name: str, owner_id: str):
         raise Exception("wobble")
 
 
@@ -39,7 +43,7 @@ def an_error():
 
 def catching_the_error():
     global response, client
-    response = client.post(tasks_url(), json={"name": "wobble"})
+    response = client.post(tasks_url(), json={"name": "wobble"}, headers=the_headers())
 
 
 def the_validation_error_is_handled():

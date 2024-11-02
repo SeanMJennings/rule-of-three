@@ -1,33 +1,37 @@
 from src.domain.tasks_list import TasksList
 from tests.validations import validate_uuid4
 
-tasks_list: TasksList = TasksList(name="My Tasks List")
+tasks_list: TasksList = TasksList(name="My Tasks List", owner_id="12345")
 
 
 def a_tasks_list_name():
     return "My Tasks List"
 
 
+def an_owner_id():
+    return "12345"
+
+
 def creating_a_tasks_list():
     global tasks_list
-    tasks_list = TasksList(a_tasks_list_name())
+    tasks_list = TasksList(a_tasks_list_name(), an_owner_id())
 
 
 def a_tasks_list():
     global tasks_list
-    tasks_list = TasksList("My Tasks List")
+    tasks_list = TasksList("My Tasks List", an_owner_id())
 
 
 def a_tasks_list_with_22_tasks():
     global tasks_list
-    tasks_list = TasksList("My Tasks List")
+    tasks_list = TasksList("My Tasks List", an_owner_id())
     for _ in range(22):
         tasks_list.add("wibble")
 
 
 def a_tasks_list_with_20_tasks():
     global tasks_list
-    tasks_list = TasksList("My Tasks List")
+    tasks_list = TasksList("My Tasks List", an_owner_id())
     for _ in range(20):
         tasks_list.add("wibble")
 
@@ -77,6 +81,7 @@ def the_task_is_ticked():
 
 def the_tasks_list_is_empty():
     assert tasks_list.name == a_tasks_list_name()
+    assert tasks_list.owner_id == an_owner_id()
     assert len(tasks_list.tasks) == 0
 
 

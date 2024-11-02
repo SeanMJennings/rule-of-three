@@ -1,7 +1,8 @@
 ﻿from flask.views import MethodView
 from flask import request
 
-from .requests import get_request_body_property
+from .auth_zero_decorators import requires_auth
+from .requests import get_request_body_property, get_user_id
 from .responses import *
 from src.application.tasks_list_service import TasksListService
 from src._app import add_app_url
@@ -9,7 +10,7 @@ from src._app import add_app_url
 
 class TasksListHandlerForGroups(MethodView):
     init_every_request = False
-    decorators = []
+    decorators = [requires_auth]
 
     @staticmethod
     def route():
@@ -23,16 +24,18 @@ class TasksListHandlerForGroups(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def get(self):
-        return success_response(self.tasks_list_service.get_all())
+        return success_response(self.tasks_list_service.get_all(get_user_id(request)))
 
     def post(self):
-        id = self.tasks_list_service.add(get_request_body_property(request, "name"))
+        id = self.tasks_list_service.add(
+            get_request_body_property(request, "name"), get_user_id(request)
+        )
         return created_response({"id": id})
 
 
 class TasksListHandlerForItems(MethodView):
     init_every_request = False
-    decorators = []
+    decorators = [requires_auth]
 
     @staticmethod
     def route():
@@ -46,26 +49,25 @@ class TasksListHandlerForItems(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def get(self, id):
-        tasks_list = self.tasks_list_service.get_by_id(id)
+        tasks_list = self.tasks_list_service.get_by_id(id, get_user_id(request))
         if tasks_list is None:
             return not_found_response("Tasks list not found")
         return success_response(tasks_list)
 
     def patch(self, id):
         self.tasks_list_service.update(
-            id,
-            get_request_body_property(request, "name"),
+            id, get_user_id(request), get_request_body_property(request, "name")
         )
         return no_content_response()
 
     def delete(self, id):
-        self.tasks_list_service.delete(id)
+        self.tasks_list_service.delete(id, get_user_id(request))
         return no_content_response()
 
 
 class AddTasksHandler(MethodView):
     init_every_request = False
-    decorators = []
+    decorators = [requires_auth]
 
     @staticmethod
     def route():
@@ -80,14 +82,16 @@ class AddTasksHandler(MethodView):
 
     def post(self, tasks_list_id):
         task_id = self.tasks_list_service.add_task(
-            tasks_list_id, get_request_body_property(request, "content")
+            tasks_list_id,
+            get_user_id(request),
+            get_request_body_property(request, "content"),
         )
         return created_response({"id": task_id})
 
 
 class TickTaskHandler(MethodView):
     init_every_request = False
-    decorators = []
+    decorators = [requires_auth]
 
     @staticmethod
     def route():
@@ -101,13 +105,17 @@ class TickTaskHandler(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def patch(self, tasks_list_id, task_id):
-        self.tasks_list_service.tick_task(tasks_list_id, task_id)
+        self.tasks_list_service.tick_task(
+            tasks_list_id,
+            get_user_id(request),
+            task_id,
+        )
         return no_content_response()
 
 
 class RemoveTaskHandler(MethodView):
     init_every_request = False
-    decorators = []
+    decorators = [requires_auth]
 
     @staticmethod
     def route():
@@ -121,13 +129,15 @@ class RemoveTaskHandler(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def patch(self, tasks_list_id, task_id):
-        self.tasks_list_service.remove_task(tasks_list_id, task_id)
+        self.tasks_list_service.remove_task(
+            tasks_list_id, get_user_id(request), task_id
+        )
         return no_content_response()
 
 
 class CarryTaskHandler(MethodView):
     init_every_request = False
-    decorators = []
+    decorators = [requires_auth]
 
     @staticmethod
     def route():
@@ -141,7 +151,7 @@ class CarryTaskHandler(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def patch(self, tasks_list_id, task_id):
-        self.tasks_list_service.carry_task(tasks_list_id, task_id)
+        self.tasks_list_service.carry_task(tasks_list_id, get_user_id(request), task_id)
         return no_content_response()
 
 

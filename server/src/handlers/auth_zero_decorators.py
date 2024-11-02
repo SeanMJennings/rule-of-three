@@ -98,7 +98,7 @@ def requires_auth(func):
             except Exception as exc:
                 raise AuthError("Unable to parse authentication token.") from exc
 
-            request_ctx.current_user = payload
+            request.current_user = payload
             return func(*args, **kwargs)
         raise AuthError("Unable to find appropriate key")
 
