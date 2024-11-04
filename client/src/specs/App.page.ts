@@ -61,10 +61,35 @@ export function the_route() {
     return router.currentRoute.value.fullPath;
 }
 
+export async function login() {
+    await elements.login.trigger("click")
+}
+
+export async function logout() {
+    await elements.logout.trigger("click")
+}
+
+export function loginExists() {
+    return elements.login.exists();
+}
+
+export function logoutExists() {
+    return elements.logout.exists();
+}
+
 function mountApp() {
     return mount(App, {
         global: {
             plugins: [router]
         }
     });
+}
+
+const elements = {
+    get login() {
+        return app.find("#login");
+    },
+    get logout() {
+        return app.find("#logout");
+    }
 }

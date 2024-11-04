@@ -10,7 +10,7 @@ export default mergeConfig(
             environment: 'jsdom',
             env: loadEnv('testing', process.cwd(), ''),
             exclude: [...configDefaults.exclude, 'e2e/*'],
-            root: fileURLToPath(new URL('./', import.meta.url))
+            root: fileURLToPath(new URL('./', import.meta.url)),
         }
     })
 )
