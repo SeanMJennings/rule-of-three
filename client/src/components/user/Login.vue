@@ -3,7 +3,9 @@ import styles from "@/components/user/Login.common.module.css";
 import { useAuth0 } from '@auth0/auth0-vue';
 const auth0 = useAuth0();
 const login = () => {
-  auth0.loginWithRedirect();
+  auth0.loginWithPopup().then(() => {
+    window.token = auth0.idTokenClaims.value?.__raw
+  })
 }
 </script>
 

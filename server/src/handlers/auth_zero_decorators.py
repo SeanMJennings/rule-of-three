@@ -5,7 +5,6 @@ from typing import Dict
 from urllib.request import urlopen
 
 from flask import request
-from flask.globals import request_ctx
 from jose import jwt
 from pathlib import Path
 import yaml

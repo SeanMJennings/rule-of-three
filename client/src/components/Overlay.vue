@@ -5,8 +5,8 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {DotLottieVue} from "@lottiefiles/dotlottie-vue";
 
 defineProps<{
-  theError: string,
-  code: number,
+  theError: string | undefined,
+  code: number | undefined,
   onClose: () => void
 }>();
 </script>

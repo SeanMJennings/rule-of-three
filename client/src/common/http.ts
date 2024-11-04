@@ -1,7 +1,17 @@
 ﻿const api = import.meta.env.VITE_BASE_URL;
 
+const headers = () => {
+    return {"Content-Type": "application/json", "Authorization": "Bearer " + window.token}
+}
+const getHeaders = () => {
+    return {"Authorization": "Bearer " + window.token}
+}
+
+
 export async function get<T>(url: string, mapper?: (r: any) => T): Promise<T> {
-    return fetch(api + url)
+    return fetch(api + url, {
+        headers: getHeaders()
+    })
         .then(async response => {
             if (!response.ok) {
                 throw {
@@ -17,7 +27,7 @@ export async function get<T>(url: string, mapper?: (r: any) => T): Promise<T> {
 export async function post(url: string, body: any): Promise<any> {
     return fetch(api + url, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: headers(),
         body: JSON.stringify(body)
     }).then(handleResponse())
 }
@@ -25,7 +35,7 @@ export async function post(url: string, body: any): Promise<any> {
 export async function patch(url: string, body: any): Promise<any> {
     return fetch(api + url, {
         method: "PATCH",
-        headers: {"Content-Type": "application/json"},
+        headers: headers(),
         body: JSON.stringify(body)
     }).then(handleResponse())
 }
@@ -33,7 +43,7 @@ export async function patch(url: string, body: any): Promise<any> {
 export async function del(url: string): Promise<any> {
     return fetch(api + url, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"}
+        headers: headers(),
     }).then(handleResponse())
 }
 

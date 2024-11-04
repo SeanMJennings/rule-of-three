@@ -9,8 +9,10 @@ const a_user: User = {
 const no_user = undefined as any as User | undefined;
 const user = ref(no_user);
 const isAuthenticated = ref(false);
+export const theTokenString = "a token";
+const token = ref({__raw: theTokenString});
 export const mockAuth0 = {
-    loginWithRedirect: () => {
+    loginWithPopup: () => {
         if (user.value !== undefined) {
             user.value = no_user;
             isAuthenticated.value = false;
@@ -19,7 +21,9 @@ export const mockAuth0 = {
             user.value = a_user;
             isAuthenticated.value = true;
         }
+        return Promise.resolve();
     },
+    idTokenClaims: token,
     logout: () => {
         user.value = no_user;
         isAuthenticated.value = false;

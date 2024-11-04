@@ -1,13 +1,13 @@
 ﻿import {beforeEach, expect, vi} from "vitest";
 import {
     login,
-    loginExists, logout, navigateTasksExists, navigateToLanding, navigateToTasks, navigateToTasksViaRouter,
+    loginExists, logout, navigateToLanding, navigateToTasks, navigateToTasksViaRouter,
     renderLanding,
     renders_erroring_app,
     renderUnknownRoute,
     the_route
 } from "@/specs/App.page";
-import {mockAuth0, resetAuth0, userIsAuthenticated} from "@/testing/mock-auth0";
+import {mockAuth0, resetAuth0, theTokenString, userIsAuthenticated} from "@/testing/mock-auth0";
 import {waitUntil} from "@/testing/utilities";
 
 
@@ -34,7 +34,13 @@ export async function renders_logout_user_when_logged_in() {
     const wrapper = await renderLanding();
     await login();
     await waitUntil(() => !loginExists());
+    expect(window.token).toBe(theTokenString);
     expect(wrapper.text()).toContain("Log out");
+}
+
+export async function loads_user_token() {
+    await renderLanding();
+    expect(window.token).toBe(theTokenString);
 }
 
 export async function lets_user_log_out() {

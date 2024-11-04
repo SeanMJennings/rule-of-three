@@ -5,7 +5,6 @@ import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machin
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 import {getName, getTasks} from "@/state-machines/tasks.extensions";
-import type {HttpError} from "@/common/http";
 
 const mockServer = MockServer.New();
 let tasks = {} as Actor<typeof tasksMachine>;

@@ -7,6 +7,11 @@ import App from "./App.vue";
 import router from "./router";
 import {createAuth0} from "@auth0/auth0-vue";
 
+declare global {
+    interface Window {
+        token: string | undefined;
+    }
+}
 const auth0_domain = import.meta.env.VITE_AUTH_0_DOMAIN;
 const auth0_client_id = import.meta.env.VITE_AUTH_0_CLIENT_ID
 const app = createApp(App);

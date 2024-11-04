@@ -4,6 +4,7 @@ import {delay} from "@/testing/utilities";
 
 export class MockServer {
     private server: SetupServerApi;
+    public headers: Headers = new Headers();
 
     constructor() {
         this.server = setupServer()
@@ -19,14 +20,16 @@ export class MockServer {
 
     public reset() {
         this.server.resetHandlers();
+        this.headers = new Headers();
     }
 
     public get(url: string, response: any, delayValue?: number, success = true): () => boolean {
         let called = false;
         const was_called = () => called;
-        this.server.use(http.get(url, async () => {
+        this.server.use(http.get(url, async (req) => {
             if (delayValue) await delay(delayValue)
             called = true;
+            this.headers = req.request.headers
             if (!success) return HttpResponse.json(response, {status: 422})
             return HttpResponse.json(response, {status: 200})
         }));
@@ -36,8 +39,9 @@ export class MockServer {
     public post(url: string, response?: any, success = true): () => boolean {
         let called = false;
         const was_called = () => called;
-        this.server.use(http.post(url, () => {
+        this.server.use(http.post(url, (req) => {
             called = true;
+            this.headers = req.request.headers
             if (!success) return HttpResponse.json(response, {status: 422})
             if (response) return HttpResponse.json(response, {status: 201})
             return HttpResponse.json({}, {status: 204})
@@ -48,8 +52,9 @@ export class MockServer {
     public patch(url: string, response = {}, success = true) {
         let called = false;
         const was_called = () => called;
-        this.server.use(http.patch(url, () => {
+        this.server.use(http.patch(url, (req) => {
             called = true;
+            this.headers = req.request.headers
             if (!success) return HttpResponse.json(response, {status: 422})
             return HttpResponse.json({}, {status: 200})
         }));
@@ -59,8 +64,9 @@ export class MockServer {
     public delete(url: string, response = {}, success = true) {
         let called = false;
         const was_called = () => called;
-        this.server.use(http.delete(url, () => {
+        this.server.use(http.delete(url, (req) => {
             called = true;
+            this.headers = req.request.headers
             if (!success) return HttpResponse.json(response, {status: 422})
             return HttpResponse.json({}, {status: 200})
         }));
