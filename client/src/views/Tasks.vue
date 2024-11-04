@@ -49,7 +49,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main>
     <Overlay v-if="showErrorModal" :the-error="theError" :code="code" :on-close="closeErrorModal"></Overlay>
     <div v-if="showLoading" :class="styles.container">
       <VueSpinner id="loadingSpinner" :class="styles.spinner" size="30" color="white" />
@@ -59,5 +58,4 @@ onUnmounted(() => {
       <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
       <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
     </div>
-  </main>
 </template>

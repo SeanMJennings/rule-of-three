@@ -20,6 +20,7 @@
 /* semantic color variables for this project */
 :root {
     --color-header: var(--vt-c-light-green);
+    --color-link-background: var(--vt-c-dark-green);
     --color-header-darker: var(--vt-c-dark-green);
     --color-overlay-fill: var(--vt-c-dark-green);
     --color-background: var(--vt-c-black);

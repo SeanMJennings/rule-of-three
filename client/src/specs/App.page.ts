@@ -11,9 +11,6 @@ let app: VueWrapper;
 // @ts-ignore
 HTMLCanvasElement.prototype.getContext = () => {};
 
-vi.mock("../views/Landing.vue", () => {
-    return {default: {template: "<div>I am a fake landing!</div>"}};
-});
 vi.mock("../views/Tasks.vue", () => {
     return {default: {template: "<div>I am a fake tasks page!</div>"}};
 });
@@ -39,10 +36,8 @@ export async function renderLanding() {
     return app;
 }
 
-export async function renderTasks() {
-    app = mountApp();
+export async function navigateToTasks() {
     await router.push("/tasks");
-    return app;
 }
 
 export async function renderUnknownRoute() {

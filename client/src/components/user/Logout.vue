@@ -1,5 +1,4 @@
 ﻿<script lang="ts" setup>
-import styles from "./ButtonIcon.module.css";
 import { useAuth0 } from '@auth0/auth0-vue';
 const auth0 = useAuth0();
 const logout = () => {
@@ -16,4 +15,4 @@ const logout = () => {
   </div>
 </template>
 
-<style scoped src="@/components/user/Logout.module.css"></style>
+<style scoped src="@/components/user/Login.common.module.css"></style>

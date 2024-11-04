@@ -3,6 +3,7 @@ import Landing from "../views/Landing.vue";
 import Tasks from "../views/Tasks.vue";
 import {useMachine} from '@xstate/vue'
 import {tasksMachine} from '@/state-machines/tasks.state-machine'
+import {authGuard} from "@auth0/auth0-vue";
 
 export const routes: RouteRecordRaw[] = [
     {
@@ -17,7 +18,8 @@ export const routes: RouteRecordRaw[] = [
                 const {snapshot, send, actorRef} = useMachine(tasksMachine);
                 return {snapshot, send, actorRef}
             }
-        }
+        },
+        beforeEnter: authGuard
     },
     {
         path:  "/:pathMatch(.*)*",

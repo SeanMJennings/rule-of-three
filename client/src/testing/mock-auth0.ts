@@ -28,6 +28,10 @@ export const mockAuth0 = {
     user: user
 };
 
+export const userIsAuthenticated = () => {
+    return isAuthenticated.value;
+}
+
 export const resetAuth0 = () => {
     user.value = no_user;
     isAuthenticated.value = false;

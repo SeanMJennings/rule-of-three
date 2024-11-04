@@ -7,8 +7,10 @@ import ErrorBoundary from "@/components/ErrorBoundary.vue";
 
 <template>
   <Header/>
-  <ErrorBoundary>
-    <RouterView/>
-  </ErrorBoundary>
+  <main>
+    <ErrorBoundary>
+      <RouterView/>
+    </ErrorBoundary>
+  </main>
   <Footer/>
 </template>
