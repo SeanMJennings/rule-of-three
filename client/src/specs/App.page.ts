@@ -37,7 +37,19 @@ export async function renderLanding() {
 }
 
 export async function navigateToTasks() {
+    await elements.tasksLink.trigger("click");
+}
+
+export async function navigateToTasksViaRouter() {
     await router.push("/tasks");
+}
+
+export function navigateTasksExists() {
+    return elements.tasksLink.exists();
+}
+
+export async function navigateToLanding() {
+    await router.push("/");
 }
 
 export async function renderUnknownRoute() {
@@ -68,10 +80,6 @@ export function loginExists() {
     return elements.login.exists();
 }
 
-export function logoutExists() {
-    return elements.logout.exists();
-}
-
 function mountApp() {
     return mount(App, {
         global: {
@@ -86,5 +94,8 @@ const elements = {
     },
     get logout() {
         return app.find("#logout");
+    },
+    get tasksLink() {
+        return app.find("#tasks-link");
     }
 }

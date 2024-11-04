@@ -1,7 +1,7 @@
 ﻿import {beforeEach, expect, vi} from "vitest";
 import {
     login,
-    loginExists, logout, navigateToTasks,
+    loginExists, logout, navigateTasksExists, navigateToLanding, navigateToTasks, navigateToTasksViaRouter,
     renderLanding,
     renders_erroring_app,
     renderUnknownRoute,
@@ -60,7 +60,7 @@ export async function does_not_render_tasks_page_link_when_user_not_logged_in() 
 
 export async function does_not_allow_navigation_to_tasks_when_logged_out() {
     const wrapper = await renderLanding();
-    await navigateToTasks();
+    await navigateToTasksViaRouter();
     expect(wrapper.html()).not.toContain("I am a fake tasks page!");
 }
 
@@ -69,7 +69,19 @@ export async function allows_navigation_to_tasks_when_logged_in() {
     await login();
     await waitUntil(() => !loginExists());
     await navigateToTasks();
+    await waitUntil(() => the_route() === "/tasks");
     expect(wrapper.html()).toContain("I am a fake tasks page!");
+}
+
+export async function allows_user_to_navigate_back_to_landing_page() {
+    const wrapper = await renderLanding();
+    await login();
+    await waitUntil(() => !loginExists());
+    await navigateToTasks();
+    await waitUntil(() => the_route() === "/tasks");
+    await navigateToLanding();
+    await waitUntil(() => the_route() === "/");
+    expect(wrapper.text()).toContain("A simple approach");
 }
 
 export async function renders_landing_page_by_the_default() {
