@@ -1,5 +1,6 @@
 ﻿<script lang="ts" setup>
 import { useAuth0 } from '@auth0/auth0-vue';
+import styles from "@/components/user/Login.common.module.css";
 const auth0 = useAuth0();
 const logout = () => {
   auth0.logout({
@@ -11,7 +12,7 @@ const logout = () => {
 
 <template>
   <div v-if="auth0.isAuthenticated.value">
-    <button id="logout" @click="logout">Log out</button>
+    <button :class="styles.button" id="logout" @click="logout">Log out</button>
   </div>
 </template>
 
