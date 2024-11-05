@@ -10,9 +10,9 @@ rs256_key = jwk.JWK.generate(
 hs256_key = jwk.JWK.generate(kty="oct", size=256, alg=hs256_algorithm, use="sig")
 public_key = rs256_key.export_public()
 private_key = rs256_key.export_private()
-issuer = "https://wibblewobble.uk.auth0.com/"
+issuer = "https://rule-of-three.uk.auth0.com/"
 different_issuer = "https://wobble.uk.auth0.com/"
-audience = issuer + "api/v2/"
+audience = "JdsqQjY8OBZicesaw24Ijzvrwzy3y9gM"
 well_known_jwks_json = {"keys": [json.loads(public_key)]}
 
 
