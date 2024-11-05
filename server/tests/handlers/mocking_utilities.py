@@ -1,5 +1,4 @@
 ﻿import pytest_mock
-from flask.testing import FlaskClient
 
 from tests.auth_zero_tokens import (
     get_jwks as mock_get_jwks,
