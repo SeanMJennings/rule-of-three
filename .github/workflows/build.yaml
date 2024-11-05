@@ -82,6 +82,20 @@ jobs:
           propertyPath: 'database'
           value: ${{ secrets.COSMOS_DATABASE }}
           commitChange: false
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'server/src/config.yaml'
+          propertyPath: 'AUTH0_DOMAIN'
+          value: ${{ secrets.AUTH0_DOMAIN }}
+          commitChange: false
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'server/src/config.yaml'
+          propertyPath: 'AUTH0_API_IDENTIFIER'
+          value: ${{ secrets.AUTH0_API_IDENTIFIER }}
+          commitChange: false
   test_server:
     runs-on: windows-latest # required for Cosmos DB emulator, would much prefer ubuntu-latest
     steps:

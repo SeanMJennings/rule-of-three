@@ -13,7 +13,7 @@ path = Path(__file__).parent / "../config.yaml"
 config = yaml.safe_load(open(path))
 
 AUTH0_DOMAIN = config["AUTH0_DOMAIN"]
-API_IDENTIFIER = config["API_IDENTIFIER"]
+AUTH0_API_IDENTIFIER = config["AUTH0_API_IDENTIFIER"]
 ALGORITHMS = ["RS256"]
 
 
@@ -85,7 +85,7 @@ def requires_auth(func):
                     token,
                     rsa_key,
                     algorithms=ALGORITHMS,
-                    audience=API_IDENTIFIER,
+                    audience=AUTH0_API_IDENTIFIER,
                     issuer="https://" + AUTH0_DOMAIN + "/",
                 )
             except jwt.ExpiredSignatureError as expired_sign_error:
