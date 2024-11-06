@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 from src.handlers.auth_zero_decorators import requires_auth
 from src.handlers.exception_handlers import handle_exception
+from src.handlers.requests import CUSTOM_AUTHORIZATION_HEADER_KEY
 from src.handlers.responses import *
 from tests.auth_zero_tokens import (
     valid_payload,
@@ -47,42 +48,51 @@ def a_request_without_authorisation_header():
 
 def a_request_with_authorisation_header_missing_bearer():
     global headers
-    headers = {"Authorization": "token"}
+    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "token"}
 
 
 def a_request_with_authorisation_header_missing_token():
     global headers
-    headers = {"Authorization": "Bearer"}
+    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer"}
 
 
 def a_request_with_authorisation_header_containing_extras():
     global headers
-    headers = {"Authorization": "Bearer token wibble"}
+    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer token wibble"}
 
 
 def a_request_with_invalid_token():
     global headers
-    headers = {"Authorization": "Bearer sillytoken"}
+    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer sillytoken"}
 
 
 def a_request_with_an_hs_256_signed_token():
     global headers
-    headers = {"Authorization": "Bearer " + hs256_token(valid_payload())}
+    headers = {
+        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + hs256_token(valid_payload())
+    }
 
 
 def a_request_with_an_expired_token():
     global headers
-    headers = {"Authorization": "Bearer " + rs256_token(expired_payload())}
+    headers = {
+        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(expired_payload())
+    }
 
 
 def a_request_with_an_incorrect_audience():
     global headers
-    headers = {"Authorization": "Bearer " + rs256_token(different_issuer_payload())}
+    headers = {
+        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer "
+        + rs256_token(different_issuer_payload())
+    }
 
 
 def a_valid_request():
     global headers
-    headers = {"Authorization": "Bearer " + rs256_token(valid_payload())}
+    headers = {
+        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())
+    }
 
 
 def an_api_that_requires_authorisation():
@@ -96,14 +106,17 @@ def making_the_request():
 
 def an_authorised_header_is_expected():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
-    assert json.loads(response.data)["error"] == "Authorization header is expected"
+    assert (
+        json.loads(response.data)["error"]
+        == CUSTOM_AUTHORIZATION_HEADER_KEY + " header is expected"
+    )
 
 
 def authorised_header_must_start_with_bearer():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
         json.loads(response.data)["error"]
-        == "Authorization header must start with: Bearer"
+        == CUSTOM_AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
     )
 
 
@@ -116,7 +129,15 @@ def authorised_header_must_only_have_bearer_and_token():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
         json.loads(response.data)["error"]
-        == "Authorization header must be: Bearer token"
+        == CUSTOM_AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
+    )
+
+
+def requires_valid_header():
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert (
+        json.loads(response.data)["error"]
+        == "Invalid header. Use an RS256 signed JWT Access Token"
     )
 
 
@@ -124,7 +145,7 @@ def requires_rs_256_signed_jwt():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
         json.loads(response.data)["error"]
-        == "Invalid header. Use an RS256 signed JWT Access Token"
+        == "HS256 is invalid header algorithm. Use an RS256 signed JWT Access Token"
     )
 
 

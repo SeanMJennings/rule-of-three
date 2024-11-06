@@ -1,10 +1,10 @@
 ﻿const api = import.meta.env.VITE_BASE_URL;
 
 const headers = () => {
-    return {"Content-Type": "application/json", "Authorization": "Bearer " + window.token}
+    return {"Content-Type": "application/json", "X-Custom-Authorization": "Bearer " + window.token}
 }
 const getHeaders = () => {
-    return {"Authorization": "Bearer " + window.token}
+    return {"X-Custom-Authorization": "Bearer " + window.token}
 }
 
 

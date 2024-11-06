@@ -9,6 +9,10 @@ from jose import jwt
 from pathlib import Path
 import yaml
 
+from src.handlers.requests import (
+    CUSTOM_AUTHORIZATION_HEADER_KEY,
+)
+
 path = Path(__file__).parent / "../config.yaml"
 config = yaml.safe_load(open(path))
 
@@ -23,18 +27,22 @@ class AuthError(Exception):
 
 
 def get_token_auth_header() -> str:
-    auth = request.headers.get("Authorization", None)
+    auth = request.headers.get(CUSTOM_AUTHORIZATION_HEADER_KEY, None)
     if not auth:
-        raise AuthError("Authorization header is expected")
+        raise AuthError(CUSTOM_AUTHORIZATION_HEADER_KEY + " header is expected")
 
     parts = auth.split()
 
     if parts[0].lower() != "bearer":
-        raise AuthError("Authorization header must start with: Bearer")
+        raise AuthError(
+            CUSTOM_AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
+        )
     if len(parts) == 1:
         raise AuthError("Token not found")
     if len(parts) > 2:
-        raise AuthError("Authorization header must be: Bearer token")
+        raise AuthError(
+            CUSTOM_AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
+        )
 
     token = parts[1]
     return token
@@ -68,7 +76,9 @@ def requires_auth(func):
                 "Invalid header. Use an RS256 signed JWT Access Token"
             ) from jwt_error
         if unverified_header["alg"] == "HS256":
-            raise AuthError("Invalid header. Use an RS256 signed JWT Access Token")
+            raise AuthError(
+                "HS256 is invalid header algorithm. Use an RS256 signed JWT Access Token"
+            )
         rsa_key = {}
         for key in jwks["keys"]:
             if key["kid"] == unverified_header["kid"]:

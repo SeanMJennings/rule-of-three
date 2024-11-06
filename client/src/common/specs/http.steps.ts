@@ -22,23 +22,23 @@ beforeEach(() => {
 export async function make_get_request() {
     await get<any>("/wibble")
     await waitUntil(wait_for_get);
-    expect(mockServer.headers.get("Authorization")).toContain("Bearer wibble")
+    expect(mockServer.headers.get("X-Custom-Authorization")).toContain("Bearer wibble")
 }
 
 export async function make_post_request() {
     await post("/wibble",{})
     await waitUntil(wait_for_post);
-    expect(mockServer.headers.get("Authorization")).toContain("Bearer wibble")
+    expect(mockServer.headers.get("X-Custom-Authorization")).toContain("Bearer wibble")
 }
 
 export async function make_patch_request() {
     await patch("/wibble",{})
     await waitUntil(wait_for_patch);
-    expect(mockServer.headers.get("Authorization")).toContain("Bearer wibble")
+    expect(mockServer.headers.get("X-Custom-Authorization")).toContain("Bearer wibble")
 }
 
 export async function make_delete_request() {
     await del("/wibble")
     await waitUntil(wait_for_delete);
-    expect(mockServer.headers.get("Authorization")).toContain("Bearer wibble")
+    expect(mockServer.headers.get("X-Custom-Authorization")).toContain("Bearer wibble")
 }

@@ -4,10 +4,7 @@
     "applicationInsights": {
       "samplingSettings": {
         "isEnabled": true,
-        "initialSamplingPercentage": 0.0,
-        "minSamplingPercentage": 0.0,
-        "maxSamplingPercentage": 0.0,
-        "excludedTypes": "Event;Exception"
+        "includedTypes": "Request, Exception"
       },
       "enableLiveMetrics": false,
       "enableDependencyTracking": false,
@@ -25,7 +22,7 @@
   },
   "extensions": {
     "http": {
-      "routePrefix": "api" 
+      "routePrefix": "api"
     }
   }
 }

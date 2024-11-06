@@ -43,7 +43,7 @@ def test_requires_valid_token(mocker):
     And(a_request_with_invalid_token)
     And(an_api_that_requires_authorisation)
     When(making_the_request)
-    Then(requires_rs_256_signed_jwt)
+    Then(requires_valid_header)
 
 
 def test_does_not_allow_hs_256_signed_jwt(mocker):
