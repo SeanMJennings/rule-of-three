@@ -12,6 +12,8 @@ const auth0 = useAuth0();
       <h1>or accepting</h1>
       <br/>
       <span>Carry a task for up to three pages of 22 lines or forget it</span>
-      <RouterLink id="tasks-link" :class="style.link" v-if="auth0.isAuthenticated.value" to="/tasks">Go to Tasks</RouterLink>
+      <div :class="style.linkContainer">
+        <RouterLink id="tasks-link" :class="style.link" v-show="auth0.isAuthenticated.value" to="/tasks">Go to Tasks</RouterLink>
+      </div>
     </div>
 </template>
