@@ -44,8 +44,8 @@ export async function navigateToTasksViaRouter() {
     await router.push("/tasks");
 }
 
-export function navigateTasksExists() {
-    return elements.tasksLink.exists();
+export async function navigateToTasksLinkVisible() {
+    return elements.tasksLink.isVisible();
 }
 
 export async function navigateToLanding() {

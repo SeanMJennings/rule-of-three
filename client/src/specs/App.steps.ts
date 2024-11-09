@@ -1,7 +1,7 @@
 ﻿import {beforeEach, expect, vi} from "vitest";
 import {
     login,
-    loginExists, logout, navigateToLanding, navigateToTasks, navigateToTasksViaRouter,
+    loginExists, logout, navigateToLanding, navigateToTasks, navigateToTasksLinkVisible, navigateToTasksViaRouter,
     renderLanding,
     renders_erroring_app,
     renderUnknownRoute,
@@ -53,15 +53,15 @@ export async function lets_user_log_out() {
 }
 
 export async function render_tasks_page_link_when_user_logged_in() {
-    const wrapper = await renderLanding();
+    await renderLanding();
     await login();
     await waitUntil(() => !loginExists());
-    expect(wrapper.html()).toContain("Go to Tasks");
+    expect(await navigateToTasksLinkVisible()).toBe(true);
 }
 
-export async function does_not_render_tasks_page_link_when_user_not_logged_in() {
-    const wrapper = await renderLanding();
-    expect(wrapper.html()).not.toContain("Go to Tasks");
+export async function tasks_page_link_invisible_when_user_not_logged_in() {
+    await renderLanding();
+    expect(await navigateToTasksLinkVisible()).toBe(false);
 }
 
 export async function does_not_allow_navigation_to_tasks_when_logged_out() {

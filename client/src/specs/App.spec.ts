@@ -2,7 +2,7 @@
 import {
     allows_navigation_to_tasks_when_logged_in, allows_user_to_navigate_back_to_landing_page,
     does_not_allow_navigation_to_tasks_when_logged_out,
-    does_not_render_tasks_page_link_when_user_not_logged_in,
+    tasks_page_link_invisible_when_user_not_logged_in,
     lets_user_log_out, loads_user_token,
     render_tasks_page_link_when_user_logged_in,
     renders_error_boundary_for_uncaught_error,
@@ -17,7 +17,7 @@ describe("App", () => {
     it("loads user token", loads_user_token)
     it("lets user log out", lets_user_log_out);
     it("renders tasks page link when user logged in", render_tasks_page_link_when_user_logged_in);
-    it("does not render tasks page when user not logged in", does_not_render_tasks_page_link_when_user_not_logged_in);
+    it("tasks page link invisible when user not logged in", tasks_page_link_invisible_when_user_not_logged_in);
     it("does not allow navigation to tasks when logged out", does_not_allow_navigation_to_tasks_when_logged_out);
     it("allows navigation to tasks when logged in", allows_navigation_to_tasks_when_logged_in);
     it("allows user to navigate back to landing page", allows_user_to_navigate_back_to_landing_page);
