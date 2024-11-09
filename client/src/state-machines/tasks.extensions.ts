@@ -54,6 +54,10 @@ export const selectedTaskListName = function (context: { id: string, tasksLists:
 export const tasksListNamingIsUpdating = function (value: StateValue) {
     return value === TasksListMachineStates.updatingTheTasksList;
 }
+
+export const tasksListIsBeingDeleted = function (value: StateValue) {
+    return value === TasksListMachineStates.deletingTheTasksList;
+}
     
 export const tasksHaveBeenCarried = function (context: { id: string, tasksLists: TasksList[]; }): boolean {
     return context.tasksLists.find((list) => list.id === context.id)?.tasks.filter((n) => !n.carried && !n.ticked && !n.removed).length === 0;

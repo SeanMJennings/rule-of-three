@@ -71,12 +71,24 @@ export function openEditTaskListName() {
     return elements.openEditTaskListName.trigger("click");
 }
 
+export function openDeleteTaskList() {
+    return elements.openDeleteTaskList.trigger("click");
+}
+
+export function closeDeleteTaskList() {
+    return elements.deleteTaskListNameModal.trigger("click");
+}
+
 export function closeEditTaskListName() {
     return elements.closeEditTaskListName.trigger("click");
 }
 
 export function editTaskListNameModalExists() {
     return elements.editTaskListNameModal.exists();
+}
+
+export function deleteTaskListModalExists() {
+    return elements.deleteTaskListNameModal.exists();
 }
 
 export function typeNewTaskListName(value: string) {
@@ -296,11 +308,20 @@ const elements = {
     get openEditTaskListName() {
         return page.find("#open-edit-task-list-name");
     },
+    get openDeleteTaskList() {
+        return page.find("#open-delete-task-list");
+    },
     get closeEditTaskListName() {
         return page.find("#edit-task-list-name-modal-close");
     },
+    get closeDeleteTaskList() {
+        return page.find("#delete-task-list-modal-close");
+    },
     get editTaskListNameModal() {
         return page.find("#edit-task-list-name-modal");
+    },
+    get deleteTaskListNameModal() {
+        return page.find("#delete-task-list-modal");
     },
     get editTaskListNameInput() {
         return page.find("#edit-task-list-name-input");

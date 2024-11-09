@@ -12,7 +12,7 @@ import {
     carryTaskHidden,
     characterCount,
     characterCountHidden,
-    clickAddTaskListPlaceholder,
+    clickAddTaskListPlaceholder, closeDeleteTaskList,
     closeEditTaskListName,
     closeErrorOverlay,
     createActor,
@@ -20,7 +20,7 @@ import {
     editTaskListNameModalExists,
     errorOverlayExists,
     errorOverlayText,
-    loadingSpinnerExists,
+    loadingSpinnerExists, openDeleteTaskList,
     openEditTaskListName,
     pageText,
     removeTask,
@@ -140,10 +140,26 @@ export async function lets_user_delete_a_task_list() {
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
     const wait_for_delete_tasks_list = mockServer.delete(`/tasks-lists/${task_list_id}`)
+    await openDeleteTaskList()
     await deleteTaskList()
     await waitUntil(wait_for_delete_tasks_list);
     await waitUntil(() => taskListSingleSelectHidden());
     expect(pageText()).toContain("Create your first task list");
+}
+
+export async function lets_user_close_delete_task_list_modal() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        id: task_list_id,
+        name: task_list_name
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await openDeleteTaskList();
+    await closeDeleteTaskList();
+    expect(taskListSingleSelectHidden()).toBe(false);
 }
 
 export async function lets_user_rename_a_task_list() {

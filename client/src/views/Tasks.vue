@@ -10,6 +10,7 @@ import {VueSpinner} from "vue3-spinners";
 import {onMounted, onUnmounted, ref} from "vue";
 import ErrorModal from "@/components/ErrorModal.vue";
 import EditTasksListNameModal from "@/components/tasks/EditTasksListNameModal.vue";
+import DeleteTasksListModal from "@/components/tasks/DeleteTasksListModal.vue";
 let subscription: Subscription;
 let errorSubscription: Subscription;
 
@@ -25,6 +26,7 @@ const {snapshot, send, actorRef} = props.tasksMachineProvider();
 const showLoading = ref(true)
 const showErrorModal = ref(false)
 const showEditTasksListNameModal = ref(false)
+const showDeleteTasksListModal = ref(false)
 const theError = ref("")
 const code = ref(0)
 
@@ -38,12 +40,12 @@ const editingTaskListName = (value: boolean) => {
   showEditTasksListNameModal.value = value;
 }
 
-const getTasksListName = () => {
-  return selectedTaskListName(actorRef.getSnapshot().context);
+const deletingTaskList = (value: boolean) => {
+  showDeleteTasksListModal.value = value;
 }
 
-const editTasksListName = () => {
-  send({type: "editTasksListName", name: getTasksListName()});
+const getTasksListName = () => {
+  return selectedTaskListName(actorRef.getSnapshot().context);
 }
 
 onMounted(() => {
@@ -66,11 +68,12 @@ onUnmounted(() => {
 <template>
     <ErrorModal v-if="showErrorModal" :the-error="theError" :code="code" :on-close="closeErrorModal" />
     <EditTasksListNameModal v-if="showEditTasksListNameModal" :on-close="() => editingTaskListName(false)" :send="send" :snapshot="snapshot" :name="getTasksListName()" />
-    <div v-if="showLoading" :class="styles.container">
+    <DeleteTasksListModal v-if="showDeleteTasksListModal" :on-close="() => deletingTaskList(false)" :send="send" :snapshot="snapshot"  />
+  <div v-if="showLoading" :class="styles.container">
       <VueSpinner id="loadingSpinner" :class="styles.spinner" size="30" color="white" />
     </div>
     <div v-else :class="styles.container">
-      <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName"/>
+      <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList"/>
       <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
       <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
     </div>

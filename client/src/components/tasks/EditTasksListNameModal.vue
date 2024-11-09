@@ -1,6 +1,6 @@
 ﻿<script lang="ts" setup>
 import styles from "../Modal.module.css";
-import editStyles from "./EditTasksListNameModal.module.css";
+import editStyles from "./TasksListModal.common.module.css";
 import {faSave, faX} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {ref, watch} from "vue";
@@ -47,4 +47,4 @@ const onSubmit = async () => {
 </template>
 
 <style scoped src="@/components/Modal.module.css"></style>
-<style scoped src="@/components/tasks/EditTasksListNameModal.module.css"></style>
+<style scoped src="@/components/tasks/TasksListModal.common.module.css"></style>

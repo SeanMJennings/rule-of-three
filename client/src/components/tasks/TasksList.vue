@@ -18,6 +18,7 @@ const props = defineProps<{
   send: (event: EventFromLogic<typeof tasksMachine>) => void;
   actorRef: Actor<typeof tasksMachine>;
   editingTaskListName: (value: boolean) => void;
+  deletingTaskList: (value: boolean) => void;
 }>();
 
 const tasksListModel: TasksListModel = reactive({name: ""});
@@ -45,8 +46,8 @@ const addTaskList = () => {
   tasksListModel.name = "";
 };
 
-const deleteTaskList = () => {
-  props.send({type: "deleteTasksList", id: selectedTasksList.id});
+const openDeleteTaskList = () => {
+  props.deletingTaskList(true);
 };
 
 const openEditTaskListName = () => {
@@ -106,7 +107,7 @@ onUnmounted(() => {
         </select>
         <div :class="style.selectInputButtons">
           <ButtonIcon the_id="open-edit-task-list-name" :icon="faEdit" :iconStyle="commonStyle.icon"  v-on:click="openEditTaskListName()"/>
-          <ButtonIcon the_id="delete-task-list-submit" :class="commonStyle.button" :icon="faTrash" :iconStyle="commonStyle.icon" v-on:click="deleteTaskList()"/>
+          <ButtonIcon the_id="open-delete-task-list" :class="commonStyle.button" :icon="faTrash" :iconStyle="commonStyle.icon" v-on:click="openDeleteTaskList()"/>
         </div>
       </div>
     </div>
