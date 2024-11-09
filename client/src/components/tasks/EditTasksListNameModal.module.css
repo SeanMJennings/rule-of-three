@@ -1,0 +1,32 @@
+﻿.body {
+    padding: 20px;
+}
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.input {
+    width: 100%;
+}
+
+.overlay {
+    display: flex;
+    flex-direction: column;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    background: var(--color-background);
+    z-index: 2;
+    border-radius: 5px;
+    width: 80vw;
+    height: 30vh;
+    @media (min-width: 768px) {
+        width: 50vw;
+    }
+    @media (min-width: 1536px) {
+        width: 40vw;
+    }
+}

@@ -47,10 +47,14 @@ export const tasksAreFull = function (context: { id: string, tasksLists: TasksLi
     return numberOfTasks >= taskLimit;
 };
 
-export const tasksAreEmpty = function (context: { id: string, tasksLists: TasksList[]; }) {
-    return context.tasksLists.find((list) => list.id === context.id)?.tasks.length === 0;
-};
+export const selectedTaskListName = function (context: { id: string, tasksLists: TasksList[]; }) {
+    return context.tasksLists.find((list) => list.id === context.id)?.name;
+}
 
+export const tasksListNamingIsUpdating = function (value: StateValue) {
+    return value === TasksListMachineStates.updatingTheTasksList;
+}
+    
 export const tasksHaveBeenCarried = function (context: { id: string, tasksLists: TasksList[]; }): boolean {
     return context.tasksLists.find((list) => list.id === context.id)?.tasks.filter((n) => !n.carried && !n.ticked && !n.removed).length === 0;
 };

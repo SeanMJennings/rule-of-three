@@ -4,11 +4,12 @@ import styles from "./Tasks.module.css";
 import TasksCounter from "@/components/tasks/TasksCounter.vue";
 import TasksForm from "@/components/tasks/TasksForm.vue";
 import TasksList from "@/components/tasks/TasksList.vue";
-import {getTasks, loading, readyToAddTasks, taskLimit} from "@/state-machines/tasks.extensions";
+import {getTasks, loading, readyToAddTasks, selectedTaskListName, taskLimit} from "@/state-machines/tasks.extensions";
 import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from 'xstate'
 import {VueSpinner} from "vue3-spinners";
 import {onMounted, onUnmounted, ref} from "vue";
-import Overlay from "@/components/Overlay.vue";
+import ErrorModal from "@/components/ErrorModal.vue";
+import EditTasksListNameModal from "@/components/tasks/EditTasksListNameModal.vue";
 let subscription: Subscription;
 let errorSubscription: Subscription;
 
@@ -23,12 +24,26 @@ const props = defineProps<{
 const {snapshot, send, actorRef} = props.tasksMachineProvider();
 const showLoading = ref(true)
 const showErrorModal = ref(false)
+const showEditTasksListNameModal = ref(false)
 const theError = ref("")
 const code = ref(0)
+
 const closeErrorModal = () => {
   showErrorModal.value = false;
   theError.value = "";
   code.value = 0;
+}
+
+const editingTaskListName = (value: boolean) => {
+  showEditTasksListNameModal.value = value;
+}
+
+const getTasksListName = () => {
+  return selectedTaskListName(actorRef.getSnapshot().context);
+}
+
+const editTasksListName = () => {
+  send({type: "editTasksListName", name: getTasksListName()});
 }
 
 onMounted(() => {
@@ -49,12 +64,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Overlay v-if="showErrorModal" :the-error="theError" :code="code" :on-close="closeErrorModal"></Overlay>
+    <ErrorModal v-if="showErrorModal" :the-error="theError" :code="code" :on-close="closeErrorModal" />
+    <EditTasksListNameModal v-if="showEditTasksListNameModal" :on-close="() => editingTaskListName(false)" :send="send" :snapshot="snapshot" :name="getTasksListName()" />
     <div v-if="showLoading" :class="styles.container">
       <VueSpinner id="loadingSpinner" :class="styles.spinner" size="30" color="white" />
     </div>
     <div v-else :class="styles.container">
-      <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot"/>
+      <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName"/>
       <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
       <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
     </div>

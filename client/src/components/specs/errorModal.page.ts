@@ -1,6 +1,6 @@
 ﻿import {mount, VueWrapper} from '@vue/test-utils'
 import {afterEach} from 'vitest'
-import Overlay from "@/components/Overlay.vue";
+import ErrorModal from "@/components/ErrorModal.vue";
 
 let app: VueWrapper;
 
@@ -8,8 +8,8 @@ afterEach(() => {
     app.unmount();
 });
 
-export function mountOverlay(message: string = "", code: number = 422, ) {
-    app = mount(Overlay,{
+export function mountErrorModal(message: string = "", code: number = 422, ) {
+    app = mount(ErrorModal,{
         props: {
             theError: message,
             code: code,

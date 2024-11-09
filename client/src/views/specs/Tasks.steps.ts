@@ -1,8 +1,9 @@
-﻿import {afterAll, afterEach, beforeEach, expect} from 'vitest'
+﻿import {afterAll, afterEach, beforeEach, expect, vi} from 'vitest'
 import {
     addAnotherTaskList,
     addATaskList,
-    addTask, addTaskDisabled,
+    addTask,
+    addTaskDisabled,
     addTaskListSubmitDisabled,
     addTaskVisible,
     another_task_list_id,
@@ -11,13 +12,24 @@ import {
     carryTaskHidden,
     characterCount,
     characterCountHidden,
-    clickAddTaskListPlaceholder, closeErrorOverlay,
-    createActor, deleteTaskList, errorOverlayExists, errorOverlayText, loadingSpinnerExists,
+    clickAddTaskListPlaceholder,
+    closeEditTaskListName,
+    closeErrorOverlay,
+    createActor,
+    deleteTaskList, editTaskListNameCharacterCount,
+    editTaskListNameModalExists,
+    errorOverlayExists,
+    errorOverlayText,
+    loadingSpinnerExists,
+    openEditTaskListName,
     pageText,
     removeTask,
     removeTaskHidden,
-    renderTasksView, resetActor, selectOptionFromTaskListSingleSelect,
+    renderTasksView,
+    resetActor,
+    selectOptionFromTaskListSingleSelect,
     stopActor,
+    submitNewTaskListName,
     task_list_id,
     task_list_name,
     taskCount,
@@ -27,7 +39,9 @@ import {
     taskListNameInputText,
     taskListSingleSelectChosenValue,
     taskListSingleSelectHidden,
-    taskPageNumber, tasksListCaretExists,
+    taskListSingleSelectText,
+    taskPageNumber,
+    tasksListCaretExists,
     tasksListInputCaretPointsDown,
     tasksListInputCaretPointsUp,
     tasksListInputCollapsed,
@@ -38,6 +52,7 @@ import {
     tickTaskHidden,
     toggleTasksListInput,
     toggleTasksListSingleSelect,
+    typeNewTaskListName,
     typeTask,
     typeTaskListName,
     unmountTasksView
@@ -52,6 +67,11 @@ const testTaskTextMoreThan150Chars =
 const mockServer = MockServer.New();
 const task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
 let wait_for_create_tasks_list: () => boolean;
+
+vi.mock("@lottiefiles/dotlottie-vue", () => {
+    return {DotLottieVue: {template: "<div>I am a fake!</div>"}};
+});
+
 
 
 beforeEach(() => {
@@ -124,6 +144,52 @@ export async function lets_user_delete_a_task_list() {
     await waitUntil(wait_for_delete_tasks_list);
     await waitUntil(() => taskListSingleSelectHidden());
     expect(pageText()).toContain("Create your first task list");
+}
+
+export async function lets_user_rename_a_task_list() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        id: task_list_id,
+        name: task_list_name
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    const wait_for_rename_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}`, {name: another_task_list_name})
+    await openEditTaskListName()
+    await typeNewTaskListName(another_task_list_name);
+    await submitNewTaskListName();
+    await waitUntil(wait_for_rename_tasks_list);
+    expect(editTaskListNameModalExists()).toBe(false);
+    await waitUntil(() => taskListSingleSelectText(task_list_id) === another_task_list_name);
+    expect(taskListSingleSelectText(task_list_id)).toBe(another_task_list_name);
+}
+
+export async function limits_edit_task_list_name_input_to_50_characters() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await openEditTaskListName()
+    await typeNewTaskListName(testTaskTextMoreThan150Chars);
+    expect(editTaskListNameCharacterCount()).toBe("50/50");
+}
+
+export async function lets_user_close_edit_task_list_name_modal() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        id: task_list_id,
+        name: task_list_name
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await openEditTaskListName()
+    await closeEditTaskListName();
+    expect(editTaskListNameModalExists()).toBe(false);
 }
 
 export async function lets_user_collapse_tasks_list_single_select() {

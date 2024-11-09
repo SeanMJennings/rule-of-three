@@ -5,6 +5,9 @@ import {tasksMachine} from '@/state-machines/tasks.state-machine'
 
 let page: VueWrapper;
 let {snapshot, send, actorRef} = useMachine(tasksMachine);
+
+// @ts-ignore
+HTMLCanvasElement.prototype.getContext = () => {};
 export const task_list_id = crypto.randomUUID();
 export const another_task_list_id = crypto.randomUUID();
 export const task_list_name = "Task list name";
@@ -64,6 +67,26 @@ export function typeTaskListName(value: string) {
     return elements.addTaskListInput.setValue(value);
 }
 
+export function openEditTaskListName() {
+    return elements.openEditTaskListName.trigger("click");
+}
+
+export function closeEditTaskListName() {
+    return elements.closeEditTaskListName.trigger("click");
+}
+
+export function editTaskListNameModalExists() {
+    return elements.editTaskListNameModal.exists();
+}
+
+export function typeNewTaskListName(value: string) {
+    return elements.editTaskListNameInput.setValue(value);
+}
+
+export function submitNewTaskListName() {
+    return elements.editTaskListNameSubmit.trigger("click");
+}
+
 export function taskListNameInputText() {
     return (elements.addTaskListInput.element as HTMLInputElement).value;
 }
@@ -79,6 +102,12 @@ export function taskListSingleSelectChosenValue() {
 export async function selectOptionFromTaskListSingleSelect(index: number) {
     const options = elements.taskListSingleSelectOptions
     await options.at(index)?.setValue()
+}
+
+
+export function taskListSingleSelectText(id: string) {
+    const options = elements.taskListSingleSelectOptions
+    return options.find(o => o.element.value === id)?.text()
 }
 
 export function addTaskListSubmit() {
@@ -176,6 +205,10 @@ export function taskListCharacterCount() {
     return elements.taskListCharacterCount.text();
 }
 
+export function editTaskListNameCharacterCount() {
+    return elements.editTaskListNameCharacterCount.text();
+}
+
 export function characterCount() {
     return elements.characterCount.text();
 }
@@ -260,6 +293,21 @@ const elements = {
     get deleteTaskListSubmit() {
         return page.find("#delete-task-list-submit");
     },
+    get openEditTaskListName() {
+        return page.find("#open-edit-task-list-name");
+    },
+    get closeEditTaskListName() {
+        return page.find("#edit-task-list-name-modal-close");
+    },
+    get editTaskListNameModal() {
+        return page.find("#edit-task-list-name-modal");
+    },
+    get editTaskListNameInput() {
+        return page.find("#edit-task-list-name-input");
+    },
+    get editTaskListNameSubmit() {
+        return page.find("#edit-task-list-name-submit");
+    },
     get taskListSingleSelect() {
         return page.find("#task-list-single-select").element as HTMLSelectElement;
     },
@@ -283,6 +331,9 @@ const elements = {
     },
     get taskListCharacterCount() {
         return page.find("#tasks-list-character-count");
+    },
+    get editTaskListNameCharacterCount() {
+        return page.find("#edit-task-list-name-character-count");
     },
     get characterCount() {
         return page.find("#character-count");

@@ -6,7 +6,7 @@ import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from '
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {TasksListMachineStates} from "@/state-machines/tasks.states";
 import type {Id} from "@/types/types";
-import {faList, faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons'
+import {faEdit, faList, faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
 import {notEmpty, readyToAddTasks, showCreateTasksList} from "@/state-machines/tasks.extensions";
@@ -17,6 +17,7 @@ const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
   send: (event: EventFromLogic<typeof tasksMachine>) => void;
   actorRef: Actor<typeof tasksMachine>;
+  editingTaskListName: (value: boolean) => void;
 }>();
 
 const tasksListModel: TasksListModel = reactive({name: ""});
@@ -46,6 +47,10 @@ const addTaskList = () => {
 
 const deleteTaskList = () => {
   props.send({type: "deleteTasksList", id: selectedTasksList.id});
+};
+
+const openEditTaskListName = () => {
+  props.editingTaskListName(true);
 };
 
 const disableAddTaskListButton = () => props.snapshot.value === TasksListMachineStates.creatingTheTasksList || props.snapshot.value === TasksListMachineStates.updatingTheTasksList;
@@ -99,7 +104,10 @@ onUnmounted(() => {
             {{ option.name }}
           </option>
         </select>
-        <ButtonIcon id="delete-task-list-submit" :class="commonStyle.button" :icon="faTrash" :iconStyle="commonStyle.icon" v-on:click="deleteTaskList()"/>
+        <div :class="style.selectInputButtons">
+          <ButtonIcon the_id="open-edit-task-list-name" :icon="faEdit" :iconStyle="commonStyle.icon"  v-on:click="openEditTaskListName()"/>
+          <ButtonIcon the_id="delete-task-list-submit" :class="commonStyle.button" :icon="faTrash" :iconStyle="commonStyle.icon" v-on:click="deleteTaskList()"/>
+        </div>
       </div>
     </div>
   </div>

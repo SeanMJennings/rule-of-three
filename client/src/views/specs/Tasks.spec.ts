@@ -12,14 +12,17 @@ import {
     does_not_show_remove_or_carry_for_ticked_tasks,
     ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded,
     lets_user_add_a_task_list,
-    lets_user_carry_tasks, lets_user_close_overlay_modal_for_validation_errors,
+    lets_user_carry_tasks,
+    lets_user_close_edit_task_list_name_modal,
+    lets_user_close_overlay_modal_for_validation_errors,
     lets_user_collapse_tasks_list_input,
     lets_user_collapse_tasks_list_single_select,
     lets_user_delete_a_task_list,
     lets_user_expand_tasks_list_input,
     lets_user_expand_tasks_list_single_select,
     lets_user_remove_tasks,
-    lets_user_tick_tasks,
+    lets_user_rename_a_task_list,
+    lets_user_tick_tasks, limits_edit_task_list_name_input_to_50_characters,
     limits_task_length_to_150_characters,
     list_character_count_limit_hidden_when_input_is_empty,
     only_shows_remove_tasks_for_tasks_carried_twice,
@@ -42,6 +45,9 @@ describe("Tasks", () => {
         it("lets user expand tasks list input", lets_user_expand_tasks_list_input);
         it("shows task list single select when there is one list", shows_task_list_single_select_when_there_is_one_list);
         it("lets user delete a task list", lets_user_delete_a_task_list);
+        it("lets user rename a task list", lets_user_rename_a_task_list);
+        it("limits edit task list name input to 50 characters", limits_edit_task_list_name_input_to_50_characters);
+        it("lets user close edit task list name modal", lets_user_close_edit_task_list_name_modal);
         it("lets user collapse tasks list single select", lets_user_collapse_tasks_list_single_select);
         it("lets user expand tasks list single select", lets_user_expand_tasks_list_single_select);
         it("selects first of multiple lists", selects_first_of_multiple_lists);
