@@ -76,7 +76,7 @@ export function openDeleteTaskList() {
 }
 
 export function closeDeleteTaskList() {
-    return elements.deleteTaskListNameModal.trigger("click");
+    return elements.closeDeleteTaskList.trigger("click");
 }
 
 export function closeEditTaskListName() {

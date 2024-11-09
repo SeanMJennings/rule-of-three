@@ -2,6 +2,9 @@
 import {afterEach} from 'vitest'
 import ErrorModal from "@/components/ErrorModal.vue";
 
+// @ts-ignore
+HTMLCanvasElement.prototype.getContext = () => {};
+
 let app: VueWrapper;
 
 afterEach(() => {

@@ -1,12 +1,12 @@
 ﻿import {describe, it} from "vitest";
 import {
     displays_default_error_message,
-    displays_error_message_for_status_code_422, 
-    displays_generic_error_message_for_other_status_codes
+    displays_error_message_for_non_server_error_codes, 
+    displays_generic_error_message_for_server_error_codes
 } from "@/components/specs/errorModal.steps";
 
 describe("Error Modal", () => {
     it("displays default error message", displays_default_error_message);
-    it("displays error message for status code 422", displays_error_message_for_status_code_422);
-    it("displays generic error message for other status codes", displays_generic_error_message_for_other_status_codes);
+    it("displays error message for non server error codes", displays_error_message_for_non_server_error_codes);
+    it("displays generic error message for server error codes", displays_generic_error_message_for_server_error_codes);
 });

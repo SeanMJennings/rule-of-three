@@ -16,7 +16,7 @@ import {
     closeEditTaskListName,
     closeErrorOverlay,
     createActor,
-    deleteTaskList, editTaskListNameCharacterCount,
+    deleteTaskList, deleteTaskListModalExists, editTaskListNameCharacterCount,
     editTaskListNameModalExists,
     errorOverlayExists,
     errorOverlayText,
@@ -159,6 +159,7 @@ export async function lets_user_close_delete_task_list_modal() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await openDeleteTaskList();
     await closeDeleteTaskList();
+    expect(deleteTaskListModalExists()).toBe(false);
     expect(taskListSingleSelectHidden()).toBe(false);
 }
 
