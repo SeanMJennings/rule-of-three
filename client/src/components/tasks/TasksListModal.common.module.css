@@ -11,6 +11,10 @@
     width: 100%;
 }
 
+.icon {
+    font-size: 21px;
+}
+
 .overlay {
     display: flex;
     flex-direction: column;
@@ -39,4 +43,6 @@
     padding: 5px 10px;
     border-radius: 2px;
     background: var(--color-link-background);
+    max-height: 28px;
+    margin-left: auto;
 }
