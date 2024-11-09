@@ -7,7 +7,7 @@ import {
     renderUnknownRoute,
     the_route
 } from "@/specs/App.page";
-import {mockAuth0, resetAuth0, theTokenString, userIsAuthenticated} from "@/testing/mock-auth0";
+import {change_token, mockAuth0, resetAuth0, theTokenString, userIsAuthenticated} from "@/testing/mock-auth0";
 import {waitUntil} from "@/testing/utilities";
 
 
@@ -18,6 +18,7 @@ vi.mock('@auth0/auth0-vue', () => ({
 
 beforeEach(() => {
     resetAuth0();
+    window.token = undefined;
 });
 
 export async function renders_landing_page() {
@@ -38,8 +39,12 @@ export async function renders_logout_user_when_logged_in() {
     expect(wrapper.text()).toContain("Log out");
 }
 
-export async function loads_user_token() {
+export async function subscribes_to_user_token_changes() {
+    change_token(undefined)
     await renderLanding();
+    expect(window.token).toBe(undefined);
+    change_token(theTokenString);
+    await waitUntil(() => window.token === theTokenString);
     expect(window.token).toBe(theTokenString);
 }
 

@@ -4,8 +4,13 @@ import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import ErrorBoundary from "@/components/ErrorBoundary.vue";
 import {useAuth0} from "@auth0/auth0-vue";
+import {watch} from "vue";
 const auth0 = useAuth0();
-window.token = auth0.idTokenClaims.value?.__raw
+
+watch(auth0.idTokenClaims, () => {
+  window.token = auth0.idTokenClaims.value?.__raw
+})
+
 </script>
 
 <template>
