@@ -4,6 +4,7 @@ from http import HTTPStatus
 import pytest
 from flask.testing import FlaskClient
 
+from src.cache import cache, cache_config
 from src.app import create_app
 from src.application.tasks_list_service import TasksListService
 from tests.database import setup_db, get_db_connection, clear_db
@@ -19,7 +20,10 @@ tasks_list_id = None
 def setup_and_teardown():
     global client
     setup_db()
-    client = create_app(TasksListService(get_db_connection())).test_client()
+    app = create_app(TasksListService(get_db_connection()))
+    cache.init_app(app, config=cache_config)
+    client = app.test_client()
+    cache.clear()
     yield
     client.__exit__(None, None, None)
     clear_db()

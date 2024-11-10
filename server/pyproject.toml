@@ -14,6 +14,7 @@ dependencies = [
     "flask-cors>=5.0.0",
     "python-dotenv>=1.0.1",
     "python-jose>=3.3.0",
+    "flask-caching>=2.3.0",
 ]
 
 [tool.uv]

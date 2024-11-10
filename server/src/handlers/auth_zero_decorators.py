@@ -5,6 +5,7 @@ from typing import Dict
 from urllib.request import urlopen
 
 from flask import request
+from src.cache import cache
 from jose import jwt
 from pathlib import Path
 import yaml
@@ -53,6 +54,14 @@ def get_jwks() -> Dict[str, str]:
     return json.loads(jsonurl.read())
 
 
+def get_jwks_from_cache() -> Dict[str, str]:
+    jwks = cache.get("jwks")
+    if jwks is None:
+        jwks = get_jwks()
+        cache.set("jwks", jwks)
+    return jwks
+
+
 def requires_scope(required_scope: str) -> bool:
     token = get_token_auth_header()
     unverified_claims = jwt.get_unverified_claims(token)
@@ -68,7 +77,7 @@ def requires_auth(func):
     @wraps(func)
     def decorated(*args, **kwargs):
         token = get_token_auth_header()
-        jwks = get_jwks()
+        jwks = get_jwks_from_cache()
         try:
             unverified_header = jwt.get_unverified_header(token)
         except jwt.JWTError as jwt_error:

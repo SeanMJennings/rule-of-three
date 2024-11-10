@@ -5,6 +5,7 @@ import pytest
 from flask.testing import FlaskClient
 
 from src.app import create_app
+from src.cache import cache, cache_config
 from src.application.validation_exception import ValidationException
 from tests.handlers.mocking_utilities import the_headers
 from tests.handlers.routing import tasks_url
@@ -33,12 +34,16 @@ class FakeTaskListServiceWithException:
 
 def a_validation_error():
     global client
-    client = create_app(FakeTaskListServiceWithValidationException()).test_client()
+    app = create_app(FakeTaskListServiceWithValidationException())
+    cache.init_app(app, config=cache_config)
+    client = app.test_client()
 
 
 def an_error():
     global client
-    client = create_app(FakeTaskListServiceWithException()).test_client()
+    app = create_app(FakeTaskListServiceWithException())
+    cache.init_app(app, config=cache_config)
+    client = app.test_client()
 
 
 def catching_the_error():

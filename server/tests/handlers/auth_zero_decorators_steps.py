@@ -4,6 +4,7 @@ from flask.testing import FlaskClient
 from flask.views import MethodView
 from flask_cors import CORS
 
+from src.cache import cache, cache_config
 from src.handlers.auth_zero_decorators import requires_auth
 from src.handlers.exception_handlers import handle_exception
 from src.handlers.requests import CUSTOM_AUTHORIZATION_HEADER_KEY
@@ -15,6 +16,7 @@ from tests.auth_zero_tokens import (
     rs256_token,
     different_issuer_payload,
 )
+from tests.handlers.mocking_utilities import reset_mocks
 from tests.handlers.routing import nonsense_url
 
 response = None
@@ -25,20 +27,24 @@ headers = None
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
     global client
-    client = an_app().test_client()
+    an_app()
+    reset_mocks()
+    cache.clear()
     yield
     client.__exit__(None, None, None)
 
 
 def an_app():
+    global client
     app = Flask(__name__)
+    cache.init_app(app, config=cache_config)
     CORS(app)
     app.add_url_rule(
         "/api" + NonsenseHandler.route(),
         view_func=NonsenseHandler.as_view(NonsenseHandler.name()),
     )
     app.errorhandler(Exception)(handle_exception)
-    return app
+    client = app.test_client()
 
 
 def a_request_without_authorisation_header():
@@ -95,8 +101,8 @@ def a_valid_request():
     }
 
 
-def an_api_that_requires_authorisation():
-    return None
+def a_reset_cache():
+    cache.clear()
 
 
 def making_the_request():
