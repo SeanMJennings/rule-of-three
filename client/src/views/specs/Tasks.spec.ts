@@ -3,7 +3,7 @@ import {
     adds_and_lists_a_task,
     asks_user_to_create_first_task_list,
     character_count_limit_hidden_when_input_is_empty, disables_add_a_task_list_whilst_adding,
-    disables_add_task_button_when_input_is_empty,
+    disables_add_task_button_when_input_is_empty, disables_add_task_button_whilst_adding,
     displays_character_count_limit,
     displays_list_character_count_limit,
     displays_loading_spinner_until_task_lists_are_loaded,
@@ -60,6 +60,7 @@ describe("Tasks", () => {
         it("renders tasks", renders_tasks);
         it("disables add task button when input is empty", disables_add_task_button_when_input_is_empty);
         it("adds and lists a task", adds_and_lists_a_task);
+        it("disables add task button whilst adding", disables_add_task_button_whilst_adding);
         it("shows task count if there are tasks", shows_task_count_if_there_are_tasks);
         it("limits task length to 150 characters", limits_task_length_to_150_characters);
         it("displays character count limit", displays_character_count_limit);

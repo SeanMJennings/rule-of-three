@@ -3,7 +3,7 @@ import {
     addAnotherTaskList,
     addATaskList,
     addTask,
-    addTaskDisabled,
+    addTaskDisabled, addTaskInputText,
     addTaskListSubmitDisabled,
     addTaskVisible,
     another_task_list_id,
@@ -383,6 +383,21 @@ export async function adds_and_lists_a_task() {
     await waitUntil(wait_for_add_task)
     await waitUntil(() => !addTaskDisabled());
     expect(taskTextShown(task_ids[0], testTaskText)).toBe(true);
+    expect(addTaskInputText()).toBe("");
+}
+
+export async function disables_add_task_button_whilst_adding() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { id: task_ids[0] }, true, 1000)
+    await typeTask(testTaskText);
+    await addTask();
+    expect(addTaskDisabled()).toBe(true);
+    await waitUntil(wait_for_add_task)
+    expect(addTaskDisabled()).toBe(false);
 }
 
 export async function limits_task_length_to_150_characters() {
@@ -424,7 +439,6 @@ export async function lets_user_tick_tasks() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
-    await typeTask(testTaskText);
 
     await add_all_tasks_except_one();
     for (const task_id of task_ids) {
@@ -444,7 +458,6 @@ export async function lets_user_carry_tasks() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
-    await typeTask(testTaskText);
     await add_all_tasks();
     await waitUntil( () => !carryTaskHidden(task_ids[0]));
     await carry_all_tasks();
@@ -456,7 +469,6 @@ export async function lets_user_remove_tasks() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
-    await typeTask(testTaskText);
     await add_all_tasks();
     await waitUntil( () => !removeTaskHidden(task_ids[0]));
     await remove_all_tasks();
@@ -468,7 +480,6 @@ export async function displays_page_number_of_tasks() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
-    await typeTask(testTaskText);
     await add_all_tasks();
     await carry_all_tasks();
     for (const task_id of task_ids) {
@@ -485,7 +496,6 @@ export async function only_shows_remove_tasks_for_tasks_carried_twice() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
-    await typeTask(testTaskText);
     await add_all_tasks();
     await waitUntil( () => !carryTaskHidden(task_ids[0]));
     await carry_all_tasks();
@@ -503,7 +513,6 @@ export async function does_not_show_remove_or_carry_for_ticked_tasks() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
-    await typeTask(testTaskText);
     await add_all_tasks_except_one();
     for (const task_id of task_ids) {
         if (task_id !== task_ids[task_ids.length - 1]) {
@@ -556,6 +565,7 @@ async function add_all_tasks_except_one() {
     for (const task_id of task_ids) {
         const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
         if (task_id !== task_ids[task_ids.length - 1]) {
+            await typeTask(testTaskText);
             await addTask();
             await waitUntil(wait_for_add_task)
             await waitUntil(() => !addTaskDisabled());
@@ -566,6 +576,7 @@ async function add_all_tasks_except_one() {
 async function add_all_tasks() {
     for (const task_id of task_ids) {
         const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})
+        await typeTask(testTaskText);
         await addTask();
         await waitUntil(wait_for_add_task)
         if (task_id !== task_ids[task_ids.length - 1]) {

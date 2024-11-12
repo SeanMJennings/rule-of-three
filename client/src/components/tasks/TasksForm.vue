@@ -32,6 +32,7 @@ const disabled = () => model.taskText.length === 0;
 const submit = () => {
   if (disabled()) return;
   props.send({type: "add", content: model.taskText});
+  model.taskText = "";
 };
 const tick = (id: string | number) => {
   props.send({type: "tick", id: id});

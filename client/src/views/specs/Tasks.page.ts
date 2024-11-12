@@ -201,6 +201,10 @@ export function typeTask(task: string) {
     return elements.addTaskInput.setValue(task);
 }
 
+export function addTaskInputText() {
+    return (elements.addTaskInput.element as HTMLInputElement).value;
+}
+
 export function addTask() {
     return elements.addTaskSubmit.trigger("click");
 }
