@@ -54,7 +54,7 @@ const openEditTaskListName = () => {
   props.editingTaskListName(true);
 };
 
-const disableAddTaskListButton = () => props.snapshot.value === TasksListMachineStates.creatingTheTasksList || props.snapshot.value === TasksListMachineStates.updatingTheTasksList;
+const disableAddTaskListButton = () => props.snapshot.value === TasksListMachineStates.creatingTheTasksList;
 
 const toggleTasksList = () => {
   tasksListInputCollapsedModel.collapsed = !tasksListInputCollapsedModel.collapsed;

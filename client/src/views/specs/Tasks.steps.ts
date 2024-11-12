@@ -59,6 +59,7 @@ import {
 } from './Tasks.page'
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
+import exp from "node:constants";
 
 const testTaskText = "Hello, world!";
 const anotherTestTaskText = "Goodbye, world!";
@@ -283,6 +284,17 @@ export async function lets_user_add_a_task_list() {
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
+}
+
+export async function disables_add_a_task_list_whilst_adding() {
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name}, true, 1000)
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await typeTaskListName(task_list_name);
+    expect(addTaskListSubmitDisabled()).toBe(true);
+    await waitUntil(wait_for_create_tasks_list)
+    expect(addTaskListSubmitDisabled()).toBe(false);
 }
 
 export async function displays_list_character_count_limit() {

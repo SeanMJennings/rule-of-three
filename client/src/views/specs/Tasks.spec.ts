@@ -2,7 +2,7 @@
 import {
     adds_and_lists_a_task,
     asks_user_to_create_first_task_list,
-    character_count_limit_hidden_when_input_is_empty,
+    character_count_limit_hidden_when_input_is_empty, disables_add_a_task_list_whilst_adding,
     disables_add_task_button_when_input_is_empty,
     displays_character_count_limit,
     displays_list_character_count_limit,
@@ -38,6 +38,7 @@ describe("Tasks", () => {
         it("displays loading spinner until task lists are loaded", displays_loading_spinner_until_task_lists_are_loaded);
         it("asks user to create first task list", asks_user_to_create_first_task_list);
         it("lets user add a task list", lets_user_add_a_task_list);
+        it("disables add a task list whilst adding", disables_add_a_task_list_whilst_adding);
         it("displays list character count limit", displays_list_character_count_limit);
         it("list character count limit hidden when input is empty", list_character_count_limit_hidden_when_input_is_empty);
         it("lets user collapse tasks list input", lets_user_collapse_tasks_list_input);

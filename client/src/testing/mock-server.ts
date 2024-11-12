@@ -36,10 +36,11 @@ export class MockServer {
         return was_called
     }
 
-    public post(url: string, response?: any, success = true): () => boolean {
+    public post(url: string, response?: any, success = true, delayValue?: number): () => boolean {
         let called = false;
         const was_called = () => called;
-        this.server.use(http.post(url, (req) => {
+        this.server.use(http.post(url, async (req) => {
+            if (delayValue) await delay(delayValue)
             called = true;
             this.headers = req.request.headers
             if (!success) return HttpResponse.json(response, {status: 422})
