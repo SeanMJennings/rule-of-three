@@ -24,7 +24,7 @@ jobs:
         uses: azure/cli@v2
         with:
           azcliversion: latest
-          inlineScript: az network dns zone create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.DOMAIN }}
+          inlineScript: az network dns zone create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ vars.DOMAIN }}
       - name: Create a resource group
         uses: azure/cli@v2
         with:
