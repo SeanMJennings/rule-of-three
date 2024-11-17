@@ -1,4 +1,4 @@
-﻿import {afterAll, afterEach, beforeEach, expect, vi} from 'vitest'
+﻿import {afterEach, beforeEach, expect, vi} from 'vitest'
 import {
     addAnotherTaskList,
     addATaskList,
@@ -15,7 +15,6 @@ import {
     clickAddTaskListPlaceholder, closeDeleteTaskList,
     closeEditTaskListName,
     closeErrorOverlay,
-    createActor,
     deleteTaskList, deleteTaskListModalExists, editTaskListNameCharacterCount,
     editTaskListNameModalExists,
     errorOverlayExists,
@@ -26,9 +25,7 @@ import {
     removeTask,
     removeTaskHidden,
     renderTasksView,
-    resetActor,
     selectOptionFromTaskListSingleSelect,
-    stopActor,
     submitNewTaskListName,
     task_list_id,
     task_list_name,
@@ -59,7 +56,6 @@ import {
 } from './Tasks.page'
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
-import exp from "node:constants";
 
 const testTaskText = "Hello, world!";
 const anotherTestTaskText = "Goodbye, world!";
@@ -73,22 +69,15 @@ vi.mock("@lottiefiles/dotlottie-vue", () => {
     return {DotLottieVue: {template: "<div>I am a fake!</div>"}};
 });
 
-
-
 beforeEach(() => {
     mockServer.reset();
     mockServer.get("/tasks-lists", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
     mockServer.start()
-    createActor();
 });
 
 afterEach(() => {
     unmountTasksView();
-});
-
-afterAll(() => {
-    stopActor();
 });
 
 export async function renders_tasks() {
@@ -103,7 +92,6 @@ export async function renders_tasks() {
 export async function displays_loading_spinner_until_task_lists_are_loaded() {
     mockServer.get("/tasks-lists", [], 1000)
     renderTasksView();
-    resetActor();
     expect(loadingSpinnerExists()).toBe(true);
 }
 
@@ -253,7 +241,6 @@ export async function selects_first_of_multiple_lists() {
         {id: another_task_list_id, name: another_task_list_name, tasks: []}
     ])
     renderTasksView();
-    resetActor();
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists)
     expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
@@ -327,7 +314,6 @@ export async function ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded(
         {id: task_list_id, name: task_list_name, tasks: []}
     ])
     renderTasksView();
-    resetActor();
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists);
     await waitUntil(() => tasksListCaretExists());
@@ -553,7 +539,6 @@ export async function shows_correct_tasks_when_selecting_a_different_list() {
             }]}
     ])
     renderTasksView();
-    resetActor();
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists)
     await selectOptionFromTaskListSingleSelect(1);

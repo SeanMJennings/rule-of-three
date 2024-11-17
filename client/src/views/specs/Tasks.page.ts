@@ -4,7 +4,6 @@ import {useMachine} from '@xstate/vue'
 import {tasksMachine} from '@/state-machines/tasks.state-machine'
 
 let page: VueWrapper;
-let {snapshot, send, actorRef} = useMachine(tasksMachine);
 
 // @ts-ignore
 HTMLCanvasElement.prototype.getContext = () => {};
@@ -13,30 +12,14 @@ export const another_task_list_id = crypto.randomUUID();
 export const task_list_name = "Task list name";
 export const another_task_list_name = "2nd Task list name";
 
-export function createActor() {
-    const {snapshot: the_snapshot, send: the_send, actorRef: the_actorRef} = useMachine(tasksMachine);
-    snapshot = the_snapshot
-    send = the_send
-    actorRef = the_actorRef
-    actorRef.start();
-    resetActor();
-}
 
 export function renderTasksView() {
     page = mountTasksView();
 }
 
-export function resetActor() {
-    send({type: "reset"});
-}
 
 export function unmountTasksView() {
     page.unmount();
-    resetActor();
-}
-
-export function stopActor() {
-    actorRef.stop();
 }
 
 export function pageText() {
@@ -269,6 +252,9 @@ function mountTasksView() {
     return mount(Tasks, {
         props: {
             tasksMachineProvider: () => {
+                const {snapshot, send, actorRef} = useMachine(tasksMachine);
+                actorRef.start();
+                send({type: "reset"});
                 return {snapshot: snapshot as any, send, actorRef};
             }
         }
