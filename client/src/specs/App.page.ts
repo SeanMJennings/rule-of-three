@@ -3,7 +3,7 @@ import {afterEach, beforeEach, vi} from 'vitest'
 import App from "../App.vue";
 import {createRouter, createWebHistory, type Router} from "vue-router";
 import {routes} from "@/router";
-import ErroringComponent from "@/testing/ErroringComponent.vue";
+import ErroringComponent from "@/specs/ErroringComponent.vue";
 
 let router: Router = {} as Router;
 let app: VueWrapper;

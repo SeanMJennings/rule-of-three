@@ -59,11 +59,11 @@ export function openDeleteTaskList() {
 }
 
 export function closeDeleteTaskList() {
-    return elements.closeDeleteTaskList.trigger("click");
+    return elements.closeModal.trigger("click");
 }
 
 export function closeEditTaskListName() {
-    return elements.closeEditTaskListName.trigger("click");
+    return elements.closeModal.trigger("click");
 }
 
 export function editTaskListNameModalExists() {
@@ -287,10 +287,10 @@ const elements = {
         return page.find("#add-task-list-submit");
     },
     get errorOverlay() {
-        return page.find("#error-overlay");
+        return page.find("#overlay");
     },
     get errorOverlayClose() {
-        return page.find("#error-overlay-close");
+        return page.find("#overlay-close");
     },
     get deleteTaskListSubmit() {
         return page.find("#delete-task-list-submit");
@@ -301,11 +301,8 @@ const elements = {
     get openDeleteTaskList() {
         return page.find("#open-delete-task-list");
     },
-    get closeEditTaskListName() {
-        return page.find("#edit-task-list-name-modal-close");
-    },
-    get closeDeleteTaskList() {
-        return page.find("#delete-task-list-modal-close");
+    get closeModal() {
+        return page.find("#overlay-close");
     },
     get editTaskListNameModal() {
         return page.find("#edit-task-list-name-modal");

@@ -1,12 +1,10 @@
 ﻿<script lang="ts" setup>
-import styles from "../Modal.module.css";
 import modalStyles from "./TasksListModal.common.module.css";
-import {faX} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import type {EventFromLogic, SnapshotFrom} from "xstate";
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {waitUntil} from "@/common/utilities";
 import {tasksListIsBeingDeleted} from "@/state-machines/tasks.extensions";
+import Modal from "@/components/Modal.vue";
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
@@ -19,22 +17,18 @@ const onSubmit = async () => {
   await waitUntil(() => !tasksListIsBeingDeleted(props.snapshot.value));
   props.onClose();
 }
+
 </script>
 
 <template>
-  <div :class="styles.background" />
-  <div :class="modalStyles.overlay" id="delete-task-list-modal" role="dialog" aria-modal="true">
-    <div :class="styles.header">
-      <h2 :class="styles.title">Delete Tasks List</h2>
-      <FontAwesomeIcon id="delete-task-list-modal-close" :class="styles.icon" :icon="faX" v-on:click="onClose" title="close"/>
-    </div>
+  <Modal title="Delete tasks list" :on-close="onClose" size="small">
     <div :class="modalStyles.body">
       <div :class="modalStyles.inputContainer">
         <span>Are you sure you want to delete the tasks list?</span>
         <button id="delete-task-list-submit" :class="modalStyles.button" v-on:click="onSubmit" title="Confirm delete">Yes</button>
       </div>
     </div>
-  </div>
+  </Modal>
 </template>
 
 <style scoped src="@/components/Modal.module.css"></style>
