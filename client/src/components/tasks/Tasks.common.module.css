@@ -23,11 +23,8 @@
 }
 
 .button {
-    margin-right: auto;
-}
-
-.icon {
     margin-left: 10px;
+    margin-right: auto;
 }
 
 .deleteIcon {

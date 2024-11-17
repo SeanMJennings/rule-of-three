@@ -44,16 +44,6 @@
     margin-right: auto;
 }
 
-.icon {
-    cursor: pointer;
-}
-
 .button {
     height: fit-content;
-}
-
-.carryActionHidden {
-}
-
-.carryActionShown {
 }
