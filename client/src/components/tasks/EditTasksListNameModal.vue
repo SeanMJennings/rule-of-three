@@ -34,7 +34,7 @@ const onSubmit = async () => {
     <div :class="editStyles.body">
       <div :class="editStyles.inputContainer">
         <input id="edit-task-list-name-input" v-model="the_name" :class="editStyles.input" type="text"/>
-        <ButtonIcon the_id="edit-task-list-name-submit" :icon="faSave" v-on:click="onSubmit" :icon-style="editStyles.icon" title="Save edit"/>
+        <ButtonIcon the_id="edit-task-list-name-submit" :icon="faSave" v-on:click="onSubmit" :class="editStyles.icon" title="Save edit"/>
       </div>
       <span id="edit-task-list-name-character-count" :class="commonStyle.characterCount">{{the_name.length > 0 ? the_name.length + "/50" : "" }}</span>
     </div>
