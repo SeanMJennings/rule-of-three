@@ -19,9 +19,10 @@ class TasksListService:
         return item["id"]
 
     def update(self, id: str, owner_id: str, new_name: str):
-        tasks_list = self.get_by_id(id, owner_id)
+        tasks_list = self.get(new_name, owner_id)
         if tasks_list is not None and tasks_list.id != id:
             raise ValidationException("Tasks list with name already exists")
+
         tasks_list = self.get_by_id(id, owner_id)
         self.__check_task_list_found(tasks_list)
         tasks_list.name = new_name
