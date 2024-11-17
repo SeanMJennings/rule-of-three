@@ -26,6 +26,7 @@
     background-color: var(--color-background-mute);
     height: 40px;
     border-bottom: solid 1px var(--color-border);
+    cursor: pointer;
 }
 
 .caret {
