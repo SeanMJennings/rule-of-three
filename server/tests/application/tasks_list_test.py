@@ -52,6 +52,12 @@ def test_cannot_rename_tasks_list_to_existing_name():
     Then(informs("Tasks list with name already exists"))
 
 
+def test_can_rename_tasks_list_to_same_name():
+    Given(an_existing_tasks_list)
+    When(renaming_a_tasks_list_to_same_name)
+    Then(the_tasks_list_is_renamed_to_same_name)
+
+
 def test_delete_tasks_list():
     Given(an_existing_tasks_list)
     When(deleting_a_tasks_list)

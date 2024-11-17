@@ -71,6 +71,11 @@ def renaming_a_tasks_list_to_existing_name():
     tasks_list_service.update(tasks_list_id, owner_id, another_tasks_list_name())
 
 
+def renaming_a_tasks_list_to_same_name():
+    global tasks_list_service
+    tasks_list_service.update(tasks_list_id, owner_id, a_tasks_list_name())
+
+
 def deleting_a_tasks_list():
     global tasks_list_service
     tasks_list_service.delete(tasks_list_id, owner_id)
@@ -171,6 +176,12 @@ def the_tasks_list_is_renamed():
     global tasks_list_service, tasks_list
     tasks_list = tasks_list_service.get("My Renamed Tasks List", owner_id)
     assert tasks_list.name == "My Renamed Tasks List"
+
+
+def the_tasks_list_is_renamed_to_same_name():
+    global tasks_list_service, tasks_list
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    assert tasks_list.name == a_tasks_list_name()
 
 
 def the_tasks_list_is_deleted():
