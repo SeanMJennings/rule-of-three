@@ -82,20 +82,20 @@ onUnmounted(() => {
       <span>Create your first task list</span>
     </div>
     <div v-if="notEmpty(snapshot.value)" :class="style.header" v-on:click="toggleTasksList()">
-      <ButtonIcon :class="commonStyle.button" :icon="faPlusCircle" :iconStyle="commonStyle.icon"/>
-      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-input-caret"/>
+      <ButtonIcon :class="commonStyle.button" :icon="faPlusCircle" :iconStyle="commonStyle.icon" title=""/>
+      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-input-caret" title="Add tasks lists"/>
     </div>
     <div v-if="notEmpty(snapshot.value) && !tasksListInputCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="add-task-list-input">Add Tasks List</label>
       <div :class="commonStyle.inputContainer">
         <input id="add-task-list-input" v-model="tasksListModel.name" :class="commonStyle.input" type="text"/>
-        <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-list-submit" v-on:click="addTaskList()"/>
+        <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-list-submit" v-on:click="addTaskList()" title="Add tasks list"/>
       </div>
       <span id="tasks-list-character-count" :class="commonStyle.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
     </div>
     <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0" :class="style.header" v-on:click="toggleTasksSelect()">
-      <ButtonIcon :class="commonStyle.button" :icon="faList" :iconStyle="commonStyle.icon"/>
-      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" />
+      <ButtonIcon :class="commonStyle.button" :icon="faList" :iconStyle="commonStyle.icon" title=""/>
+      <ButtonIcon :icon="faCaretSquareDown" :iconStyle="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" title="Select tasks list"/>
     </div>
     <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="task-list-single-select">Select Tasks List</label>
@@ -106,8 +106,8 @@ onUnmounted(() => {
           </option>
         </select>
         <div :class="style.selectInputButtons">
-          <ButtonIcon the_id="open-edit-task-list-name" :icon="faEdit" :iconStyle="commonStyle.icon"  v-on:click="openEditTaskListName()"/>
-          <ButtonIcon the_id="open-delete-task-list" :class="commonStyle.button" :icon="faTrash" :iconStyle="commonStyle.icon" v-on:click="openDeleteTaskList()"/>
+          <ButtonIcon the_id="open-edit-task-list-name" :icon="faEdit" :iconStyle="commonStyle.icon" v-on:click="openEditTaskListName()" title="Edit tasks list name"/>
+          <ButtonIcon the_id="open-delete-task-list" :class="commonStyle.button" :icon="faTrash" :iconStyle="commonStyle.icon" v-on:click="openDeleteTaskList()" title="Delete tasks list"/>
         </div>
       </div>
     </div>

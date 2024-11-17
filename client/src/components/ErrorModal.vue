@@ -13,10 +13,10 @@ defineProps<{
 
 <template>
   <div :class="styles.background" />
-  <div :class="styles.overlay" id="error-overlay">
+  <div :class="styles.overlay" id="error-overlay" role="dialog" aria-modal="true">
     <div :class="styles.header">
       <h2 :class="styles.title">An error occurred</h2>
-      <FontAwesomeIcon id="error-overlay-close" :class="styles.icon" :icon="faX" v-on:click="onClose"/>
+      <FontAwesomeIcon id="error-overlay-close" :class="styles.icon" :icon="faX" v-on:click="onClose" title="close"/>
     </div>
     <div :class="styles.body">
       <span>{{ (theError !== undefined && theError !== '' && !code?.toString()?.startsWith('5')) ? theError : "The error is unknown" }}</span>

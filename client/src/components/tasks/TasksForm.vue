@@ -52,7 +52,7 @@ const remove = (id: string | number) => {
       <label :class="commonStyle.label" for="add-task-input">Add a Task</label>
       <div :class="commonStyle.inputContainer">
         <input id="add-task-input" v-model="model.taskText" :class="commonStyle.input" type="text"/>
-        <ButtonIcon :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>
+        <ButtonIcon title="Add task" :icon="faPlusSquare" :iconStyle="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-submit" v-on:click="submit()" :disabled="!_.isEqual(snapshot.value, TasksMachineCombinedStates.addingTasksListsAddingTasks)"/>
       </div>
       <span id="character-count" :class="commonStyle.characterCount">{{ model.taskText.length > 0 ? model.taskText.length + "/150" : "" }}</span>
     </div>

@@ -23,15 +23,15 @@ const onSubmit = async () => {
 
 <template>
   <div :class="styles.background" />
-  <div :class="modalStyles.overlay" id="delete-task-list-modal">
+  <div :class="modalStyles.overlay" id="delete-task-list-modal" role="dialog" aria-modal="true">
     <div :class="styles.header">
       <h2 :class="styles.title">Delete Tasks List</h2>
-      <FontAwesomeIcon id="delete-task-list-modal-close" :class="styles.icon" :icon="faX" v-on:click="onClose"/>
+      <FontAwesomeIcon id="delete-task-list-modal-close" :class="styles.icon" :icon="faX" v-on:click="onClose" title="close"/>
     </div>
     <div :class="modalStyles.body">
       <div :class="modalStyles.inputContainer">
         <span>Are you sure you want to delete the tasks list?</span>
-        <button id="delete-task-list-submit" :class="modalStyles.button" v-on:click="onSubmit">Yes</button>
+        <button id="delete-task-list-submit" :class="modalStyles.button" v-on:click="onSubmit" title="Confirm delete">Yes</button>
       </div>
     </div>
   </div>

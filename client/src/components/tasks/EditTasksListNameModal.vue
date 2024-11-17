@@ -31,15 +31,15 @@ const onSubmit = async () => {
 
 <template>
   <div :class="styles.background" />
-  <div :class="editStyles.overlay" id="edit-task-list-name-modal">
+  <div :class="editStyles.overlay" id="edit-task-list-name-modal" role="dialog" aria-modal="true">
     <div :class="styles.header">
       <h2 :class="styles.title">Edit Tasks List Name</h2>
-      <FontAwesomeIcon id="edit-task-list-name-modal-close" :class="styles.icon" :icon="faX" v-on:click="onClose"/>
+      <FontAwesomeIcon id="edit-task-list-name-modal-close" :class="styles.icon" :icon="faX" v-on:click="onClose" title="close"/>
     </div>
     <div :class="editStyles.body">
       <div :class="editStyles.inputContainer">
         <input id="edit-task-list-name-input" v-model="the_name" :class="editStyles.input" type="text"/>
-        <ButtonIcon the_id="edit-task-list-name-submit" :icon="faSave" v-on:click="onSubmit" :icon-style="editStyles.icon"/>
+        <ButtonIcon the_id="edit-task-list-name-submit" :icon="faSave" v-on:click="onSubmit" :icon-style="editStyles.icon" title="Save edit"/>
       </div>
       <span id="edit-task-list-name-character-count" :class="commonStyle.characterCount">{{the_name.length > 0 ? the_name.length + "/50" : "" }}</span>
     </div>
