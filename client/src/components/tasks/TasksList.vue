@@ -33,7 +33,7 @@ watch(selectedTasksList, (newValue: Id) => {
 });
 
 const tasksListInputCollapsedModel: { collapsed: boolean } = reactive({collapsed: true});
-const tasksListSelectCollapsedModel: { collapsed: boolean } = reactive({collapsed: false});
+const tasksListSelectCollapsedModel: { collapsed: boolean } = reactive({collapsed: true});
 
 const readyToCreateFirstTaskList = () => {
   props.send({type: "readyToAddFirstTaskList"});

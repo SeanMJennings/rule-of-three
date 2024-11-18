@@ -112,6 +112,7 @@ export async function shows_task_list_single_select_when_there_is_one_list() {
         name: task_list_name
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     expect(taskListSingleSelectHidden()).toBe(false);
     expect(pageText()).not.toContain("Create your first task list");
     expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
@@ -128,6 +129,7 @@ export async function lets_user_delete_a_task_list() {
         name: task_list_name
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     const wait_for_delete_tasks_list = mockServer.delete(`/tasks-lists/${task_list_id}`)
     await openDeleteTaskList()
     await deleteTaskList()
@@ -146,6 +148,7 @@ export async function lets_user_close_delete_task_list_modal() {
         name: task_list_name
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     await openDeleteTaskList();
     await closeDeleteTaskList();
     expect(deleteTaskListModalExists()).toBe(false);
@@ -162,6 +165,7 @@ export async function lets_user_rename_a_task_list() {
         name: task_list_name
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     const wait_for_rename_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}`, {name: another_task_list_name})
     await openEditTaskListName()
     await typeNewTaskListName(another_task_list_name);
@@ -178,6 +182,7 @@ export async function limits_edit_task_list_name_input_to_50_characters() {
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     await openEditTaskListName()
     await typeNewTaskListName(testTaskTextMoreThan150Chars);
     expect(editTaskListNameCharacterCount()).toBe("50/50");
@@ -193,6 +198,7 @@ export async function lets_user_close_edit_task_list_name_modal() {
         name: task_list_name
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     await openEditTaskListName()
     await closeEditTaskListName();
     expect(editTaskListNameModalExists()).toBe(false);
@@ -208,6 +214,7 @@ export async function lets_user_collapse_tasks_list_single_select() {
         name: another_task_list_name
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     await addAnotherTaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -226,6 +233,7 @@ export async function lets_user_expand_tasks_list_single_select() {
         name: another_task_list_name
     })
     await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
     await addAnotherTaskList();
     await waitUntil(wait_for_create_tasks_list)
     await waitUntil(() => !addTaskListSubmitDisabled());
@@ -243,6 +251,7 @@ export async function selects_first_of_multiple_lists() {
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists)
+    await toggleTasksListSingleSelect();
     expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
 }
 
@@ -309,7 +318,7 @@ export async function lets_user_collapse_tasks_list_input() {
     expect(tasksListInputCaretPointsDown()).toBe(true);
 }
 
-export async function ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded() {
+export async function ensures_add_and_select_tasks_list_are_closed_if_a_task_list_is_loaded() {
     const wait_for_get_task_lists = mockServer.get("/tasks-lists", [
         {id: task_list_id, name: task_list_name, tasks: []}
     ])
@@ -319,6 +328,8 @@ export async function ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded(
     await waitUntil(() => tasksListCaretExists());
     expect(tasksListInputCollapsed()).toBe(true);
     expect(tasksListInputCaretPointsDown()).toBe(true);
+    expect(tasksListSingleSelectCollapsed()).toBe(true);
+    expect(tasksListSingleSelectCaretPointsDown()).toBe(true);
 }
 
 export async function lets_user_expand_tasks_list_input() {
@@ -567,7 +578,8 @@ export async function shows_correct_tasks_when_selecting_a_different_list() {
     ])
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
-    await waitUntil(wait_for_get_task_lists)
+    await waitUntil(wait_for_get_task_lists);
+    await toggleTasksListSingleSelect();
     await selectOptionFromTaskListSingleSelect(1);
     await waitUntil(() => !tickTaskHidden(task_ids[1]));
     expect(taskTextShown(task_ids[1], anotherTestTaskText)).toBe(true);

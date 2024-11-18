@@ -10,7 +10,7 @@ import {
     displays_overlay_modal_for_validation_errors,
     displays_page_number_of_tasks,
     does_not_show_remove_or_carry_for_ticked_tasks,
-    ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded,
+    ensures_add_and_select_tasks_list_are_closed_if_a_task_list_is_loaded,
     lets_user_add_a_task_list,
     lets_user_carry_tasks, lets_user_close_delete_task_list_modal,
     lets_user_close_edit_task_list_name_modal,
@@ -42,7 +42,7 @@ describe("Tasks", () => {
         it("displays list character count limit", displays_list_character_count_limit);
         it("list character count limit hidden when input is empty", list_character_count_limit_hidden_when_input_is_empty);
         it("lets user collapse tasks list input", lets_user_collapse_tasks_list_input);
-        it("ensures add tasks list is closed if a task list is loaded", ensures_add_tasks_list_is_closed_if_a_task_list_is_loaded);
+        it("ensures add and select task list are closed if a task list is loaded", ensures_add_and_select_tasks_list_are_closed_if_a_task_list_is_loaded);
         it("lets user expand tasks list input", lets_user_expand_tasks_list_input);
         it("shows task list single select when there is one list", shows_task_list_single_select_when_there_is_one_list);
         it("lets user delete a task list", lets_user_delete_a_task_list);
