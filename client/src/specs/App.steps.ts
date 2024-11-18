@@ -1,7 +1,13 @@
 ﻿import {beforeEach, expect, vi} from "vitest";
 import {
     login,
-    loginExists, logout, navigateToLanding, navigateToTasks, navigateToTasksLinkVisible, navigateToTasksViaRouter,
+    loginExists,
+    logout,
+    navigateToLanding,
+    navigateToLandingViaRouter,
+    navigateToTasks,
+    navigateToTasksLinkVisible,
+    navigateToTasksViaRouter,
     renderLanding,
     renders_erroring_app,
     renderUnknownRoute,
@@ -84,13 +90,24 @@ export async function allows_navigation_to_tasks_when_logged_in() {
     expect(wrapper.html()).toContain("I am a fake tasks page!");
 }
 
-export async function allows_user_to_navigate_back_to_landing_page() {
+export async function allows_user_to_navigate_to_landing_clicking_header_title() {
     const wrapper = await renderLanding();
     await login();
     await waitUntil(() => !loginExists());
     await navigateToTasks();
     await waitUntil(() => the_route() === "/tasks");
     await navigateToLanding();
+    await waitUntil(() => the_route() === "/");
+    expect(wrapper.text()).toContain("A simple approach");
+}
+
+export async function allows_user_to_navigate_back_to_landing_page() {
+    const wrapper = await renderLanding();
+    await login();
+    await waitUntil(() => !loginExists());
+    await navigateToTasks();
+    await waitUntil(() => the_route() === "/tasks");
+    await navigateToLandingViaRouter();
     await waitUntil(() => the_route() === "/");
     expect(wrapper.text()).toContain("A simple approach");
 }

@@ -70,11 +70,11 @@ onUnmounted(() => {
     <EditTasksListNameModal v-if="showEditTasksListNameModal" :on-close="() => editingTaskListName(false)" :send="send" :snapshot="snapshot" :name="getTasksListName()" />
     <DeleteTasksListModal v-if="showDeleteTasksListModal" :on-close="() => deletingTaskList(false)" :send="send" :snapshot="snapshot"  />
   <div v-if="showLoading" :class="styles.container">
-      <VueSpinner id="loadingSpinner" :class="styles.spinner" size="30" color="white" />
-    </div>
-    <div v-else :class="styles.container">
-      <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList"/>
-      <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
-      <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
-    </div>
+    <VueSpinner id="loadingSpinner" :class="styles.spinner" size="30" color="white" />
+  </div>
+  <div v-else :class="styles.container">
+    <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList"/>
+    <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
+    <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
+  </div>
 </template>

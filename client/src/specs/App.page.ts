@@ -48,8 +48,12 @@ export async function navigateToTasksLinkVisible() {
     return elements.tasksLink.isVisible();
 }
 
-export async function navigateToLanding() {
+export async function navigateToLandingViaRouter() {
     await router.push("/");
+}
+
+export async function navigateToLanding() {
+    await elements.headerTitle.trigger("click");
 }
 
 export async function renderUnknownRoute() {
@@ -97,5 +101,8 @@ const elements = {
     },
     get tasksLink() {
         return app.find("#tasks-link");
+    },
+    get headerTitle() {
+        return app.find("#landing-link");
     }
 }
