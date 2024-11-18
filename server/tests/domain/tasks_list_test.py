@@ -30,10 +30,14 @@ def test_cannot_tick_a_task_that_does_not_exist():
     Then(informs("Task not found"))
 
 
-def test_have_to_decide_to_carry_or_remove_each_task_once_list_is_full():
+def test_have_to_decide_to_carry_remove_or_tick_each_task_once_list_is_full():
     Given(a_tasks_list_with_22_tasks)
     When(validating(adding_a_task_to_tasks_list, "My Task"))
-    Then(informs("Tasks list holds 22 tasks. Each task must be carried or removed"))
+    Then(
+        informs(
+            "Tasks list holds 22 tasks. Each task must be carried, removed or ticked"
+        )
+    )
 
 
 def test_cannot_carry_a_task_until_list_is_full():
@@ -93,11 +97,25 @@ def test_ticked_tasks_are_removed_when_a_list_is_carried():
     Then(the_ticked_task_is_removed)
 
 
+def test_ticking_last_task_in_full_list_will_process_list():
+    Given(a_tasks_list_with_22_tasks)
+    When(carrying_the_first_eleven_tasks)
+    And(removing_the_next_ten_tasks)
+    And(ticking_the_last_task)
+    Then(the_first_eleven_tasks_are_carried)
+    And(the_first_eleven_tasks_have_a_page_count_of_1)
+    And(the_next_eleven_tasks_are_removed)
+
+
 def test_cannot_add_task_until_finished_carrying_or_removing_tasks():
     Given(a_tasks_list_with_22_tasks)
     When(carrying_the_first_eleven_tasks)
     When(validating(adding_a_task_to_tasks_list, "My Task"))
-    Then(informs("Tasks list holds 22 tasks. Each task must be carried or removed"))
+    Then(
+        informs(
+            "Tasks list holds 22 tasks. Each task must be carried, removed or ticked"
+        )
+    )
 
 
 def test_can_only_carry_tasks_twice():

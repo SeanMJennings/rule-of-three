@@ -109,6 +109,15 @@ def removing_the_next_eleven_tasks():
         tasks_list.remove(task.id)
 
 
+def removing_the_next_ten_tasks():
+    for task in tasks_list.tasks[11:21]:
+        tasks_list.remove(task.id)
+
+
+def ticking_the_last_task():
+    tasks_list.tick(tasks_list.tasks[-1].id)
+
+
 def tasks_have_been_carried_twice():
     global tasks_list
     for task in tasks_list.tasks:

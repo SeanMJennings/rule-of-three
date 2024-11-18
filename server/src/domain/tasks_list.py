@@ -38,7 +38,7 @@ class TasksList:
     def add(self, task: str):
         if len(self.tasks) == 22:
             raise Exception(
-                "Tasks list holds 22 tasks. Each task must be carried or removed"
+                "Tasks list holds 22 tasks. Each task must be carried, removed or ticked"
             )
         the_task = Task(task)
         self.tasks.append(the_task)
@@ -48,6 +48,7 @@ class TasksList:
         for index, task in enumerate(self.tasks):
             if task.id == task_id:
                 self.tasks[index] = task.tick()
+                self.__last_task_carried_removed_or_ticked()
                 return
         raise Exception("Task not found")
 
@@ -61,7 +62,7 @@ class TasksList:
                 if task.is_ticked:
                     raise Exception("Ticked tasks cannot be carried")
                 self.tasks[index] = task.carry()
-                self.__last_task_carried_or_removed()
+                self.__last_task_carried_removed_or_ticked()
                 return
         raise Exception("Task not found")
 
@@ -73,12 +74,12 @@ class TasksList:
                 if task.is_ticked:
                     raise Exception("Ticked tasks cannot be marked for removal")
                 self.tasks[index] = task.remove()
-                self.__last_task_carried_or_removed()
+                self.__last_task_carried_removed_or_ticked()
                 return
         raise Exception("Task not found")
 
-    def __last_task_carried_or_removed(self):
-        if all(
+    def __last_task_carried_removed_or_ticked(self):
+        if len(self.tasks) == 22 and all(
             [
                 task.is_carried or task.is_removed or task.is_ticked
                 for task in self.tasks
