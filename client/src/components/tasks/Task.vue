@@ -22,9 +22,9 @@ defineProps<{
     <span :id="`task-${task.id}`" :class="`${task.ticked ? style.taskTicked : task.carried ? style.taskCarried : task.removed ? style.taskRemoved : ''} ${style.task}`">{{task.content }}</span>
     <div :class="style.actionsContainer">
       <span :id="`task-${task.id}-page`" :class="`${task.ticked ? style.taskTicked : task.carried ? style.taskCarried : task.removed ? style.taskRemoved : ''} ${style.page}`">{{ task.page }}</span>
-      <ButtonIcon title="tick" :class="style.button" :the_id="`task-${task.id}-tick`" :icon="faCheck" v-if="showTickAction" v-on:click="tick(task.id)"/>
-      <ButtonIcon title="carry" :class="style.button" :the_id="`task-${task.id}-carry`" :icon="faArrowRight" v-if="showCarryAction" v-on:click="carry(task.id)"/>
-      <ButtonIcon title="remove" :class="style.button" :the_id="`task-${task.id}-remove`" :icon="faX" v-if="showRemoveAction" v-on:click="remove(task.id)"/>
+      <ButtonIcon title="Tick" :class="style.button" :the_id="`task-${task.id}-tick`" :icon="faCheck" v-if="showTickAction" v-on:click="tick(task.id)"/>
+      <ButtonIcon title="Carry" :class="style.button" :the_id="`task-${task.id}-carry`" :icon="faArrowRight" v-if="showCarryAction" v-on:click="carry(task.id)"/>
+      <ButtonIcon title="Remove" :class="style.button" :the_id="`task-${task.id}-remove`" :icon="faX" v-if="showRemoveAction" v-on:click="remove(task.id)"/>
     </div>
   </div>
 </template>

@@ -161,7 +161,7 @@ export function tasksListSingleSelectCaretPointsDown() {
 }
 
 export function tasksListInputCaretPointsDown() {
-    return !elements.tasksListCaretIcon.classes().includes("fa-rotate-180");
+    return !elements.tasksListCaret.classes().includes("fa-rotate-180");
 }
 
 export function tasksListInputCaretPointsUp() {
@@ -270,9 +270,6 @@ const elements = {
     },
     get tasksListCaret() {
         return page.find("#tasks-list-input-caret");
-    },
-    get tasksListCaretIcon() {
-        return page.find("#tasks-list-input-caret-icon");
     },
     get tasksListSelectCaret() {
         return page.find("#tasks-list-select-caret");
