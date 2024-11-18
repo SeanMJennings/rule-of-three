@@ -460,6 +460,33 @@ export async function lets_user_remove_tasks() {
     await remove_all_tasks();
 }
 
+export async function lets_user_tick_tasks_during_choosing() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await add_all_tasks();
+    await waitUntil( () => !carryTaskHidden(task_ids[0]));
+    for (const task_id of task_ids) {
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            const wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/tick`)
+            await tickTask(task_id);
+            await waitUntil(wait_for_tick_task)
+            await (waitUntil(() => tickTaskHidden(task_id)));
+            expect(tickTaskHidden(task_id)).toBe(true);
+        }
+    }
+
+    for (const task_id of task_ids) {
+        if (task_id !== task_ids[task_ids.length - 1]) {
+            expect(carryTaskHidden(task_id)).toBe(true);
+            expect(removeTaskHidden(task_id)).toBe(true);
+            expect(tickTaskHidden(task_id)).toBe(true);
+        }
+    }
+}
+
 export async function displays_page_number_of_tasks() {
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();

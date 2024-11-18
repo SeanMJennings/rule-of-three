@@ -15,6 +15,7 @@ export const enum TasksMachineStates {
     tickingTheTask = "tickingTheTask",
     removingTheTask = "removingTheTask",
     carryingTheTask = "carryingTheTask",
+    tickingTheTaskDuringChoosing = "tickingTheTaskDuringChoosing",
     choosingTasksToCarry = "choosingTasksToCarry",
     assessingTasks = "assessingTasks",
 }
@@ -28,5 +29,6 @@ export const TasksMachineCombinedStates = {
     addingTasksListsChoosingTasksToCarry: {addingTasksLists: TasksMachineStates.choosingTasksToCarry,},
     addingTasksListsCarryingTheTask: {addingTasksLists: TasksMachineStates.carryingTheTask,},
     addingTasksListsRemovingTheTask: {addingTasksLists: TasksMachineStates.removingTheTask,},
+    addingTasksListsTickingTheTaskDuringChoosing: {addingTasksLists: TasksMachineStates.tickingTheTaskDuringChoosing,},
     addingTasksListsAssessingTasks: {addingTasksLists: TasksMachineStates.assessingTasks,},
 };

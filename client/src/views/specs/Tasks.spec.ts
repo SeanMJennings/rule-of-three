@@ -22,7 +22,7 @@ import {
     lets_user_expand_tasks_list_single_select,
     lets_user_remove_tasks,
     lets_user_rename_a_task_list,
-    lets_user_tick_tasks, limits_edit_task_list_name_input_to_50_characters,
+    lets_user_tick_tasks, lets_user_tick_tasks_during_choosing, limits_edit_task_list_name_input_to_50_characters,
     limits_task_length_to_150_characters,
     list_character_count_limit_hidden_when_input_is_empty,
     only_shows_remove_tasks_for_tasks_carried_twice,
@@ -68,6 +68,7 @@ describe("Tasks", () => {
         it("lets user tick tasks", lets_user_tick_tasks);
         it("lets user carry tasks", lets_user_carry_tasks);
         it("lets user remove tasks", lets_user_remove_tasks, 10000);
+        it("lets user tick tasks during choosing", lets_user_tick_tasks_during_choosing);
         it("displays page number of tasks", displays_page_number_of_tasks, 10000);
         it("does not show remove or carry for ticked tasks", does_not_show_remove_or_carry_for_ticked_tasks);
         it("only shows remove tasks for tasks carried twice", only_shows_remove_tasks_for_tasks_carried_twice, 10000);

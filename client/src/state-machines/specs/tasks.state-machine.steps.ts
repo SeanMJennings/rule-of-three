@@ -367,6 +367,37 @@ export async function notifies_when_failing_to_remove_a_task() {
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry);
 }
 
+export async function lets_user_tick_off_task_during_carry() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    tasks.send({type: "readyToAddFirstTask"})
+    await add_all_tasks();
+    await carry_all_tasks_except_one();
+    await tick_last_task();
+    expect(getTasks(tasks.getSnapshot().context).filter((n) => n.page === 1).length).toEqual(reducedTaskLimit - 1);
+    expect(getTasks(tasks.getSnapshot().context).filter((n) => !n.carried).length).toEqual(reducedTaskLimit - 1);
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
+}
+
+export async function notifies_when_failing_to_tick_off_a_task_during_carry() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    tasks.send({type: "readyToAddFirstTask"})
+    await add_all_tasks();
+    await carry_all_tasks_except_one();
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    const wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_ids[0]}/tick`, { error: "Failed to tick a task" }, false)
+    tasks.send({type: "tick", id: task_ids[0]});
+    await waitUntil(wait_for_tick_task)
+    expect(the_error).toEqual({error: "Failed to tick a task", type: "error", code: 422});
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsChoosingTasksToCarry);
+}
+
 export async function cannot_carry_tasks_past_two_pages() {
     await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
@@ -421,6 +452,10 @@ async function tickTask(task_id: string) {
     const wait_for_tick_task = mockServer.patch(`/tasks-lists/${task_list_id}/task/${task_id}/tick`);
     tasks.send({ type: "tick", id: task_id });
     await waitUntil(wait_for_tick_task);
+}
+
+async function tick_last_task() {
+    await tickTask(task_ids[task_ids.length - 1]);
 }
 
 async function addTask(task_id: string) {

@@ -66,7 +66,7 @@ const remove = (id: string | number) => {
           :tick="tick"
           :show-carry-action="carryingOrRemovingTasks(snapshot.value) && canCarryTask(task)"
           :show-remove-action="carryingOrRemovingTasks(snapshot.value) && canRemoveTask(task)"
-          :show-tick-action="showTickTasks(snapshot.value) && !task.ticked"
+          :show-tick-action="showTickTasks(snapshot.value) && !task.ticked && !task.carried && !task.removed"
     />
   </div>
 </template>

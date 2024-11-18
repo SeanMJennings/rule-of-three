@@ -223,6 +223,9 @@ export const tasksMachine = createMachine(
                             remove: {
                                 target: TasksMachineStates.removingTheTask,
                             },
+                            tick: {
+                                target: TasksMachineStates.tickingTheTaskDuringChoosing,
+                            },
                         },
                         always: {
                             guard: "tasksHaveAllBeenCarried",
@@ -250,6 +253,20 @@ export const tasksMachine = createMachine(
                             onDone: {
                                 target: TasksMachineStates.assessingTasks,
                                 actions: assign({ tasksLists: taskListWithCarriedTask()})
+                            },
+                            onError: {
+                                target: TasksMachineStates.choosingTasksToCarry,
+                                actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
+                            }
+                        },
+                    },
+                    tickingTheTaskDuringChoosing: {
+                        invoke: {
+                            input: ({context, event}) => ({id: context.id, taskId: event.id}),
+                            src: fromPromise(async ({input: {id, taskId}}) => await tickTask(id, taskId)),
+                            onDone: {
+                                target: TasksMachineStates.assessingTasks,
+                                actions: assign({ tasksLists: taskListWithTickedTask() })
                             },
                             onError: {
                                 target: TasksMachineStates.choosingTasksToCarry,

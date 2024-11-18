@@ -21,7 +21,9 @@ import {
     notifies_when_failing_to_add_a_task,
     notifies_when_failing_to_tick_off_a_task,
     notifies_when_failing_to_carry_a_task,
-    notifies_when_failing_to_remove_a_task
+    notifies_when_failing_to_remove_a_task,
+    lets_user_tick_off_task_during_carry,
+    notifies_when_failing_to_tick_off_a_task_during_carry
 } from '@/state-machines/specs/tasks.state-machine.steps'
 
 describe("Tasks state machine", () => {
@@ -48,6 +50,8 @@ describe("Tasks state machine", () => {
         it("removes ticked tasks when all tasks are carried", removes_ticked_tasks_when_all_tasks_are_carried, 10000);
         it("lets user remove tasks", lets_user_remove_tasks);
         it("notifies when failing to remove tasks", notifies_when_failing_to_remove_a_task)
+        it("lets user tick off task during carry", lets_user_tick_off_task_during_carry);
+        it("notifies when failing to tick off task during carry", notifies_when_failing_to_tick_off_a_task_during_carry)
         it("cannot carry tasks past two pages", cannot_carry_tasks_past_two_pages, 10000);
         it("selecting a different tasks list retrieves correct tasks", selecting_a_different_tasks_list_retrieves_correct_tasks, 10000);
     });
