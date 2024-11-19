@@ -15,49 +15,61 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Register subscription for Domain Registration
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: az provider register --namespace Microsoft.DomainRegistration      
-      - name: Register DNS zone for domain
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: az network dns zone create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ vars.DOMAIN }}
-      - name: Create a resource group
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az group create -g ${{ secrets.RESOURCE_GROUP }} -l ${{ secrets.RESOURCE_GROUP_LOCATION }}
-      - name: Create a static web app 
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az staticwebapp create \
-                --name ${{ secrets.STATIC_WEB_APP_NAME }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --location ${{ secrets.STATIC_WEB_APP_LOCATION }} \
-                --sku free
+#      - name: Register subscription for Domain Registration
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: az provider register --namespace Microsoft.DomainRegistration      
+#      - name: Register DNS zone for domain
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: az network dns zone create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ vars.DOMAIN }}
+#      - name: Create a resource group
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az group create -g ${{ secrets.RESOURCE_GROUP }} -l ${{ secrets.RESOURCE_GROUP_LOCATION }}
+#      - name: Create a static web app 
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az staticwebapp create \
+#                --name ${{ secrets.STATIC_WEB_APP_NAME }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --location ${{ secrets.STATIC_WEB_APP_LOCATION }} \
+#                --sku free
       - name: Create Cosmos DB
         uses: azure/cli@v2
         with:
           azcliversion: latest
           inlineScript: |
-            az cosmosdb create \
-                --name ${{ secrets.COSMOS_NAME }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --kind GlobalDocumentDB \
-                --enable-free-tier true            
-            az cosmosdb sql database create \
-                --account-name ${{ secrets.COSMOS_NAME }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --name ${{ secrets.COSMOS_DATABASE }}
-            az cosmosdb sql container create \
+#            az cosmosdb create \
+#                --name ${{ secrets.COSMOS_NAME }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --kind GlobalDocumentDB \
+#                --enable-free-tier true            
+#            az cosmosdb sql database create \
+#                --account-name ${{ secrets.COSMOS_NAME }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --name ${{ secrets.COSMOS_DATABASE }}
+#            az cosmosdb sql container create \
+#                --account-name ${{ secrets.COSMOS_NAME }} \
+#                --database-name ${{ secrets.COSMOS_DATABASE }} \
+#                --name ${{ secrets.COSMOS_CONTAINER }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --partition-key-path ${{ secrets.COSMOS_PARTITION_KEY_PATH }}
+            az cosmosdb sql container throughput migrate \
                 --account-name ${{ secrets.COSMOS_NAME }} \
                 --database-name ${{ secrets.COSMOS_DATABASE }} \
                 --name ${{ secrets.COSMOS_CONTAINER }} \
                 --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --partition-key-path ${{ secrets.COSMOS_PARTITION_KEY_PATH }}
+                --throughput-type manual
+            az cosmosdb sql container throughput migrate \
+                --account-name ${{ secrets.COSMOS_NAME }} \
+                --database-name ${{ secrets.COSMOS_DATABASE }} \
+                --name ${{ secrets.COSMOS_CONTAINER }} \
+                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                --max-throughput 400

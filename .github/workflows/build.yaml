@@ -160,11 +160,6 @@ jobs:
           skip_api_build: true
           app_location: ${{ env.CLIENT_OUTPUT_FOLDER }}
           api_location: ${{ env.SERVER_OUTPUT_FOLDER }}
-      - name: Ensure cosmos throughput limited
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az cosmosdb sql database throughput update --resource-group ${{ secrets.RESOURCE_GROUP }} --account-name ${{ secrets.COSMOS_NAME }} --name ${{ secrets.COSMOS_DATABASE }} --max-throughput 400
       - name: Cleanup cache
         run: |
           gh extension install actions/gh-actions-cache
