@@ -164,7 +164,7 @@ jobs:
         uses: azure/cli@v2
         with:
           inlineScript: |
-            az cosmosdb sql database throughput update --resource-group ${{ secrets.RESOURCE_GROUP }} --account-name ${{ secrets.COSMOS_NAME }} --max-throughput 400
+            az cosmosdb sql database throughput update --resource-group ${{ secrets.RESOURCE_GROUP }} --account-name ${{ secrets.COSMOS_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.COSMOS_DATABASE }} --max-throughput 400
       - name: Cleanup cache
         run: |
           gh extension install actions/gh-actions-cache
