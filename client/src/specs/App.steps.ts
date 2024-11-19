@@ -1,5 +1,6 @@
 ﻿import {beforeEach, expect, vi} from "vitest";
 import {
+    closeMenu,
     login,
     loginExists,
     logout,
@@ -7,7 +8,7 @@ import {
     navigateToLandingViaRouter,
     navigateToTasks,
     navigateToTasksLinkVisible,
-    navigateToTasksViaRouter,
+    navigateToTasksViaRouter, openMenu, openMenuShowing,
     renderLanding,
     renders_erroring_app,
     renderUnknownRoute,
@@ -37,12 +38,12 @@ export async function renders_login_user_when_not_logged_in() {
     expect(wrapper.text()).toContain("Log in");
 }
 
-export async function renders_logout_user_when_logged_in() {
-    const wrapper = await renderLanding();
+export async function renders_menu_when_logged_in() {
+    await renderLanding();
     await login();
     await waitUntil(() => !loginExists());
     expect(window.token).toBe(theTokenString);
-    expect(wrapper.text()).toContain("Log out");
+    expect(openMenuShowing()).toBe(true);
 }
 
 export async function subscribes_to_user_token_changes() {
@@ -54,10 +55,28 @@ export async function subscribes_to_user_token_changes() {
     expect(window.token).toBe(theTokenString);
 }
 
+export async function displays_user_name_in_menu() {
+    const wrapper = await renderLanding();
+    await login();
+    await waitUntil(() => !loginExists());
+    await openMenu();
+    expect(wrapper.text()).toContain("Mr wibble");
+}
+
+export async function lets_user_close_menu() {
+    const wrapper = await renderLanding();
+    await login();
+    await waitUntil(() => !loginExists());
+    await openMenu();
+    await closeMenu();
+    expect(wrapper.text()).not.toContain("Mr wibble")
+}
+
 export async function lets_user_log_out() {
     const wrapper = await renderLanding();
     await login();
     await waitUntil(() => !loginExists());
+    await openMenu();
     await logout();
     await waitUntil(loginExists);
     expect(wrapper.text()).toContain("Log in");

@@ -1,5 +1,5 @@
 ﻿<script lang="ts" setup>
-import styles from "@/components/user/Login.common.module.css";
+import styles from "@/components/user/Login.module.css";
 import { useAuth0 } from '@auth0/auth0-vue';
 const auth0 = useAuth0();
 const login = () => {
@@ -15,4 +15,4 @@ const login = () => {
   </div>
 </template>
 
-<style scoped src="@/components/user/Login.common.module.css"></style>
+<style scoped src="@/components/user/Login.module.css"></style>

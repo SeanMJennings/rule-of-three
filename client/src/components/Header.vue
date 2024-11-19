@@ -1,7 +1,7 @@
 ﻿<script lang="ts" setup>
 import styles from "./Header.module.css";
 import Login from "@/components/user/Login.vue";
-import Logout from "@/components/user/Logout.vue";
+import Menu from "@/components/user/Menu.vue";
 import {RouterLink} from "vue-router";
 </script>
 
@@ -9,7 +9,7 @@ import {RouterLink} from "vue-router";
   <header :class="styles.header">
     <RouterLink id="landing-link" to="/"><h1>Rule of Three</h1></RouterLink>
     <Login/>
-    <Logout/>
+    <Menu/>
   </header>
 </template>
 

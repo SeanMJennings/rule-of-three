@@ -5,6 +5,7 @@ vi.mock('@auth0/auth0-vue');
 
 const a_user: User = {
     sub: "123",
+    name: "Mr wibble"
 }
 const no_user = undefined as any as User | undefined;
 const user = ref(no_user);

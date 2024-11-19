@@ -4,6 +4,7 @@ import App from "../App.vue";
 import {createRouter, createWebHistory, type Router} from "vue-router";
 import {routes} from "@/router";
 import ErroringComponent from "@/specs/ErroringComponent.vue";
+import exp from "node:constants";
 
 let router: Router = {} as Router;
 let app: VueWrapper;
@@ -80,6 +81,18 @@ export async function logout() {
     await elements.logout.trigger("click")
 }
 
+export async function openMenu() {
+    await elements.menuOpen.trigger("click")
+}
+
+export function openMenuShowing() {
+    return elements.menuOpen.exists()
+}
+
+export async function closeMenu() {
+    await elements.menuClose.trigger("click")
+}
+
 export function loginExists() {
     return elements.login.exists();
 }
@@ -95,6 +108,12 @@ function mountApp() {
 const elements = {
     get login() {
         return app.find("#login");
+    },
+    get menuOpen() {
+        return app.find("#menu-open");
+    },
+    get menuClose() {
+        return app.find("#menu-close");
     },
     get logout() {
         return app.find("#logout");

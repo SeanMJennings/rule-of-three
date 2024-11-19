@@ -11,15 +11,17 @@ import {
     renders_landing_page,
     renders_landing_page_by_the_default,
     renders_login_user_when_not_logged_in,
-    renders_logout_user_when_logged_in,
-    allows_user_to_navigate_to_landing_clicking_header_title
+    renders_menu_when_logged_in,
+    allows_user_to_navigate_to_landing_clicking_header_title, displays_user_name_in_menu, lets_user_close_menu
 } from "@/specs/App.steps";
 
 describe("App", () => {
     it("renders landing page", renders_landing_page);
     it("renders login user when not logged in", renders_login_user_when_not_logged_in);
-    it("renders logout user when logged in", renders_logout_user_when_logged_in);
+    it("renders menu when logged in", renders_menu_when_logged_in);
     it("subscribes to user token changes", subscribes_to_user_token_changes);
+    it("displays user name in menu", displays_user_name_in_menu);
+    it("lets user close menu", lets_user_close_menu);
     it("lets user log out", lets_user_log_out);
     it("renders tasks page link when user logged in", render_tasks_page_link_when_user_logged_in);
     it("tasks page link invisible when user not logged in", tasks_page_link_invisible_when_user_not_logged_in);
