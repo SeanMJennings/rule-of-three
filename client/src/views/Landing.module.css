@@ -36,7 +36,6 @@
     align-items: center;
 }
 
-
 .link {
     color: var(--color-text);
     text-decoration: none;
@@ -45,4 +44,16 @@
     padding: 5px 10px;
     border-radius: 2px;
     background: var(--color-link-background);
+}
+
+.instructionContainer {
+    max-width: 275px;
+    @media (min-width: 640px) {
+        max-width: 460px;
+        
+    }
+    > span {
+        display: inline-block;
+        text-align: start;
+    }
 }
