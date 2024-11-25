@@ -23,12 +23,13 @@ import {
     notifies_when_failing_to_carry_a_task,
     notifies_when_failing_to_remove_a_task,
     lets_user_tick_off_task_during_carry,
-    notifies_when_failing_to_tick_off_a_task_during_carry
+    notifies_when_failing_to_tick_off_a_task_during_carry, loads_task_lists_in_order_of_last_selected_time
 } from '@/state-machines/specs/tasks.state-machine.steps'
 
 describe("Tasks state machine", () => {
-    describe("Tasks lists", () => {
+    describe("Task lists", () => {
         it("loads a task list", loads_a_task_list);
+        it("loads tasks list in order of last selected time", loads_task_lists_in_order_of_last_selected_time);
         it("notifies when failing to load a task list", notifies_when_failing_to_load_a_task_list);
         it("adds a task list", adds_a_task_list);
         it("notifies when failing to add a task list", notifies_when_failing_to_add_a_task_list)

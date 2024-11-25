@@ -16,6 +16,8 @@ const new_task_list_name = "New task list name";
 const another_task_list_name = "2nd task list name";
 const task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
 const another_set_of_task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
+const newest_date = new Date()
+const oldest_date = new Date("2021-01-01")
 let wait_for_get_tasks_list: () => boolean;
 let wait_for_create_tasks_list: () => boolean;
 
@@ -68,6 +70,24 @@ export async function loads_a_task_list() {
         page: 0,
         ticked: false
     }]);
+}
+
+export async function loads_task_lists_in_order_of_last_selected_time() {
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [
+        {id: task_list_id, name: task_list_name, tasks: [], last_selected_time: oldest_date.toISOString()},
+        {id: another_task_list_id, name: another_task_list_name, tasks: [], last_selected_time: newest_date.toISOString()}
+    ])
+    tasks.send({type: "reset"})
+    await waitForLoadingToFinish();
+    await waitUntil(wait_for_get_tasks_list)
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
+    expect(tasks.getSnapshot().context.id).toEqual(another_task_list_id);
+    expect(getName(tasks.getSnapshot().context)).toEqual(another_task_list_name);
+    expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual([
+        {id: another_task_list_id, name: another_task_list_name, tasks: [], last_selected_time: newest_date.toISOString()},
+        {id: task_list_id, name: task_list_name, tasks: [], last_selected_time: oldest_date.toISOString()},
+    ]);
 }
 
 export async function adds_a_task_list() {

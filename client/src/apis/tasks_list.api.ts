@@ -76,6 +76,7 @@ const taskListApiMapper = (taskList: any[]) => {
         return {
             id: taskList.id,
             name: taskList.name,
+            last_selected_time: taskList.last_selected_time,
             tasks: taskList.tasks.map((task: any) => {
                 return {
                     id: task.id,
@@ -83,9 +84,11 @@ const taskListApiMapper = (taskList: any[]) => {
                     carried: task.is_carried,
                     removed: task.is_removed,
                     ticked: task.is_ticked,
-                    page: task.page_count
+                    page: task.page_count,
                 }
             })
         }
-    });
+    }).sort((a,b) => {
+        return new Date(b.last_selected_time ?? '').getTime() - new Date(a.last_selected_time ?? '').getTime()
+    })
 }
