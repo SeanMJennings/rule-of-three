@@ -576,11 +576,13 @@ export async function shows_correct_tasks_when_selecting_a_different_list() {
                 page_count: 0
             }]}
     ])
+    const wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`, {})
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists);
     await toggleTasksListSingleSelect();
     await selectOptionFromTaskListSingleSelect(1);
+    await waitUntil(wait_for_update_last_selected_time);
     await waitUntil(() => !tickTaskHidden(task_ids[1]));
     expect(taskTextShown(task_ids[1], anotherTestTaskText)).toBe(true);
     

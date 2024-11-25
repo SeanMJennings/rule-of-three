@@ -13,7 +13,7 @@ import {
     deleteTasksList,
     getTasksLists,
     removeTask,
-    tickTask,
+    tickTask, updateLastSelectedTime,
     updateTasksList
 } from "@/apis/tasks_list.api";
 import type {HttpError} from "@/common/http";
@@ -146,6 +146,25 @@ export const tasksMachine = createMachine(
                     }
                 },
             },
+            selectingTheTasksList: {
+                invoke: {
+                    input: ({event}) => ({id: event.id}),
+                    src: fromPromise(async ({input: {id}}) => await updateLastSelectedTime(id)),
+                    onDone: {
+                        target: TasksListMachineStates.assessingTasksList,
+                        actions: assign({
+                            id: ({context, event}) => {
+                                if (context.tasksLists.find((list) => list.id === event.output.id) === undefined) return context.id;
+                                return (context.id = event.output.id)
+                            }
+                        }),
+                    },
+                    onError: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
+                    }
+                },
+            },
             addingTasksLists: {
                 initial: TasksMachineStates.addingTasks,
                 on: {
@@ -159,13 +178,7 @@ export const tasksMachine = createMachine(
                         target: TasksListMachineStates.deletingTheTasksList,
                     },
                     selectTasksList: {
-                        actions: assign({
-                            id: ({context, event}) => {
-                                if (context.tasksLists.find((list) => list.id === event.id) === undefined) return context.id;
-                                return (context.id = event.id)
-                            }
-                        }),
-                        target: TasksListMachineStates.assessingTasksList,
+                        target: TasksListMachineStates.selectingTheTasksList,
                     },
                 },
                 always: {

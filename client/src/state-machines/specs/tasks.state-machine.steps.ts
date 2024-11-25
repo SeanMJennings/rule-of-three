@@ -282,11 +282,11 @@ export async function selects_a_different_tasks_list() {
         id: another_task_list_id,
         name: another_task_list_name
     })
-    
     tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    
+    const wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`)
     tasks.send({type: "selectTasksList", id: another_task_list_id});
+    await waitUntil(wait_for_update_last_selected_time)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
 
     expect(tasks.getSnapshot().context.id).toEqual(another_task_list_id);
@@ -449,16 +449,21 @@ export async function selecting_a_different_tasks_list_retrieves_correct_tasks()
     })
     tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-
+    let wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`)
     tasks.send({type: "selectTasksList", id: another_task_list_id});
+    await waitUntil(wait_for_update_last_selected_time)
     tasks.send({type: "readyToAddFirstTask"});
     await add_all_tasks_for_another_task_list();
 
+    wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${task_list_id}/last-selected-time`)
     tasks.send({type: "selectTasksList", id: task_list_id});
+    await waitUntil(wait_for_update_last_selected_time)
     expect(getTasks(tasks.getSnapshot().context).length).toEqual(reducedTaskLimit);
     expect(getTasks(tasks.getSnapshot().context)[0].id).toEqual(task_ids[0]);
 
+    wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`)
     tasks.send({type: "selectTasksList", id: another_task_list_id});
+    await waitUntil(wait_for_update_last_selected_time)
     expect(getTasks(tasks.getSnapshot().context).length).toEqual(reducedTaskLimit);
     expect(getTasks(tasks.getSnapshot().context)[0].id).toEqual(another_set_of_task_ids[0]);
 }

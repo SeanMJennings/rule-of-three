@@ -34,6 +34,15 @@ export const deleteTasksList = async (id: any) => {
     });
 }
 
+export const updateLastSelectedTime = async (id: any) => {
+    return patch(`/tasks-lists/${id}/last-selected-time`, {})
+        .then(() => {
+            return {
+                id
+            }
+    });
+}
+
 export const addTask = async (tasksListId: any, content: any) => {
     return post(`/tasks-lists/${tasksListId}/task`, {content})
         .then((response) => {
