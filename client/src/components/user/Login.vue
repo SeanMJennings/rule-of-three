@@ -11,7 +11,7 @@ const login = () => {
 
 <template>
   <div v-if="!auth0.isAuthenticated.value">
-    <button :class="styles.button" id="login" @click="login">Log in</button>
+    <button :class="styles.button" id="login" @click="login" title="Login">Login</button>
   </div>
 </template>
 

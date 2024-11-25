@@ -35,7 +35,7 @@ export async function renders_landing_page() {
 
 export async function renders_login_user_when_not_logged_in() {
     const wrapper = await renderLanding();
-    expect(wrapper.text()).toContain("Log in");
+    expect(wrapper.text()).toContain("Login");
 }
 
 export async function renders_menu_when_logged_in() {
@@ -79,7 +79,7 @@ export async function lets_user_log_out() {
     await openMenu();
     await logout();
     await waitUntil(loginExists);
-    expect(wrapper.text()).toContain("Log in");
+    expect(wrapper.text()).toContain("Login");
 }
 
 export async function render_tasks_page_link_when_user_logged_in() {
