@@ -24,18 +24,18 @@ def test_can_list_tasks_lists(mocker):
     Then(the_tasks_lists_are_listed)
 
 
-def test_listing_a_single_tasks_list_updates_last_selected_time(mocker):
-    Given(an_app_with_a(mocker))
-    And(a_tasks_list)
-    When(listing_the_task_list)
-    Then(the_last_selected_time_is_updated)
-
-
 def test_can_update_tasks_list(mocker):
     Given(an_app_with_a(mocker))
     And(a_tasks_list)
     When(updating_the_tasks_list)
     Then(the_tasks_list_is_updated)
+
+
+def test_can_update_last_selected_time(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_tasks_list)
+    When(updating_last_selected_time)
+    Then(the_last_selected_time_is_updated)
 
 
 def test_can_delete_tasks_list(mocker):
