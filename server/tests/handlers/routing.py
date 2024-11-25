@@ -10,6 +10,10 @@ def tasks_list_url_with_id(id):
     return f"{tasks_url()}/{id}"
 
 
+def tasks_list_url_last_selected_time(id):
+    return f"{tasks_list_url_with_id(id)}/last-selected-time"
+
+
 def task_url(tasks_list_id):
     return f"{tasks_list_url_with_id(tasks_list_id)}/task"
 
