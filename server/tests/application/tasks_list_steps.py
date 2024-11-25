@@ -1,3 +1,5 @@
+from tests.datetime import NewDateTimeNow, the_updated_datetime
+import datetime
 import pytest
 from azure.cosmos import ContainerProxy
 from src.application.tasks_list_service import TasksListService
@@ -38,6 +40,7 @@ def another_tasks_list_name():
 
 def creating_a_tasks_list():
     global tasks_list_service, tasks_list_id
+    datetime.datetime = NewDateTimeNow
     tasks_list_id = tasks_list_service.add(a_tasks_list_name(), owner_id)
 
 
@@ -74,6 +77,12 @@ def renaming_a_tasks_list_to_existing_name():
 def renaming_a_tasks_list_to_same_name():
     global tasks_list_service
     tasks_list_service.update(tasks_list_id, owner_id, a_tasks_list_name())
+
+
+def updating_last_selected_time():
+    global tasks_list_service
+    datetime.datetime = NewDateTimeNow
+    tasks_list_service.update_last_selected_time(tasks_list_id, owner_id)
 
 
 def deleting_a_tasks_list():
@@ -165,6 +174,13 @@ def all_tasks_lists_are_retrieved():
     assert len(tasks_lists) == 2
     assert tasks_lists[0].name == "My Tasks List"
     assert tasks_lists[1].name == "Another Tasks List"
+
+
+def the_last_selected_time_is_updated():
+    global tasks_list_service, tasks_list
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    assert tasks_list.last_selected_time.date() == the_updated_datetime.date()
+    assert tasks_list.last_selected_time.time() == the_updated_datetime.time()
 
 
 def there_are_no_tasks_lists():

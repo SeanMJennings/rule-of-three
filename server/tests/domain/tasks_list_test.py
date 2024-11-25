@@ -7,6 +7,7 @@ def test_create_empty_tasks_list():
     And(an_owner_id)
     When(creating_a_tasks_list)
     Then(the_tasks_list_is_empty)
+    And(the_last_selected_time_is_now)
 
 
 def test_can_add_task_to_tasks_list():
@@ -15,6 +16,12 @@ def test_can_add_task_to_tasks_list():
     And(creating_a_tasks_list)
     When(adding_a_task_to_tasks_list("My Task"))
     Then(the_tasks_list_contains_a_task_with_text("My Task"))
+
+
+def test_can_update_last_selected_time():
+    Given(a_tasks_list)
+    When(updating_last_selected_time)
+    Then(the_last_selected_time_is_updated)
 
 
 def test_can_tick_a_task():

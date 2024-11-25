@@ -1,6 +1,5 @@
 ﻿from flask.views import MethodView
 from flask import request
-
 from .auth_zero_decorators import requires_auth
 from .requests import get_request_body_property, get_user_id
 from .responses import *
@@ -62,6 +61,26 @@ class TasksListHandlerForItems(MethodView):
 
     def delete(self, id):
         self.tasks_list_service.delete(id, get_user_id(request))
+        return no_content_response()
+
+
+class UpdateLastSelectedTimeHandler(MethodView):
+    init_every_request = False
+    decorators = [requires_auth]
+
+    @staticmethod
+    def route():
+        return "/tasks-lists/<id>/last-selected-time"
+
+    @staticmethod
+    def name():
+        return "update_last_selected_time_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def patch(self, id):
+        self.tasks_list_service.update_last_selected_time(id, get_user_id(request))
         return no_content_response()
 
 
@@ -162,6 +181,9 @@ def register_handlers(app, tasks_list_service):
     tasks_list_handler_for_items = TasksListHandlerForItems.as_view(
         TasksListHandlerForItems.name(), tasks_list_service
     )
+    update_last_selected_time_handler = UpdateLastSelectedTimeHandler.as_view(
+        UpdateLastSelectedTimeHandler.name(), tasks_list_service
+    )
     add_tasks_handler = AddTasksHandler.as_view(
         AddTasksHandler.name(), tasks_list_service
     )
@@ -177,6 +199,9 @@ def register_handlers(app, tasks_list_service):
 
     add_app_url(app, TasksListHandlerForGroups.route(), tasks_list_handler_for_groups)
     add_app_url(app, TasksListHandlerForItems.route(), tasks_list_handler_for_items)
+    add_app_url(
+        app, UpdateLastSelectedTimeHandler.route(), update_last_selected_time_handler
+    )
     add_app_url(app, AddTasksHandler.route(), add_tasks_handler)
     add_app_url(app, TickTaskHandler.route(), tick_task_handler)
     add_app_url(app, RemoveTaskHandler.route(), remove_task_handler)

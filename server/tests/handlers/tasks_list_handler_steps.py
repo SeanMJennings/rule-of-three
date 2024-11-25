@@ -1,9 +1,12 @@
 ﻿import json
 from http import HTTPStatus
-
+from tests.datetime import (
+    NewDateTimeNow,
+    the_updated_datetime,
+)
+import datetime
 import pytest
 from flask.testing import FlaskClient
-
 from src.cache import cache, cache_config
 from src.app import create_app
 from src.application.tasks_list_service import TasksListService
@@ -86,6 +89,15 @@ def updating_the_tasks_list():
     )
 
 
+def updating_last_selected_time():
+    global response
+    datetime.datetime = NewDateTimeNow
+    response = client.patch(
+        tasks_list_url_last_selected_time(tasks_list_id),
+        headers=the_headers(),
+    )
+
+
 def deleting_the_tasks_list():
     global response
     response = client.delete(
@@ -154,6 +166,17 @@ def the_tasks_list_is_updated():
     response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["name"] == an_updated_tasks_list_name()
+
+
+def the_last_selected_time_is_updated():
+    global response
+    assert response.status_code == HTTPStatus.NO_CONTENT
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
+    assert response.status_code == HTTPStatus.OK
+    assert (
+        json.loads(response.data)["last_selected_time"]
+        == the_updated_datetime.isoformat()
+    )
 
 
 def the_tasks_list_is_deleted():

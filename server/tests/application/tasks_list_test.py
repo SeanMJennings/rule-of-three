@@ -58,6 +58,12 @@ def test_can_rename_tasks_list_to_same_name():
     Then(the_tasks_list_is_renamed_to_same_name)
 
 
+def test_update_last_selected_time():
+    Given(an_existing_tasks_list)
+    When(updating_last_selected_time)
+    Then(the_last_selected_time_is_updated)
+
+
 def test_delete_tasks_list():
     Given(an_existing_tasks_list)
     When(deleting_a_tasks_list)

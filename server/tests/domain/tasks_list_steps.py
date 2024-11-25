@@ -1,5 +1,12 @@
 from src.domain.tasks_list import TasksList
 from tests.validations import validate_uuid4
+from tests.datetime import (
+    OldDateTimeNow,
+    NewDateTimeNow,
+    the_datetime,
+    the_updated_datetime,
+)
+import datetime
 
 tasks_list: TasksList = TasksList(name="My Tasks List", owner_id="12345")
 
@@ -14,7 +21,14 @@ def an_owner_id():
 
 def creating_a_tasks_list():
     global tasks_list
+    datetime.datetime = OldDateTimeNow
     tasks_list = TasksList(a_tasks_list_name(), an_owner_id())
+
+
+def updating_last_selected_time():
+    global tasks_list
+    datetime.datetime = NewDateTimeNow
+    tasks_list.update_last_selected_time()
 
 
 def a_tasks_list():
@@ -83,6 +97,16 @@ def the_tasks_list_is_empty():
     assert tasks_list.name == a_tasks_list_name()
     assert tasks_list.owner_id == an_owner_id()
     assert len(tasks_list.tasks) == 0
+
+
+def the_last_selected_time_is_now():
+    assert tasks_list.last_selected_time.date() == the_datetime.date()
+    assert tasks_list.last_selected_time.time() == the_datetime.time()
+
+
+def the_last_selected_time_is_updated():
+    assert tasks_list.last_selected_time.date() == the_updated_datetime.date()
+    assert tasks_list.last_selected_time.time() == the_updated_datetime.time()
 
 
 def the_tasks_list_contains_a_task_with_text(task_text):

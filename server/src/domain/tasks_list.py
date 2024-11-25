@@ -1,14 +1,24 @@
-﻿import uuid
+﻿import datetime
+import uuid
 from src.domain.task import Task
 
 
 class TasksList:
 
     def __init__(
-        self, name: str, owner_id: str, tasks: list[Task] = None, id: str = None
+        self,
+        name: str,
+        owner_id: str,
+        tasks: list[Task] = None,
+        id: str = None,
+        last_selected_time: datetime.datetime | str = None,
     ):
         self.name = name
         self.owner_id = owner_id
+        if last_selected_time is not None:
+            self.last_selected_time = self.__get_datetime(last_selected_time)
+        else:
+            self.last_selected_time = datetime.datetime.now()
         if id is None:
             self.id = str(uuid.uuid4())
         else:
@@ -25,6 +35,7 @@ class TasksList:
             dictionary["owner_id"],
             [Task.from_dict(task) for task in dictionary["tasks"]],
             dictionary["id"],
+            dictionary["last_selected_time"],
         )
 
     def to_dict(self):
@@ -33,6 +44,7 @@ class TasksList:
             "owner_id": self.owner_id,
             "tasks": [task.to_dict() for task in self.tasks],
             "id": self.id,
+            "last_selected_time": self.last_selected_time.isoformat(),
         }
 
     def add(self, task: str):
@@ -43,6 +55,9 @@ class TasksList:
         the_task = Task(task)
         self.tasks.append(the_task)
         return the_task.id
+
+    def update_last_selected_time(self):
+        self.last_selected_time = datetime.datetime.now()
 
     def tick(self, task_id: str):
         for index, task in enumerate(self.tasks):
@@ -93,3 +108,9 @@ class TasksList:
 
     def __list_is_full(self):
         return len(self.tasks) == 22
+
+    @staticmethod
+    def __get_datetime(time: str | datetime.datetime) -> datetime.datetime:
+        if isinstance(time, str):
+            return datetime.datetime.fromisoformat(time)
+        return time

@@ -29,6 +29,12 @@ class TasksListService:
         item = self.db.upsert_item(tasks_list.to_dict())
         return item["id"]
 
+    def update_last_selected_time(self, id: str, owner_id: str):
+        tasks_list = self.get_by_id(id, owner_id)
+        self.__check_task_list_found(tasks_list)
+        tasks_list.update_last_selected_time()
+        self.db.upsert_item(tasks_list.to_dict())
+
     def delete(self, id: str, owner_id: str):
         tasks_list = self.get_by_id(id, owner_id)
         self.__check_task_list_found(tasks_list)
