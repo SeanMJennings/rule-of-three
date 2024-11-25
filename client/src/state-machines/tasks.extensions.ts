@@ -5,7 +5,16 @@ import * as _ from "lodash";
 export const taskLimit = Number(import.meta.env.TASK_LIMIT || 22);
 
 export const loading = (value: StateValue) => {
-    return value === TasksListMachineStates.loading;
+    return value === TasksListMachineStates.loading 
+        || value === TasksListMachineStates.addingTasksLists
+        || value === TasksListMachineStates.selectingTheTasksList
+        || value === TasksListMachineStates.updatingTheTasksList
+        || value === TasksListMachineStates.deletingTheTasksList
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsCreatingTheTask)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsTickingTheTaskDuringChoosing)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsRemovingTheTask)
+        || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsCarryingTheTask)
 }
 
 export const readyToAddTasks = (value: StateValue) => {

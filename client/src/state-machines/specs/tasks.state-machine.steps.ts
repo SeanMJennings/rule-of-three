@@ -298,6 +298,25 @@ export async function selects_a_different_tasks_list() {
     ]);
 }
 
+export async function notifies_when_failing_to_select_a_different_tasks_list() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        id: another_task_list_id,
+        name: another_task_list_name
+    })
+    tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    const wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`, { error: "Failed to select tasks list" }, false)
+    tasks.send({type: "selectTasksList", id: another_task_list_id});
+    await waitUntil(wait_for_update_last_selected_time)
+    expect(the_error).toEqual({error: "Failed to select tasks list", type: "error", code: 422});
+}
+
 export async function adds_maximum_tasks_and_then_refuses_subsequent_tasks() {
     await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});
