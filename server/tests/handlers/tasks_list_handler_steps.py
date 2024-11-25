@@ -57,6 +57,12 @@ def listing_tasks_lists():
     response = client.get(tasks_url(), headers=the_headers())
 
 
+def listing_the_task_list():
+    global response
+    datetime.datetime = NewDateTimeNow
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
+
+
 def a_tasks_list():
     adding_a_tasks_list()
 
@@ -85,15 +91,6 @@ def updating_the_tasks_list():
     response = client.patch(
         tasks_list_url_with_id(tasks_list_id),
         json={"name": an_updated_tasks_list_name()},
-        headers=the_headers(),
-    )
-
-
-def updating_last_selected_time():
-    global response
-    datetime.datetime = NewDateTimeNow
-    response = client.patch(
-        tasks_list_url_last_selected_time(tasks_list_id),
         headers=the_headers(),
     )
 
@@ -170,7 +167,7 @@ def the_tasks_list_is_updated():
 
 def the_last_selected_time_is_updated():
     global response
-    assert response.status_code == HTTPStatus.NO_CONTENT
+    assert response.status_code == HTTPStatus.OK
     response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
     assert response.status_code == HTTPStatus.OK
     assert (
