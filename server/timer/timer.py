@@ -4,7 +4,7 @@ import urllib3
 import yaml
 
 urllib3.disable_warnings()
-path = Path(__file__).parent / "config.yaml"
+path = Path(__file__) / "../config.yaml"
 config = yaml.safe_load(open(path))
 
 the_url = config["url"]
