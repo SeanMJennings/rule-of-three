@@ -174,7 +174,7 @@ class CarryTaskHandler(MethodView):
         return no_content_response()
 
 
-def register_handlers(app, tasks_list_service):
+def register_task_handlers(app, tasks_list_service):
     tasks_list_handler_for_groups = TasksListHandlerForGroups.as_view(
         TasksListHandlerForGroups.name(), tasks_list_service
     )

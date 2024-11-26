@@ -5,6 +5,8 @@
 def tasks_url():
     return "http://localhost:5000/api/tasks-lists"
 
+def keep_alive_url():
+    return "http://localhost:5000/api/keep-alive"
 
 def tasks_list_url_with_id(id):
     return f"{tasks_url()}/{id}"
