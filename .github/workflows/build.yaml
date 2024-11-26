@@ -92,6 +92,13 @@ jobs:
       - name: Update values.yaml
         uses: fjogeleit/yaml-update-action@main
         with:
+          valueFile: 'server/timer/config.yaml'
+          propertyPath: 'url'
+          value: ${{ vars.URL }}
+          commitChange: false
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
           valueFile: 'server/api/config.yaml'
           propertyPath: 'AUTH0_API_IDENTIFIER'
           value: ${{ vars.AUTH0_API_IDENTIFIER }}
