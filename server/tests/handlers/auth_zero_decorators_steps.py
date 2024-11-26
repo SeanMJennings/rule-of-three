@@ -4,11 +4,11 @@ from flask.testing import FlaskClient
 from flask.views import MethodView
 from flask_cors import CORS
 
-from src.cache import cache, cache_config
-from src.handlers.auth_zero_decorators import requires_auth
-from src.handlers.exception_handlers import handle_exception
-from src.handlers.requests import CUSTOM_AUTHORIZATION_HEADER_KEY
-from src.handlers.responses import *
+from api.cache import cache, cache_config
+from api.handlers.auth_zero_decorators import requires_auth
+from api.handlers.exception_handlers import handle_exception
+from api.handlers.requests import CUSTOM_AUTHORIZATION_HEADER_KEY
+from api.handlers.responses import *
 from tests.auth_zero_tokens import (
     valid_payload,
     expired_payload,

@@ -1,7 +1,7 @@
-from src.application.tasks_list_service import TasksListService
-from src.persistence.initialise_cosmos import container
-from src.app import create_app
-from src.cache import cache, cache_config
+from api.application.tasks_list_service import TasksListService
+from api.persistence.initialise_cosmos import container
+from api.app import create_app
+from api.cache import cache, cache_config
 import azure.functions as func
 
 

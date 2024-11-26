@@ -2,8 +2,8 @@ from tests.datetime import NewDateTimeNow, the_updated_datetime
 import datetime
 import pytest
 from azure.cosmos import ContainerProxy
-from src.application.tasks_list_service import TasksListService
-from src.domain.tasks_list import TasksList
+from api.application.tasks_list_service import TasksListService
+from api.domain.tasks_list import TasksList
 from tests.database import setup_db, get_db_connection, clear_db
 
 db: ContainerProxy

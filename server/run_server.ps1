@@ -1,4 +1,4 @@
 uv sync
 .\.venv\Scripts\Activate.ps1
-src/persistence/initialise_cosmos.py
-flask --app src/__init__.py run
+api/persistence/initialise_cosmos.py
+flask --app api/__init__.py run

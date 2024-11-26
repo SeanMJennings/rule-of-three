@@ -1,6 +1,6 @@
 ﻿import datetime
 import uuid
-from src.domain.task import Task
+from api.domain.task import Task
 
 
 class TasksList:

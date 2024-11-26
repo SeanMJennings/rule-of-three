@@ -1,4 +1,4 @@
-from src.domain.tasks_list import TasksList
+from api.domain.tasks_list import TasksList
 from tests.validations import validate_uuid4
 from tests.datetime import (
     OldDateTimeNow,

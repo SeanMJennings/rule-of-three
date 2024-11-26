@@ -1,6 +1,6 @@
 ﻿from flask import jsonify
-from src.application.validation_exception import ValidationException
-from src.handlers.auth_zero_decorators import AuthError
+from api.application.validation_exception import ValidationException
+from api.handlers.auth_zero_decorators import AuthError
 from http import HTTPStatus
 
 

@@ -7,9 +7,9 @@ from tests.datetime import (
 import datetime
 import pytest
 from flask.testing import FlaskClient
-from src.cache import cache, cache_config
-from src.app import create_app
-from src.application.tasks_list_service import TasksListService
+from api.cache import cache, cache_config
+from api.app import create_app
+from api.application.tasks_list_service import TasksListService
 from tests.database import setup_db, get_db_connection, clear_db
 from tests.handlers.mocking_utilities import the_headers
 from tests.handlers.routing import *

@@ -4,9 +4,9 @@ from http import HTTPStatus
 import pytest
 from flask.testing import FlaskClient
 
-from src.app import create_app
-from src.cache import cache, cache_config
-from src.application.validation_exception import ValidationException
+from api.app import create_app
+from api.cache import cache, cache_config
+from api.application.validation_exception import ValidationException
 from tests.handlers.mocking_utilities import the_headers
 from tests.handlers.routing import tasks_url
 

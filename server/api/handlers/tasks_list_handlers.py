@@ -3,8 +3,8 @@ from flask import request
 from .auth_zero_decorators import requires_auth
 from .requests import get_request_body_property, get_user_id
 from .responses import *
-from src.application.tasks_list_service import TasksListService
-from src._app import add_app_url
+from api.application.tasks_list_service import TasksListService
+from api._app import add_app_url
 
 
 class TasksListHandlerForGroups(MethodView):

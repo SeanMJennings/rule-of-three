@@ -1,9 +1,9 @@
 ﻿from azure.cosmos import ContainerProxy
 
-from src.application.not_found_exception import NotFoundException
-from src.domain.tasks_list import TasksList
-from src.persistence.converters import convert_to_domain, convert_to_domain_list
-from src.application.validation_exception import ValidationException
+from api.application.not_found_exception import NotFoundException
+from api.domain.tasks_list import TasksList
+from api.persistence.converters import convert_to_domain, convert_to_domain_list
+from api.application.validation_exception import ValidationException
 
 
 class TasksListService:

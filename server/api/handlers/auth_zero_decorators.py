@@ -5,12 +5,12 @@ from typing import Dict
 from urllib.request import urlopen
 
 from flask import request
-from src.cache import cache
+from api.cache import cache
 from jose import jwt
 from pathlib import Path
 import yaml
 
-from src.handlers.requests import (
+from api.handlers.requests import (
     CUSTOM_AUTHORIZATION_HEADER_KEY,
 )
 

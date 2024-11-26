@@ -1,7 +1,7 @@
-﻿from src.handlers.tasks_list_handlers import register_handlers
+﻿from api.handlers.tasks_list_handlers import register_handlers
 from flask import Flask
 from flask_cors import CORS
-from src.handlers.exception_handlers import handle_exception
+from api.handlers.exception_handlers import handle_exception
 
 
 def create_app(tasks_list_service):
