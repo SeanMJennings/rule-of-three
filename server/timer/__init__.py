@@ -10,5 +10,5 @@ config = yaml.safe_load(open(path))
 the_url = config["url"]
 
 
-def main() -> None:
-    requests.get('https://' + the_url + '/api/keep-alive')
+def main():
+    return requests.get('https://' + the_url + '/api/keep-alive').status_code
