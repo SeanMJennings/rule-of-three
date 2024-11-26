@@ -101,21 +101,21 @@ jobs:
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
-#      - name: Install uv
-#        uses: astral-sh/setup-uv@v3
-#      - name: Set up Python
-#        run: uv python install ${{ env.PYTHON_VERSION }}
-#      - name: Install project dependencies
-#        run: cd ./server && uv sync
-#      - name: Lint using Flake8
-#        run: cd ./server && uv tool run flake8
-#      - name: Start Azure Cosmos DB emulator
-#        run: |
-#          Write-Host "Launching Cosmos DB Emulator"
-#          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
-#          Start-CosmosDbEmulator -Timeout 360
-#      - name: Test with pytest
-#        run: cd ./server && uv run pytest
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+      - name: Install project dependencies
+        run: cd ./server && uv sync
+      - name: Lint using Flake8
+        run: cd ./server && uv tool run flake8
+      - name: Start Azure Cosmos DB emulator
+        run: |
+          Write-Host "Launching Cosmos DB Emulator"
+          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
+          Start-CosmosDbEmulator -Timeout 360
+      - name: Test with pytest
+        run: cd ./server && uv run pytest
   deploy:
     needs: [ build_client, build_server, test_server ]
     runs-on: ubuntu-latest
@@ -171,7 +171,11 @@ jobs:
           inlineScript: |
             FUNCTION_APP_ID=$(az functionapp list -o tsv --query "[?name=='${{ secrets.FUNCTION_APP_NAME }}'].id")
             az staticwebapp functions link -n ${{ secrets.STATIC_WEB_APP_NAME }} -g ${{ secrets.RESOURCE_GROUP }} --function-resource-id $FUNCTION_APP_ID
-      # add step to remove old folders from storage account
+      - name: Delete older files in storage account
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az storage blob delete-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} --source github-actions-deploy --if-unmodified-since `date -u -d "5 minutes ago" '+%Y-%m-%dT%H:%MZ'`
       - name: Cleanup cache
         run: |
           gh extension install actions/gh-actions-cache

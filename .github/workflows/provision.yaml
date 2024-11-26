@@ -68,6 +68,7 @@ jobs:
             --runtime "python" \
             --runtime-version "3.10" \
             --functions-version "4" \
+            --https-only true \
             --disable-app-insights
       - name: Add cors for Azure portal to function app
         uses: azure/cli@v2
