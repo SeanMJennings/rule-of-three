@@ -1,8 +1,5 @@
 ﻿from http import HTTPStatus
-
-import pytest
 from flask.testing import FlaskClient
-
 from api import TasksListService
 from api.app import create_app
 from tests.handlers.routing import *
