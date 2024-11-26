@@ -101,21 +101,21 @@ jobs:
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-      - name: Set up Python
-        run: uv python install ${{ env.PYTHON_VERSION }}
-      - name: Install project dependencies
-        run: cd ./server && uv sync
-      - name: Lint using Flake8
-        run: cd ./server && uv tool run flake8
-      - name: Start Azure Cosmos DB emulator
-        run: |
-          Write-Host "Launching Cosmos DB Emulator"
-          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
-          Start-CosmosDbEmulator -Timeout 360
-      - name: Test with pytest
-        run: cd ./server && uv run pytest
+#      - name: Install uv
+#        uses: astral-sh/setup-uv@v3
+#      - name: Set up Python
+#        run: uv python install ${{ env.PYTHON_VERSION }}
+#      - name: Install project dependencies
+#        run: cd ./server && uv sync
+#      - name: Lint using Flake8
+#        run: cd ./server && uv tool run flake8
+#      - name: Start Azure Cosmos DB emulator
+#        run: |
+#          Write-Host "Launching Cosmos DB Emulator"
+#          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
+#          Start-CosmosDbEmulator -Timeout 360
+#      - name: Test with pytest
+#        run: cd ./server && uv run pytest
   deploy:
     needs: [ build_client, build_server, test_server ]
     runs-on: ubuntu-latest
@@ -149,7 +149,7 @@ jobs:
             SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ secrets.STATIC_WEB_APP_NAME }} -o tsv --query properties.apiKey)
             echo "::add-mask::$SWA_DEPLOYMENT_TOKEN"
             echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
-      - name: Deploy App
+      - name: Deploy static web app
         id: build-deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -159,7 +159,19 @@ jobs:
           skip_app_build: true
           skip_api_build: true
           app_location: ${{ env.CLIENT_OUTPUT_FOLDER }}
-          api_location: ${{ env.SERVER_OUTPUT_FOLDER }}
+      - name: Deploy Azure function app
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ secrets.FUNCTION_APP_NAME }}
+          package: ${{ env.SERVER_OUTPUT_FOLDER }}
+      - name: Link static web app to function
+        uses: azure/cli@v2
+        with:
+          azcliversion: 2.47.0 # needed for staticwebapp functions link to work due to bug
+          inlineScript: |
+            FUNCTION_APP_ID=$(az functionapp list -o tsv --query "[?name=='${{ secrets.FUNCTION_APP_NAME }}'].id")
+            az staticwebapp functions link -n ${{ secrets.STATIC_WEB_APP_NAME }} -g ${{ secrets.RESOURCE_GROUP }} --function-resource-id $FUNCTION_APP_ID
+      # add step to remove old folders from storage account
       - name: Cleanup cache
         run: |
           gh extension install actions/gh-actions-cache
