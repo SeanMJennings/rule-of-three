@@ -1,0 +1,11 @@
+﻿{
+  "scriptFile": "timer.py",
+  "bindings": [
+    {
+      "name": "keep-alive",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 */5 * * * *"
+    }
+  ]
+}
