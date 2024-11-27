@@ -16,7 +16,7 @@ import {
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
-import {faTasks} from "@fortawesome/free-solid-svg-icons";
+import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import TasksCounter from "@/components/tasks/TasksCounter.vue";
 
 const props = defineProps<{
@@ -50,7 +50,7 @@ const remove = (id: string | number) => {
 
 <template>
   <div :class="commonStyle.header">
-    <ButtonIcon :class="commonStyle.button" :icon="faTasks" title=""/>
+    <ButtonIcon :class="commonStyle.button" :icon="faCheck" title="" :disabled="true"/>
   </div>
   <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
   <div :class="styles.container">
