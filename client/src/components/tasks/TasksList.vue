@@ -6,7 +6,7 @@ import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from '
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {TasksListMachineStates} from "@/state-machines/tasks.states";
 import type {Id} from "@/types/types";
-import {faEdit, faList, faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons'
+import {faEdit, faPlusCircle, faTrash, faSearch} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
 import {notEmpty, readyToAddTasks, showCreateTasksList} from "@/state-machines/tasks.extensions";
@@ -81,7 +81,7 @@ onUnmounted(() => {
     <div v-if="showCreateTasksList(snapshot.value)" id="add-task-list-placeholder" :class="style.placeholder" v-on:click="readyToCreateFirstTaskList()">
       <span>Create your first task list</span>
     </div>
-    <div v-if="notEmpty(snapshot.value)" :class="style.header" v-on:click="toggleTasksList()">
+    <div v-if="notEmpty(snapshot.value)" :class="commonStyle.header" v-on:click="toggleTasksList()">
       <ButtonIcon :class="commonStyle.button" :icon="faPlusCircle" title=""/>
       <ButtonIcon :icon="faCaretSquareDown" :class="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-input-caret" title="Add tasks lists"/>
     </div>
@@ -93,8 +93,8 @@ onUnmounted(() => {
       </div>
       <span id="tasks-list-character-count" :class="commonStyle.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
     </div>
-    <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0" :class="style.header" v-on:click="toggleTasksSelect()">
-      <ButtonIcon :class="commonStyle.button" :icon="faList" title=""/>
+    <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0" :class="commonStyle.header" v-on:click="toggleTasksSelect()">
+      <ButtonIcon :class="commonStyle.button" :icon="faSearch" title=""/>
       <ButtonIcon :icon="faCaretSquareDown" :class="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" title="Select tasks list"/>
     </div>
     <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">

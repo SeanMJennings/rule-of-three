@@ -1,10 +1,9 @@
 ﻿<script lang="ts" setup>
 import {tasksMachine, type TasksMachineError} from "@/state-machines/tasks.state-machine";
 import styles from "./Tasks.module.css";
-import TasksCounter from "@/components/tasks/TasksCounter.vue";
 import TasksForm from "@/components/tasks/TasksForm.vue";
 import TasksList from "@/components/tasks/TasksList.vue";
-import {getTasks, loading, readyToAddTasks, selectedTaskListName, taskLimit} from "@/state-machines/tasks.extensions";
+import {loading, readyToAddTasks, selectedTaskListName} from "@/state-machines/tasks.extensions";
 import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from 'xstate'
 import {VueSpinner} from "vue3-spinners";
 import {onMounted, onUnmounted, ref} from "vue";
@@ -79,7 +78,6 @@ onUnmounted(() => {
       <VueSpinner id="loadingSpinner" size="30" color="white" />
     </div>
     <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList"/>
-    <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
     <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
   </div>
 </template>

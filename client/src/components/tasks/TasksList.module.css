@@ -19,16 +19,6 @@
     cursor: pointer;
 }
 
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-background-mute);
-    height: 40px;
-    border-bottom: solid 1px var(--color-border);
-    cursor: pointer;
-}
-
 .caret {
     margin-left: auto;
     margin-right: 10px;

@@ -11,11 +11,13 @@ import {
   canRemoveTask, carryingOrRemovingTasks,
   getTasks,
   showAddTask,
-  showTickTasks
+  showTickTasks, taskLimit
 } from "@/state-machines/tasks.extensions";
 import * as _ from "lodash";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
+import {faTasks} from "@fortawesome/free-solid-svg-icons";
+import TasksCounter from "@/components/tasks/TasksCounter.vue";
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
@@ -47,6 +49,10 @@ const remove = (id: string | number) => {
 </script>
 
 <template>
+  <div :class="commonStyle.header">
+    <ButtonIcon :class="commonStyle.button" :icon="faTasks" title=""/>
+  </div>
+  <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
   <div :class="styles.container">
     <div v-if="showAddTask(snapshot.value)" id="add-task" :class="styles.addTask">
       <label :class="commonStyle.label" for="add-task-input">Add a Task</label>
