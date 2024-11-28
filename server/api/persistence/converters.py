@@ -4,7 +4,7 @@ from azure.core.paging import ItemPaged
 T = TypeVar("T")
 
 
-def convert_to_domain(_type: T, paged_items: ItemPaged):
+def convert_to_domain(_type: T, paged_items: ItemPaged) -> T | None:
     list_items = list(iter(paged_items))
     if len(list_items) > 0:
         return _type.from_dict(list_items[0])

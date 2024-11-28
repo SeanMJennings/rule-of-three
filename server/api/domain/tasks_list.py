@@ -56,6 +56,9 @@ class TasksList:
         self.tasks.append(the_task)
         return the_task.id
 
+    def the_tasks(self):
+        return self.tasks
+
     def update_last_selected_time(self):
         self.last_selected_time = datetime.datetime.now()
 

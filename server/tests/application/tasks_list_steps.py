@@ -1,3 +1,5 @@
+import base64
+
 from tests.datetime import NewDateTimeNow, the_updated_datetime
 import datetime
 import pytest
@@ -210,6 +212,12 @@ def the_task_is_added_to_the_tasks_list():
     tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
     assert len(tasks_list.tasks) == 1
     assert tasks_list.tasks[0].content == "My Task"
+
+
+def the_task_is_stored_in_base64_ascii():
+    item = list(db.read_all_items())[0]
+    item_content = item["tasks"][0]["content"]
+    assert item_content == base64.b64encode("My Task".encode("ascii")).decode("ascii")
 
 
 def the_task_is_ticked_in_the_tasks_list():

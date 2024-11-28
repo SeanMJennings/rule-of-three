@@ -36,6 +36,16 @@ class Task:
             dictionary["page_count"],
         )
 
+    def set_content(self, content):
+        return Task(
+            content,
+            self.id,
+            self.is_ticked,
+            self.is_carried,
+            self.is_removed,
+            self.page_count,
+        )
+
     def tick(self):
         return Task(
             self.content,

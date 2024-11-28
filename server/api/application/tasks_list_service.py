@@ -1,6 +1,7 @@
 ﻿from azure.cosmos import ContainerProxy
 
 from api.application.not_found_exception import NotFoundException
+from api.application.string_encoding import decode_string, encode_string
 from api.domain.tasks_list import TasksList
 from api.persistence.converters import convert_to_domain, convert_to_domain_list
 from api.application.validation_exception import ValidationException
@@ -15,6 +16,7 @@ class TasksListService:
         tasks_list = TasksList(name, owner_id)
         if self.get(name, owner_id) is not None:
             raise ValidationException("Tasks list with name already exists")
+        self.__encoded_tasks_list(tasks_list)
         item = self.db.upsert_item(tasks_list.to_dict())
         return item["id"]
 
@@ -26,6 +28,7 @@ class TasksListService:
         tasks_list = self.get_by_id(id, owner_id)
         self.__check_task_list_found(tasks_list)
         tasks_list.name = new_name
+        self.__encoded_tasks_list(tasks_list)
         item = self.db.upsert_item(tasks_list.to_dict())
         return item["id"]
 
@@ -33,6 +36,7 @@ class TasksListService:
         tasks_list = self.get_by_id(id, owner_id)
         self.__check_task_list_found(tasks_list)
         tasks_list.update_last_selected_time()
+        self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
     def delete(self, id: str, owner_id: str):
@@ -52,7 +56,7 @@ class TasksListService:
             ],
             enable_cross_partition_query=True,
         )
-        return convert_to_domain(TasksList, item)
+        return self.__decoded_tasks_list(convert_to_domain(TasksList | None, item))
 
     def get_by_id(self, id: str, owner_id: str) -> TasksList | None:
         item = self.db.query_items(
@@ -63,7 +67,7 @@ class TasksListService:
             ],
             enable_cross_partition_query=True,
         )
-        return convert_to_domain(TasksList, item)
+        return self.__decoded_tasks_list(convert_to_domain(TasksList, item))
 
     def get_all(self, owner_id: str) -> list[TasksList]:
         items = self.db.query_items(
@@ -71,12 +75,14 @@ class TasksListService:
             parameters=[dict(name="@owner_id", value=owner_id)],
             enable_cross_partition_query=True,
         )
-        return convert_to_domain_list(TasksList, items)
+        encoded_lists = convert_to_domain_list(TasksList, items)
+        return list(self.__decoded_tasks_list(encoded_list) for encoded_list in encoded_lists)
 
     def add_task(self, tasks_list_id: str, owner_id: str, task: str):
         tasks_list = self.get_by_id(tasks_list_id, owner_id)
         self.__check_task_list_found(tasks_list)
         the_task_id = tasks_list.add(task)
+        self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
         return the_task_id
 
@@ -84,21 +90,38 @@ class TasksListService:
         tasks_list = self.get_by_id(tasks_list_id, owner_id)
         self.__check_task_list_found(tasks_list)
         tasks_list.tick(task_id)
+        self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
     def remove_task(self, tasks_list_id: str, owner_id: str, task_id: str):
         tasks_list = self.get_by_id(tasks_list_id, owner_id)
         self.__check_task_list_found(tasks_list)
         tasks_list.remove(task_id)
+        self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
     def carry_task(self, tasks_list_id: str, owner_id: str, task_id: str):
         tasks_list = self.get_by_id(tasks_list_id, owner_id)
         self.__check_task_list_found(tasks_list)
         tasks_list.carry(task_id)
+        self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
     @staticmethod
     def __check_task_list_found(tasks_list):
         if tasks_list is None:
             raise NotFoundException("Tasks list not found")
+
+    @staticmethod
+    def __decoded_tasks_list(tasks_list: TasksList | None):
+        if tasks_list is not None:
+            tasks_list.__setattr__(
+                'tasks', [task.set_content(decode_string(task.content)) for task in tasks_list.tasks])
+        return tasks_list
+
+    @staticmethod
+    def __encoded_tasks_list(tasks_list: TasksList):
+        if tasks_list is not None:
+            tasks_list.__setattr__(
+                'tasks', [task.set_content(encode_string(task.content)) for task in tasks_list.tasks])
+        return tasks_list

@@ -82,6 +82,12 @@ def test_add_a_task_to_tasks_list():
     Then(the_task_is_added_to_the_tasks_list)
 
 
+def test_tasks_stored_in_base64_ascii():
+    Given(an_existing_tasks_list)
+    When(adding_a_task)
+    Then(the_task_is_stored_in_base64_ascii)
+
+
 def test_cannot_add_task_to_non_existing_tasks_list():
     Given(an_invalid_tasks_list_id)
     When(validating(adding_a_task_for_non_existing_tasks_list))
