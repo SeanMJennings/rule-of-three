@@ -215,6 +215,7 @@ def the_task_is_added_to_the_tasks_list():
 
 
 def the_task_is_stored_in_base64_ascii():
+    global db
     item = list(db.read_all_items())[0]
     item_content = item["tasks"][0]["content"]
     assert item_content == base64.b64encode("My Task".encode("ascii")).decode("ascii")
