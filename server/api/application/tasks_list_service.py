@@ -56,7 +56,7 @@ class TasksListService:
             ],
             enable_cross_partition_query=True,
         )
-        return self.__decoded_tasks_list(convert_to_domain(TasksList | None, item))
+        return self.__decoded_tasks_list(convert_to_domain(TasksList, item))
 
     def get_by_id(self, id: str, owner_id: str) -> TasksList | None:
         item = self.db.query_items(
@@ -113,7 +113,7 @@ class TasksListService:
             raise NotFoundException("Tasks list not found")
 
     @staticmethod
-    def __decoded_tasks_list(tasks_list: TasksList | None):
+    def __decoded_tasks_list(tasks_list: TasksList):
         if tasks_list is not None:
             tasks_list.__setattr__(
                 'tasks', [task.set_content(decode_string(task.content)) for task in tasks_list.tasks])

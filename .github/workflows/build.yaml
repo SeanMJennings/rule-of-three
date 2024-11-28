@@ -141,6 +141,14 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+      - name: Migrate cosmos
+        run: |
+          cd ./server
+          uv run -m api.persistence.migrate_cosmos
       - name: Get SWA deployment token
         uses: azure/cli@v2
         id: swa-token

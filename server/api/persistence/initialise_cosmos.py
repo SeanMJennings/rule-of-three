@@ -1,4 +1,4 @@
-﻿from azure.cosmos import CosmosClient, PartitionKey
+﻿from azure.cosmos import CosmosClient, PartitionKey, ContainerProxy
 from api.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
 import urllib3
 from pathlib import Path
@@ -24,7 +24,7 @@ database = client.create_database_if_not_exists(
     offer_throughput=400,
 )
 
-container = database.create_container_if_not_exists(
+container: ContainerProxy = database.create_container_if_not_exists(
     id=CONTAINER_ID,
     partition_key=PartitionKey(
         path=PARTITIONKEYPATH,
