@@ -6,4 +6,4 @@ def get_user_id(request):
     return request.current_user["sub"]
 
 
-CUSTOM_AUTHORIZATION_HEADER_KEY = "X-Custom-Authorization"
+CUSTOM_AUTHORIZATION_HEADER_KEY = "Authorization"
