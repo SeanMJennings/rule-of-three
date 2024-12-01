@@ -25,6 +25,11 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: az network dns zone create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ vars.DOMAIN }}
+      - name: Create CNAME record set
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: az network dns record-set cname create --name www --resource-group ${{ secrets.RESOURCE_GROUP }} --zone-name ${{ vars.DOMAIN }}
       - name: Create a resource group
         uses: azure/cli@v2
         with:
@@ -41,6 +46,12 @@ jobs:
                 --resource-group ${{ secrets.RESOURCE_GROUP }} \
                 --location ${{ secrets.STATIC_WEB_APP_LOCATION }} \
                 --sku Standard
+      - name: Add custom domain to static web app
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az staticwebapp hostname set --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.STATIC_WEB_APP_NAME }} --hostname www.${{ vars.DOMAIN }} --no-wait
       - name: Create a storage account for function app
         uses: azure/cli@v2
         with:

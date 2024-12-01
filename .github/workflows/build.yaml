@@ -167,6 +167,12 @@ jobs:
           skip_app_build: true
           skip_api_build: true
           app_location: ${{ env.CLIENT_OUTPUT_FOLDER }}
+      - name: Set dns zone cname record to default host name of static web app
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            SWA_DEFAULT_HOST_NAME=$(az staticwebapp show --name ${{ secrets.STATIC_WEB_APP_NAME }}  --query "defaultHostname")
+            az network dns record-set cname set-record --cname $SWA_DEFAULT_HOST_NAME --record-set-name www --resource-group ${{ secrets.RESOURCE_GROUP }} --zone-name ${{ vars.DOMAIN }}
       - name: Deploy Azure function app
         uses: Azure/functions-action@v1
         with:
