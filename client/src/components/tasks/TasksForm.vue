@@ -49,7 +49,7 @@ const remove = (id: string | number) => {
 </script>
 
 <template>
-  <div :class="commonStyle.header">
+  <div v-if="showAddTask(snapshot.value)" :class="commonStyle.header">
     <ButtonIcon :class="commonStyle.button" :icon="faCheck" title="" :disabled="true"/>
   </div>
   <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>

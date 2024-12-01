@@ -29,6 +29,10 @@ export const notEmpty = (value: StateValue) => {
     return value !== TasksMachineCombinedStates.empty;
 }
 
+export const notEmptyOrInitiallyLoading = (value: StateValue) => {
+    return value !== TasksMachineCombinedStates.empty && value !== TasksListMachineStates.loading;
+}
+
 export const showAddTask = (value: StateValue) => {
     return _.isEqual(value, TasksMachineCombinedStates.addingTasksListsAddingTasks)
         || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask)
