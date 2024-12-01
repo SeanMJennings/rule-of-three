@@ -1,4 +1,4 @@
-﻿export const enum TasksListMachineStates {
+﻿export enum TasksListMachineStates {
     loading = "loading",
     empty = "empty",
     readyToAddTasksLists = "readyToAddTasksLists",
@@ -10,7 +10,7 @@
     assessingTasksList = "assessingTasksList",
 }
 
-export const enum TasksMachineStates {
+export enum TasksMachineStates {
     addingTasks = "addingTasks",
     creatingTheTask = "creatingTheTask",
     tickingTheTask = "tickingTheTask",

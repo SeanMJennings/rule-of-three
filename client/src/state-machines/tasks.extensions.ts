@@ -7,6 +7,7 @@ export const taskLimit = Number(import.meta.env.TASK_LIMIT || 22);
 export const loading = (value: StateValue) => {
     return value === TasksListMachineStates.loading 
         || value === TasksListMachineStates.addingTasksLists
+        || value === TasksListMachineStates.creatingTheTasksList
         || value === TasksListMachineStates.selectingTheTasksList
         || value === TasksListMachineStates.updatingTheTasksList
         || value === TasksListMachineStates.deletingTheTasksList
