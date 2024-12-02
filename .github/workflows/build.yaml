@@ -172,6 +172,7 @@ jobs:
         with:
           inlineScript: |
             SWA_DEFAULT_HOST_NAME=$(az staticwebapp show --name ${{ secrets.STATIC_WEB_APP_NAME }}  --query "defaultHostname")
+            $SWA_DEFAULT_HOST_NAME=${SWA_DEFAULT_HOST_NAME:1:-1}
             az network dns record-set cname set-record --cname $SWA_DEFAULT_HOST_NAME --record-set-name www --resource-group ${{ secrets.RESOURCE_GROUP }} --zone-name ${{ vars.DOMAIN }}
       - name: Deploy Azure function app
         uses: Azure/functions-action@v1

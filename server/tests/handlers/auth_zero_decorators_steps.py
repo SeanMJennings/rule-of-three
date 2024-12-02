@@ -74,31 +74,24 @@ def a_request_with_invalid_token():
 
 def a_request_with_an_hs_256_signed_token():
     global headers
-    headers = {
-        AUTHORIZATION_HEADER_KEY: "Bearer " + hs256_token(valid_payload())
-    }
+    headers = {AUTHORIZATION_HEADER_KEY: "Bearer " + hs256_token(valid_payload())}
 
 
 def a_request_with_an_expired_token():
     global headers
-    headers = {
-        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(expired_payload())
-    }
+    headers = {AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(expired_payload())}
 
 
 def a_request_with_an_incorrect_audience():
     global headers
     headers = {
-        AUTHORIZATION_HEADER_KEY: "Bearer "
-                                  + rs256_token(different_issuer_payload())
+        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(different_issuer_payload())
     }
 
 
 def a_valid_request():
     global headers
-    headers = {
-        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())
-    }
+    headers = {AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())}
 
 
 def a_reset_cache():
@@ -113,16 +106,16 @@ def making_the_request():
 def an_authorised_header_is_expected():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
-            json.loads(response.data)["error"]
-            == AUTHORIZATION_HEADER_KEY + " header is expected"
+        json.loads(response.data)["error"]
+        == AUTHORIZATION_HEADER_KEY + " header is expected"
     )
 
 
 def authorised_header_must_start_with_bearer():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
-            json.loads(response.data)["error"]
-            == AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
+        json.loads(response.data)["error"]
+        == AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
     )
 
 
@@ -134,8 +127,8 @@ def authorised_header_must_have_token():
 def authorised_header_must_only_have_bearer_and_token():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
-            json.loads(response.data)["error"]
-            == AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
+        json.loads(response.data)["error"]
+        == AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
     )
 
 
@@ -193,5 +186,6 @@ class NonsenseHandler(MethodView):
     def name():
         return "nonsense_handler"
 
-    def get(self):
+    @staticmethod
+    def get():
         return success_response(None)
