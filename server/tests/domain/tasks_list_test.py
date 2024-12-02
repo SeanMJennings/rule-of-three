@@ -137,3 +137,36 @@ def test_must_remove_task_that_has_been_carried_twice():
     And(tasks_have_been_carried_twice)
     When(removing_all_tasks)
     Then(the_tasks_list_is_empty)
+
+
+def test_can_share_tasks_list_with_another_user():
+    Given(a_tasks_list)
+    When(sharing_tasks_list_with_a_user)
+    Then(the_tasks_list_is_shared_to_a_user)
+
+
+def test_can_share_tasks_list_with_multiple_users():
+    Given(a_tasks_list)
+    When(sharing_tasks_list_with_a_user)
+    And(sharing_tasks_list_with_another_user)
+    Then(the_tasks_list_is_shared_to_both_users)
+
+
+def test_cannot_share_tasks_list_twice_with_same_user():
+    Given(a_tasks_list)
+    When(sharing_tasks_list_with_a_user)
+    And(validating(sharing_tasks_list_with_a_user))
+    Then(informs("Tasks list already shared with user"))
+
+
+def test_can_unshare_tasks_list():
+    Given(a_tasks_list)
+    And(sharing_tasks_list_with_a_user)
+    When(unsharing_tasks_list_with_a_user)
+    Then(the_tasks_list_is_not_shared_to_a_user)
+
+
+def test_cannot_unshare_tasks_list_that_is_not_shared():
+    Given(a_tasks_list)
+    When(validating(unsharing_tasks_list_with_a_user))
+    Then(informs("Tasks list not shared with user"))

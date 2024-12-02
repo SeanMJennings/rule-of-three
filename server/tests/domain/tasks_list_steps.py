@@ -8,7 +8,9 @@ from tests.datetime import (
 )
 import datetime
 
-tasks_list: TasksList = TasksList(name="My Tasks List", owner_email="12345")
+tasks_list: TasksList = TasksList(name="My Tasks List", owner_email="wibble@wobble.com")
+an_email = "jackie@chan.com"
+another_email = "will@smith.com"
 
 
 def a_tasks_list_name():
@@ -99,6 +101,18 @@ def the_tasks_list_is_empty():
     assert len(tasks_list.tasks) == 0
 
 
+def the_tasks_list_is_shared_to_a_user():
+    assert tasks_list.shared_with == [an_email]
+
+
+def the_tasks_list_is_shared_to_both_users():
+    assert tasks_list.shared_with == [an_email, another_email]
+
+
+def the_tasks_list_is_not_shared_to_a_user():
+    assert tasks_list.shared_with == []
+
+
 def the_last_selected_time_is_now():
     assert tasks_list.last_selected_time.date() == the_datetime.date()
     assert tasks_list.last_selected_time.time() == the_datetime.time()
@@ -154,6 +168,18 @@ def removing_all_tasks():
     global tasks_list
     for task in tasks_list.tasks:
         tasks_list.remove(task.id)
+
+
+def sharing_tasks_list_with_a_user():
+    tasks_list.share(an_email)
+
+ 
+def unsharing_tasks_list_with_a_user():
+    tasks_list.unshare(an_email)
+
+
+def sharing_tasks_list_with_another_user():
+    tasks_list.share(another_email)
 
 
 def the_first_eleven_tasks_are_carried():

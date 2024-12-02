@@ -12,6 +12,7 @@ class TasksList:
         tasks: list[Task] = None,
         id: str = None,
         last_selected_time: datetime.datetime | str = None,
+        shared_with: list[str] = None,
     ):
         self.name = name
         self.owner_email = owner_email
@@ -27,6 +28,10 @@ class TasksList:
             self.tasks = tasks
         else:
             self.tasks = []
+        if shared_with is not None:
+            self.shared_with = shared_with
+        else:
+            self.shared_with = []
 
     @staticmethod
     def from_dict(dictionary):
@@ -95,6 +100,16 @@ class TasksList:
                 self.__last_task_carried_removed_or_ticked()
                 return
         raise Exception("Task not found")
+
+    def share(self, email: str):
+        if email in self.shared_with:
+            raise Exception("Tasks list already shared with user")
+        self.shared_with.append(email)
+
+    def unshare(self, email: str):
+        if email not in self.shared_with:
+            raise Exception("Tasks list not shared with user")
+        self.shared_with.remove(email)
 
     def __last_task_carried_removed_or_ticked(self):
         if len(self.tasks) == 22 and all(
