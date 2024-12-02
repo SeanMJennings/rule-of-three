@@ -11,7 +11,7 @@ from pathlib import Path
 import yaml
 
 from api.handlers.requests import (
-    CUSTOM_AUTHORIZATION_HEADER_KEY,
+    AUTHORIZATION_HEADER_KEY,
 )
 
 path = Path(__file__).parent / "../config.yaml"
@@ -28,21 +28,21 @@ class AuthError(Exception):
 
 
 def get_token_auth_header() -> str:
-    auth = request.headers.get(CUSTOM_AUTHORIZATION_HEADER_KEY, None)
+    auth = request.headers.get(AUTHORIZATION_HEADER_KEY, None)
     if not auth:
-        raise AuthError(CUSTOM_AUTHORIZATION_HEADER_KEY + " header is expected")
+        raise AuthError(AUTHORIZATION_HEADER_KEY + " header is expected")
 
     parts = auth.split()
 
     if parts[0].lower() != "bearer":
         raise AuthError(
-            CUSTOM_AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
+            AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
         )
     if len(parts) == 1:
         raise AuthError("Token not found")
     if len(parts) > 2:
         raise AuthError(
-            CUSTOM_AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
+            AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
         )
 
     token = parts[1]

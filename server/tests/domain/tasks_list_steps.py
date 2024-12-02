@@ -8,21 +8,21 @@ from tests.datetime import (
 )
 import datetime
 
-tasks_list: TasksList = TasksList(name="My Tasks List", owner_id="12345")
+tasks_list: TasksList = TasksList(name="My Tasks List", owner_email="12345")
 
 
 def a_tasks_list_name():
     return "My Tasks List"
 
 
-def an_owner_id():
+def an_owner_email():
     return "12345"
 
 
 def creating_a_tasks_list():
     global tasks_list
     datetime.datetime = OldDateTimeNow
-    tasks_list = TasksList(a_tasks_list_name(), an_owner_id())
+    tasks_list = TasksList(a_tasks_list_name(), an_owner_email())
 
 
 def updating_last_selected_time():
@@ -33,19 +33,19 @@ def updating_last_selected_time():
 
 def a_tasks_list():
     global tasks_list
-    tasks_list = TasksList("My Tasks List", an_owner_id())
+    tasks_list = TasksList("My Tasks List", an_owner_email())
 
 
 def a_tasks_list_with_22_tasks():
     global tasks_list
-    tasks_list = TasksList("My Tasks List", an_owner_id())
+    tasks_list = TasksList("My Tasks List", an_owner_email())
     for _ in range(22):
         tasks_list.add("wibble")
 
 
 def a_tasks_list_with_20_tasks():
     global tasks_list
-    tasks_list = TasksList("My Tasks List", an_owner_id())
+    tasks_list = TasksList("My Tasks List", an_owner_email())
     for _ in range(20):
         tasks_list.add("wibble")
 
@@ -95,7 +95,7 @@ def the_task_is_ticked():
 
 def the_tasks_list_is_empty():
     assert tasks_list.name == a_tasks_list_name()
-    assert tasks_list.owner_id == an_owner_id()
+    assert tasks_list.owner_email == an_owner_email()
     assert len(tasks_list.tasks) == 0
 
 

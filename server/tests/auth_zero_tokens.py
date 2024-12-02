@@ -30,6 +30,7 @@ def valid_payload():
     return {
         "iss": issuer,
         "sub": "BvwjAUeDP0Y0EERDlJvs6JJHxPQsbRUw@clients",
+        "email": "wibble@wobble.com",
         "aud": audience,
         "iat": 1730377646,
         "exp": 4070908800,  # expires in 2099
@@ -42,6 +43,7 @@ def expired_payload():
     return {
         "iss": issuer,
         "sub": "BvwjAUeDP0Y0EERDlJvs6JJHxPQsbRUw@clients",
+        "email": "wibble@wobble.com",
         "aud": audience,
         "iat": 1730377646,
         "exp": 1730377647,  # expired
@@ -54,6 +56,7 @@ def different_issuer_payload():
     return {
         "iss": different_issuer,
         "sub": "BvwjAUeDP0Y0EERDlJvs6JJHxPQsbRUw@clients",
+        "email": "wibble@wobble.com",
         "aud": audience,
         "iat": 1730377646,
         "exp": 4070908800,

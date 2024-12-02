@@ -23,12 +23,12 @@ def setup_and_teardown():
 
 
 class FakeTaskListServiceWithValidationException:
-    def add(self, name: str, owner_id: str):
+    def add(self, name: str, owner_email: str):
         raise ValidationException("wibble")
 
 
 class FakeTaskListServiceWithException:
-    def add(self, name: str, owner_id: str):
+    def add(self, name: str, owner_email: str):
         raise Exception("wobble")
 
 

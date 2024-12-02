@@ -2,8 +2,8 @@
     return request.get_json(silent=True)[name]
 
 
-def get_user_id(request):
-    return request.current_user["sub"]
+def get_user_email(request):
+    return request.current_user["email"]
 
 
-CUSTOM_AUTHORIZATION_HEADER_KEY = "Authorization"
+AUTHORIZATION_HEADER_KEY = "Authorization"

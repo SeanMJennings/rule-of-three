@@ -1,5 +1,5 @@
 ﻿from azure.cosmos import CosmosClient, PartitionKey, ContainerProxy
-from api.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
+from api.persistence.constants import TASKS_LISTS_CONTAINER_ID, TASKS_LISTS_PARTITION_KEY_PATH
 import urllib3
 from pathlib import Path
 import yaml
@@ -24,9 +24,9 @@ database = client.create_database_if_not_exists(
     offer_throughput=400,
 )
 
-container: ContainerProxy = database.create_container_if_not_exists(
-    id=CONTAINER_ID,
+tasks_lists_container: ContainerProxy = database.create_container_if_not_exists(
+    id=TASKS_LISTS_CONTAINER_ID,
     partition_key=PartitionKey(
-        path=PARTITIONKEYPATH,
+        path=TASKS_LISTS_PARTITION_KEY_PATH,
     ),
 )

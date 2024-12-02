@@ -1,6 +1,6 @@
 ﻿import pytest_mock
 
-from api.handlers.requests import CUSTOM_AUTHORIZATION_HEADER_KEY
+from api.handlers.requests import AUTHORIZATION_HEADER_KEY
 from tests.auth_zero_tokens import (
     get_jwks as mock_get_jwks,
     get_jwks_with_wrong_key_id,
@@ -10,7 +10,7 @@ from tests.auth_zero_tokens import (
 
 test_mocker = None
 get_jwks_mock = None
-headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())}
+headers = {AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())}
 
 
 def reset_mocks():
@@ -18,7 +18,7 @@ def reset_mocks():
     test_mocker = None
     get_jwks_mock = None
     headers = {
-        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())
+        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())
     }
 
 

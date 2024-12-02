@@ -4,7 +4,7 @@ from tests.application.tasks_list_steps import *
 
 def test_create_empty_tasks_list():
     Given(a_tasks_list_name)
-    And(an_owner_id)
+    And(an_owner_email)
     When(creating_a_tasks_list)
     Then(the_tasks_list_can_be_retrieved)
 

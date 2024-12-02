@@ -14,8 +14,8 @@ tasks_list: TasksList
 tasks_lists: list[TasksList]
 another_tasks_list: TasksList
 tasks_list_id: str
-owner_id = "12345"
-another_owner_id = "54321"
+owner_email = "wibble@wobble.com"
+another_owner_email = "wabble@wubble.com"
 
 
 @pytest.fixture(autouse=True)
@@ -32,8 +32,8 @@ def a_tasks_list_name():
     return "My Tasks List"
 
 
-def an_owner_id():
-    return owner_id
+def an_owner_email():
+    return owner_email
 
 
 def another_tasks_list_name():
@@ -43,22 +43,22 @@ def another_tasks_list_name():
 def creating_a_tasks_list():
     global tasks_list_service, tasks_list_id
     datetime.datetime = NewDateTimeNow
-    tasks_list_id = tasks_list_service.add(a_tasks_list_name(), owner_id)
+    tasks_list_id = tasks_list_service.add(a_tasks_list_name(), owner_email)
 
 
 def getting_all_tasks_lists():
     global tasks_list_service, tasks_lists
-    tasks_lists = tasks_list_service.get_all(owner_id)
+    tasks_lists = tasks_list_service.get_all(owner_email)
 
 
 def getting_all_tasks_lists_for_another_owner():
     global tasks_list_service, tasks_lists
-    tasks_lists = tasks_list_service.get_all(another_owner_id)
+    tasks_lists = tasks_list_service.get_all(another_owner_email)
 
 
 def creating_another_tasks_list():
     global tasks_list_service
-    tasks_list_service.add(another_tasks_list_name(), owner_id)
+    tasks_list_service.add(another_tasks_list_name(), owner_email)
 
 
 def an_invalid_tasks_list_id():
@@ -68,34 +68,34 @@ def an_invalid_tasks_list_id():
 
 def renaming_a_tasks_list():
     global tasks_list_service
-    tasks_list_service.update(tasks_list_id, owner_id, "My Renamed Tasks List")
+    tasks_list_service.update(tasks_list_id, owner_email, "My Renamed Tasks List")
 
 
 def renaming_a_tasks_list_to_existing_name():
     global tasks_list_service
-    tasks_list_service.update(tasks_list_id, owner_id, another_tasks_list_name())
+    tasks_list_service.update(tasks_list_id, owner_email, another_tasks_list_name())
 
 
 def renaming_a_tasks_list_to_same_name():
     global tasks_list_service
-    tasks_list_service.update(tasks_list_id, owner_id, a_tasks_list_name())
+    tasks_list_service.update(tasks_list_id, owner_email, a_tasks_list_name())
 
 
 def updating_last_selected_time():
     global tasks_list_service
     datetime.datetime = NewDateTimeNow
-    tasks_list_service.update_last_selected_time(tasks_list_id, owner_id)
+    tasks_list_service.update_last_selected_time(tasks_list_id, owner_email)
 
 
 def deleting_a_tasks_list():
     global tasks_list_service
-    tasks_list_service.delete(tasks_list_id, owner_id)
+    tasks_list_service.delete(tasks_list_id, owner_email)
 
 
 def an_existing_tasks_list():
     creating_a_tasks_list()
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
 
 
 def adding_a_tasks_list_with_existing_name():
@@ -105,69 +105,69 @@ def adding_a_tasks_list_with_existing_name():
 def another_existing_tasks_list():
     creating_another_tasks_list()
     global tasks_list_service, another_tasks_list
-    another_tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    another_tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
 
 
 def adding_a_task():
     global tasks_list_service, tasks_list
-    tasks_list_service.add_task(tasks_list.id, owner_id, "My Task")
+    tasks_list_service.add_task(tasks_list.id, owner_email, "My Task")
 
 
 def adding_a_task_for_non_existing_tasks_list():
     global tasks_list_service
-    tasks_list_service.add_task("non_existing", owner_id, "My Task")
+    tasks_list_service.add_task("non_existing", owner_email, "My Task")
 
 
 def an_existing_tasks_list_with_a_task():
     global tasks_list_service, tasks_list
     an_existing_tasks_list()
     adding_a_task()
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
 
 
 def an_existing_tasks_list_which_is_full():
     global tasks_list_service, tasks_list
     an_existing_tasks_list()
     for i in range(22):
-        tasks_list_service.add_task(tasks_list.id, owner_id, f"My Task {i}")
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+        tasks_list_service.add_task(tasks_list.id, owner_email, f"My Task {i}")
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
 
 
 def ticking_a_task():
     global tasks_list_service, tasks_list
-    tasks_list_service.tick_task(tasks_list.id, owner_id, tasks_list.tasks[0].id)
+    tasks_list_service.tick_task(tasks_list.id, owner_email, tasks_list.tasks[0].id)
 
 
 def ticking_a_task_for_non_existing_tasks_list():
     global tasks_list_service
-    tasks_list_service.tick_task("non_existing", owner_id, "non_existing")
+    tasks_list_service.tick_task("non_existing", owner_email, "non_existing")
 
 
 def removing_a_task():
     global tasks_list_service, tasks_list
-    tasks_list_service.remove_task(tasks_list.id, owner_id, tasks_list.tasks[0].id)
+    tasks_list_service.remove_task(tasks_list.id, owner_email, tasks_list.tasks[0].id)
 
 
 def removing_a_task_from_non_existing_tasks_list():
     global tasks_list_service
-    tasks_list_service.remove_task("non_existing", owner_id, "non_existing")
+    tasks_list_service.remove_task("non_existing", owner_email, "non_existing")
 
 
 def carrying_a_task():
     global tasks_list_service, tasks_list
-    tasks_list_service.carry_task(tasks_list.id, owner_id, tasks_list.tasks[0].id)
+    tasks_list_service.carry_task(tasks_list.id, owner_email, tasks_list.tasks[0].id)
 
 
 def carrying_a_task_for_non_existing_tasks_list():
     global tasks_list_service
-    tasks_list_service.carry_task("non_existing", owner_id, "non_existing")
+    tasks_list_service.carry_task("non_existing", owner_email, "non_existing")
 
 
 def the_tasks_list_can_be_retrieved():
     global tasks_list_service, tasks_list, tasks_list_id
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert tasks_list.id == tasks_list_id
-    assert tasks_list.owner_id == owner_id
+    assert tasks_list.owner_email == owner_email
     assert tasks_list.name == "My Tasks List"
 
 
@@ -180,7 +180,7 @@ def all_tasks_lists_are_retrieved():
 
 def the_last_selected_time_is_updated():
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert tasks_list.last_selected_time.date() == the_updated_datetime.date()
     assert tasks_list.last_selected_time.time() == the_updated_datetime.time()
 
@@ -192,24 +192,24 @@ def there_are_no_tasks_lists():
 
 def the_tasks_list_is_renamed():
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get("My Renamed Tasks List", owner_id)
+    tasks_list = tasks_list_service.get("My Renamed Tasks List", owner_email)
     assert tasks_list.name == "My Renamed Tasks List"
 
 
 def the_tasks_list_is_renamed_to_same_name():
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert tasks_list.name == a_tasks_list_name()
 
 
 def the_tasks_list_is_deleted():
     global tasks_list_service
-    assert tasks_list_service.get(a_tasks_list_name(), owner_id) is None
+    assert tasks_list_service.get(a_tasks_list_name(), owner_email) is None
 
 
 def the_task_is_added_to_the_tasks_list():
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert len(tasks_list.tasks) == 1
     assert tasks_list.tasks[0].content == "My Task"
 
@@ -223,20 +223,20 @@ def the_task_is_stored_in_base64_ascii():
 
 def the_task_is_ticked_in_the_tasks_list():
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert len(tasks_list.tasks) == 1
     assert tasks_list.tasks[0].is_ticked is True
 
 
 def the_task_is_removed_from_the_tasks_list():
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert len(tasks_list.tasks) == 22
     assert tasks_list.tasks[0].is_removed is True
 
 
 def the_task_is_carried_in_the_tasks_list():
     global tasks_list_service, tasks_list
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_id)
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert len(tasks_list.tasks) == 22
     assert tasks_list.tasks[0].is_carried is True

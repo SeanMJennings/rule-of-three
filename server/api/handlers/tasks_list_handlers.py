@@ -1,7 +1,7 @@
 ﻿from flask.views import MethodView
 from flask import request
 from .auth_zero_decorators import requires_auth
-from .requests import get_request_body_property, get_user_id
+from .requests import get_request_body_property, get_user_email
 from .responses import *
 from api.application.tasks_list_service import TasksListService
 from api._app import add_app_url
@@ -23,11 +23,11 @@ class TasksListHandlerForGroups(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def get(self):
-        return success_response(self.tasks_list_service.get_all(get_user_id(request)))
+        return success_response(self.tasks_list_service.get_all(get_user_email(request)))
 
     def post(self):
         id = self.tasks_list_service.add(
-            get_request_body_property(request, "name"), get_user_id(request)
+            get_request_body_property(request, "name"), get_user_email(request)
         )
         return created_response({"id": id})
 
@@ -48,19 +48,19 @@ class TasksListHandlerForItems(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def get(self, id):
-        tasks_list = self.tasks_list_service.get_by_id(id, get_user_id(request))
+        tasks_list = self.tasks_list_service.get_by_id(id, get_user_email(request))
         if tasks_list is None:
             return not_found_response("Tasks list not found")
         return success_response(tasks_list)
 
     def patch(self, id):
         self.tasks_list_service.update(
-            id, get_user_id(request), get_request_body_property(request, "name")
+            id, get_user_email(request), get_request_body_property(request, "name")
         )
         return no_content_response()
 
     def delete(self, id):
-        self.tasks_list_service.delete(id, get_user_id(request))
+        self.tasks_list_service.delete(id, get_user_email(request))
         return no_content_response()
 
 
@@ -80,7 +80,7 @@ class UpdateLastSelectedTimeHandler(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def patch(self, id):
-        self.tasks_list_service.update_last_selected_time(id, get_user_id(request))
+        self.tasks_list_service.update_last_selected_time(id, get_user_email(request))
         return no_content_response()
 
 
@@ -102,7 +102,7 @@ class AddTasksHandler(MethodView):
     def post(self, tasks_list_id):
         task_id = self.tasks_list_service.add_task(
             tasks_list_id,
-            get_user_id(request),
+            get_user_email(request),
             get_request_body_property(request, "content"),
         )
         return created_response({"id": task_id})
@@ -126,7 +126,7 @@ class TickTaskHandler(MethodView):
     def patch(self, tasks_list_id, task_id):
         self.tasks_list_service.tick_task(
             tasks_list_id,
-            get_user_id(request),
+            get_user_email(request),
             task_id,
         )
         return no_content_response()
@@ -149,7 +149,7 @@ class RemoveTaskHandler(MethodView):
 
     def patch(self, tasks_list_id, task_id):
         self.tasks_list_service.remove_task(
-            tasks_list_id, get_user_id(request), task_id
+            tasks_list_id, get_user_email(request), task_id
         )
         return no_content_response()
 
@@ -170,7 +170,7 @@ class CarryTaskHandler(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def patch(self, tasks_list_id, task_id):
-        self.tasks_list_service.carry_task(tasks_list_id, get_user_id(request), task_id)
+        self.tasks_list_service.carry_task(tasks_list_id, get_user_email(request), task_id)
         return no_content_response()
 
 

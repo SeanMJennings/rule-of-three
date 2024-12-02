@@ -5,7 +5,7 @@ import yaml
 import os
 from api.persistence.run_cosmos import start_and_wait_for_cosmos
 
-from api.persistence.constants import CONTAINER_ID, PARTITIONKEYPATH
+from api.persistence.constants import TASKS_LISTS_CONTAINER_ID, TASKS_LISTS_PARTITION_KEY_PATH
 
 urllib3.disable_warnings()
 path = Path(__file__).parent / "config.yaml"
@@ -23,16 +23,16 @@ else:
 def setup_db():
     client.create_database_if_not_exists(config["database"])
     client.get_database_client(config["database"]).create_container_if_not_exists(
-        id=CONTAINER_ID,
+        id=TASKS_LISTS_CONTAINER_ID,
         partition_key=PartitionKey(
-            path=PARTITIONKEYPATH,
+            path=TASKS_LISTS_PARTITION_KEY_PATH,
         ),
     )
 
 
 def get_db_connection():
     return client.get_database_client(config["database"]).get_container_client(
-        CONTAINER_ID
+        TASKS_LISTS_CONTAINER_ID
     )
 
 

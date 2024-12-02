@@ -8,13 +8,13 @@ class TasksList:
     def __init__(
         self,
         name: str,
-        owner_id: str,
+        owner_email: str,
         tasks: list[Task] = None,
         id: str = None,
         last_selected_time: datetime.datetime | str = None,
     ):
         self.name = name
-        self.owner_id = owner_id
+        self.owner_email = owner_email
         if last_selected_time is not None:
             self.last_selected_time = self.__get_datetime(last_selected_time)
         else:
@@ -32,7 +32,7 @@ class TasksList:
     def from_dict(dictionary):
         return TasksList(
             dictionary["name"],
-            dictionary["owner_id"],
+            dictionary["owner_email"],
             [Task.from_dict(task) for task in dictionary["tasks"]],
             dictionary["id"],
             dictionary["last_selected_time"],
@@ -41,7 +41,7 @@ class TasksList:
     def to_dict(self):
         return {
             "name": self.name,
-            "owner_id": self.owner_id,
+            "owner_email": self.owner_email,
             "tasks": [task.to_dict() for task in self.tasks],
             "id": self.id,
             "last_selected_time": self.last_selected_time.isoformat(),

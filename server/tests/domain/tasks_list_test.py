@@ -4,7 +4,7 @@ from tests.domain.tasks_list_steps import *
 
 def test_create_empty_tasks_list():
     Given(a_tasks_list_name)
-    And(an_owner_id)
+    And(an_owner_email)
     When(creating_a_tasks_list)
     Then(the_tasks_list_is_empty)
     And(the_last_selected_time_is_now)
@@ -12,7 +12,7 @@ def test_create_empty_tasks_list():
 
 def test_can_add_task_to_tasks_list():
     Given(a_tasks_list_name)
-    And(an_owner_id)
+    And(an_owner_email)
     And(creating_a_tasks_list)
     When(adding_a_task_to_tasks_list("My Task"))
     Then(the_tasks_list_contains_a_task_with_text("My Task"))

@@ -1,8 +1,6 @@
 import "./assets/main.css";
-
 import {createApp} from "vue";
 import {createPinia} from "pinia";
-
 import App from "./App.vue";
 import router from "./router";
 import {createAuth0} from "@auth0/auth0-vue";
@@ -22,6 +20,7 @@ app.use(
         domain: auth0_domain,
         clientId: auth0_client_id,
         authorizationParams: {
+            scope: "openid profile email",
             redirect_uri: window.location.origin
         }
     })

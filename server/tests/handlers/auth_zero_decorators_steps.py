@@ -7,7 +7,7 @@ from flask_cors import CORS
 from api.cache import cache, cache_config
 from api.handlers.auth_zero_decorators import requires_auth
 from api.handlers.exception_handlers import handle_exception
-from api.handlers.requests import CUSTOM_AUTHORIZATION_HEADER_KEY
+from api.handlers.requests import AUTHORIZATION_HEADER_KEY
 from api.handlers.responses import *
 from tests.auth_zero_tokens import (
     valid_payload,
@@ -54,50 +54,50 @@ def a_request_without_authorisation_header():
 
 def a_request_with_authorisation_header_missing_bearer():
     global headers
-    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "token"}
+    headers = {AUTHORIZATION_HEADER_KEY: "token"}
 
 
 def a_request_with_authorisation_header_missing_token():
     global headers
-    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer"}
+    headers = {AUTHORIZATION_HEADER_KEY: "Bearer"}
 
 
 def a_request_with_authorisation_header_containing_extras():
     global headers
-    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer token wibble"}
+    headers = {AUTHORIZATION_HEADER_KEY: "Bearer token wibble"}
 
 
 def a_request_with_invalid_token():
     global headers
-    headers = {CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer sillytoken"}
+    headers = {AUTHORIZATION_HEADER_KEY: "Bearer sillytoken"}
 
 
 def a_request_with_an_hs_256_signed_token():
     global headers
     headers = {
-        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + hs256_token(valid_payload())
+        AUTHORIZATION_HEADER_KEY: "Bearer " + hs256_token(valid_payload())
     }
 
 
 def a_request_with_an_expired_token():
     global headers
     headers = {
-        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(expired_payload())
+        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(expired_payload())
     }
 
 
 def a_request_with_an_incorrect_audience():
     global headers
     headers = {
-        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer "
-        + rs256_token(different_issuer_payload())
+        AUTHORIZATION_HEADER_KEY: "Bearer "
+                                  + rs256_token(different_issuer_payload())
     }
 
 
 def a_valid_request():
     global headers
     headers = {
-        CUSTOM_AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())
+        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())
     }
 
 
@@ -113,16 +113,16 @@ def making_the_request():
 def an_authorised_header_is_expected():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
-        json.loads(response.data)["error"]
-        == CUSTOM_AUTHORIZATION_HEADER_KEY + " header is expected"
+            json.loads(response.data)["error"]
+            == AUTHORIZATION_HEADER_KEY + " header is expected"
     )
 
 
 def authorised_header_must_start_with_bearer():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
-        json.loads(response.data)["error"]
-        == CUSTOM_AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
+            json.loads(response.data)["error"]
+            == AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
     )
 
 
@@ -134,8 +134,8 @@ def authorised_header_must_have_token():
 def authorised_header_must_only_have_bearer_and_token():
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert (
-        json.loads(response.data)["error"]
-        == CUSTOM_AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
+            json.loads(response.data)["error"]
+            == AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
     )
 
 
