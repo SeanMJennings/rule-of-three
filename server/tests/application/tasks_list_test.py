@@ -134,3 +134,15 @@ def test_can_share_tasks_list():
     Given(an_existing_tasks_list)
     When(sharing_tasks_list)
     Then(the_tasks_list_is_shared)
+
+
+def test_can_unshare_tasks_list():
+    Given(a_shared_tasks_list)
+    When(unsharing_tasks_list)
+    Then(the_tasks_list_is_unshared)
+
+
+def test_a_sharee_can_unshare_themselves():
+    Given(a_shared_tasks_list)
+    When(unsharing_self)
+    Then(the_sharee_is_unshared)

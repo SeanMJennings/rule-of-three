@@ -98,6 +98,11 @@ def an_existing_tasks_list():
     tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
 
 
+def a_shared_tasks_list():
+    an_existing_tasks_list()
+    sharing_tasks_list()
+
+
 def adding_a_tasks_list_with_existing_name():
     creating_a_tasks_list()
 
@@ -161,6 +166,16 @@ def carrying_a_task():
 def sharing_tasks_list():
     global tasks_list_service
     tasks_list_service.share(tasks_list.id, owner_email, another_owner_email)
+
+
+def unsharing_tasks_list():
+    global tasks_list_service
+    tasks_list_service.unshare(tasks_list.id, owner_email, another_owner_email)
+
+
+def unsharing_self():
+    global tasks_list_service
+    tasks_list_service.unshare_self(tasks_list.id, another_owner_email)
 
 
 def carrying_a_task_for_non_existing_tasks_list():
@@ -252,3 +267,17 @@ def the_tasks_list_is_shared():
     tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert len(tasks_list.shared_with) == 1
     assert tasks_list.shared_with == [another_owner_email]
+
+
+def the_tasks_list_is_unshared():
+    global tasks_list_service, tasks_list
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
+    assert len(tasks_list.shared_with) == 0
+    assert tasks_list.shared_with == []
+
+
+def the_sharee_is_unshared():
+    global tasks_list_service, tasks_list
+    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
+    assert len(tasks_list.shared_with) == 0
+    assert tasks_list.shared_with == []

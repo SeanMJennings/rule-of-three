@@ -58,12 +58,12 @@ class TasksListService:
         )
         return self.__decoded_tasks_list(convert_to_domain(TasksList, item))
 
-    def get_by_id(self, id: str, owner_email: str) -> TasksList | None:
+    def get_by_id(self, id: str, email: str) -> TasksList | None:
         item = self.db.query_items(
-            query="SELECT * FROM c WHERE c.id = @id and c.owner_email = @owner_email",
+            query="SELECT * FROM c WHERE c.id = @id and (c.owner_email = @email or ARRAY_CONTAINS(c.shared_with, @email))",
             parameters=[
                 dict(name="@id", value=id),
-                dict(name="@owner_email", value=owner_email),
+                dict(name="@email", value=email),
             ],
             enable_cross_partition_query=True,
         )
@@ -113,6 +113,20 @@ class TasksListService:
         tasks_list = self.get_by_id(tasks_list_id, owner_email)
         self.__check_task_list_found(tasks_list)
         tasks_list.share(email_to_share)
+        self.__encoded_tasks_list(tasks_list)
+        self.db.upsert_item(tasks_list.to_dict())
+
+    def unshare(self, tasks_list_id: str, owner_email: str, email_to_unshare: str):
+        tasks_list = self.get_by_id(tasks_list_id, owner_email)
+        self.__check_task_list_found(tasks_list)
+        tasks_list.unshare(email_to_unshare)
+        self.__encoded_tasks_list(tasks_list)
+        self.db.upsert_item(tasks_list.to_dict())
+
+    def unshare_self(self, tasks_list_id: str, email_to_unshare: str):
+        tasks_list = self.get_by_id(tasks_list_id, email_to_unshare)
+        self.__check_task_list_found(tasks_list)
+        tasks_list.unshare(email_to_unshare)
         self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
