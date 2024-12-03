@@ -28,10 +28,10 @@ class TasksListHandlerForGroups(MethodView):
         )
 
     def post(self):
-        id = self.tasks_list_service.add(
+        tasks_list = self.tasks_list_service.add(
             get_request_body_property(request, "name"), get_user_email(request)
         )
-        return created_response({"id": id})
+        return created_response(tasks_list)
 
 
 class TasksListHandlerForItems(MethodView):

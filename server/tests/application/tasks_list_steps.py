@@ -41,9 +41,9 @@ def another_tasks_list_name():
 
 
 def creating_a_tasks_list():
-    global tasks_list_service, tasks_list_id
+    global tasks_list_service, tasks_list
     datetime.datetime = NewDateTimeNow
-    tasks_list_id = tasks_list_service.add(a_tasks_list_name(), owner_email)
+    tasks_list = tasks_list_service.add(a_tasks_list_name(), owner_email)
 
 
 def getting_all_tasks_lists():
@@ -73,7 +73,7 @@ def an_invalid_tasks_list_id():
 
 def renaming_a_tasks_list():
     global tasks_list_service
-    tasks_list_service.update(tasks_list_id, owner_email, "My Renamed Tasks List")
+    tasks_list_service.update(tasks_list.id, owner_email, "My Renamed Tasks List")
 
 
 def renaming_a_tasks_list_to_existing_name():
@@ -83,18 +83,18 @@ def renaming_a_tasks_list_to_existing_name():
 
 def renaming_a_tasks_list_to_same_name():
     global tasks_list_service
-    tasks_list_service.update(tasks_list_id, owner_email, a_tasks_list_name())
+    tasks_list_service.update(tasks_list.id, owner_email, a_tasks_list_name())
 
 
 def updating_last_selected_time():
     global tasks_list_service
     datetime.datetime = NewDateTimeNow
-    tasks_list_service.update_last_selected_time(tasks_list_id, owner_email)
+    tasks_list_service.update_last_selected_time(tasks_list.id, owner_email)
 
 
 def deleting_a_tasks_list():
     global tasks_list_service
-    tasks_list_service.delete(tasks_list_id, owner_email)
+    tasks_list_service.delete(tasks_list.id, owner_email)
 
 
 def an_existing_tasks_list():
@@ -219,11 +219,11 @@ def carrying_a_task_for_non_existing_tasks_list():
 
 
 def the_tasks_list_can_be_retrieved():
-    global tasks_list_service, tasks_list, tasks_list_id
-    tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
-    assert tasks_list.id == tasks_list_id
-    assert tasks_list.owner_email == owner_email
-    assert tasks_list.name == "My Tasks List"
+    global tasks_list_service, tasks_list
+    the_tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
+    assert the_tasks_list.id == tasks_list.id
+    assert the_tasks_list.owner_email == owner_email
+    assert the_tasks_list.name == "My Tasks List"
 
 
 def all_tasks_lists_are_retrieved():

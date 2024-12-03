@@ -17,8 +17,8 @@ class TasksListService:
         if self.get(name, owner_email) is not None:
             raise ValidationException("Tasks list with name already exists")
         self.__encoded_tasks_list(tasks_list)
-        item = self.db.upsert_item(tasks_list.to_dict())
-        return item["id"]
+        self.db.upsert_item(tasks_list.to_dict())
+        return tasks_list
 
     def update(self, id: str, owner_email: str, new_name: str):
         tasks_list = self.get(new_name, owner_email)
@@ -28,8 +28,8 @@ class TasksListService:
         self.__check_task_list_found(tasks_list)
         tasks_list.name = new_name
         self.__encoded_tasks_list(tasks_list)
-        item = self.db.upsert_item(tasks_list.to_dict())
-        return item["id"]
+        self.db.upsert_item(tasks_list.to_dict())
+        return tasks_list
 
     def update_last_selected_time(self, id: str, owner_email: str):
         tasks_list = self.get_by_id(id, owner_email)

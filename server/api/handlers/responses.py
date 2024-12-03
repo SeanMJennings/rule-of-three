@@ -13,10 +13,16 @@ def success_response(item) -> Response:
     return Response(response=json.dumps(item.to_dict()), status=HTTPStatus.OK)
 
 
-def created_response(id) -> Response:
-    if id is None:
+def created_response(item) -> Response:
+    if isinstance(item, list):
+        return Response(
+            response=json.dumps([i.to_dict() for i in item]), status=HTTPStatus.CREATED
+        )
+    if item is None:
         return Response(status=HTTPStatus.CREATED)
-    return Response(response=json.dumps(id), status=HTTPStatus.CREATED)
+    if type(item) is dict:
+        return Response(response=json.dumps(item), status=HTTPStatus.CREATED)
+    return Response(response=json.dumps(item.to_dict()), status=HTTPStatus.CREATED)
 
 
 def not_found_response(error: str) -> Response:
