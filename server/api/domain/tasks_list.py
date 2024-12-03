@@ -41,6 +41,7 @@ class TasksList:
             [Task.from_dict(task) for task in dictionary["tasks"]],
             dictionary["id"],
             dictionary["last_selected_time"],
+            [shared for shared in dictionary["shared_with"]],
         )
 
     def to_dict(self):
@@ -50,6 +51,7 @@ class TasksList:
             "tasks": [task.to_dict() for task in self.tasks],
             "id": self.id,
             "last_selected_time": self.last_selected_time.isoformat(),
+            "shared_with": self.shared_with,
         }
 
     def add(self, task: str):
@@ -104,9 +106,13 @@ class TasksList:
     def share(self, email: str):
         if email in self.shared_with:
             raise Exception("Tasks list already shared with user")
+        if email == self.owner_email:
+            raise Exception("Tasks list cannot be shared with owner")
         self.shared_with.append(email)
 
     def unshare(self, email: str):
+        if email == self.owner_email:
+            raise Exception("Tasks list cannot be unshared with owner")
         if email not in self.shared_with:
             raise Exception("Tasks list not shared with user")
         self.shared_with.remove(email)

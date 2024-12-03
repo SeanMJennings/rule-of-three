@@ -76,7 +76,9 @@ class TasksListService:
             enable_cross_partition_query=True,
         )
         encoded_lists = convert_to_domain_list(TasksList, items)
-        return list(self.__decoded_tasks_list(encoded_list) for encoded_list in encoded_lists)
+        return list(
+            self.__decoded_tasks_list(encoded_list) for encoded_list in encoded_lists
+        )
 
     def add_task(self, tasks_list_id: str, owner_email: str, task: str):
         tasks_list = self.get_by_id(tasks_list_id, owner_email)
@@ -107,6 +109,13 @@ class TasksListService:
         self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
+    def share(self, tasks_list_id: str, owner_email: str, email_to_share: str):
+        tasks_list = self.get_by_id(tasks_list_id, owner_email)
+        self.__check_task_list_found(tasks_list)
+        tasks_list.share(email_to_share)
+        self.__encoded_tasks_list(tasks_list)
+        self.db.upsert_item(tasks_list.to_dict())
+
     @staticmethod
     def __check_task_list_found(tasks_list):
         if tasks_list is None:
@@ -116,12 +125,22 @@ class TasksListService:
     def __decoded_tasks_list(tasks_list: TasksList):
         if tasks_list is not None:
             tasks_list.__setattr__(
-                'tasks', [task.set_content(decode_string(task.content)) for task in tasks_list.tasks])
+                "tasks",
+                [
+                    task.set_content(decode_string(task.content))
+                    for task in tasks_list.tasks
+                ],
+            )
         return tasks_list
 
     @staticmethod
     def __encoded_tasks_list(tasks_list: TasksList):
         if tasks_list is not None:
             tasks_list.__setattr__(
-                'tasks', [task.set_content(encode_string(task.content)) for task in tasks_list.tasks])
+                "tasks",
+                [
+                    task.set_content(encode_string(task.content))
+                    for task in tasks_list.tasks
+                ],
+            )
         return tasks_list

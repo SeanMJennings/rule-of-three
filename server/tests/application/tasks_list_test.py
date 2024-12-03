@@ -128,3 +128,9 @@ def test_cannot_carry_task_for_non_existing_tasks_list():
     Given(an_existing_tasks_list)
     When(validating(carrying_a_task_for_non_existing_tasks_list))
     Then(informs("Tasks list not found"))
+
+
+def test_can_share_tasks_list():
+    Given(an_existing_tasks_list)
+    When(sharing_tasks_list)
+    Then(the_tasks_list_is_shared)

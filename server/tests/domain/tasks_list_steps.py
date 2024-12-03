@@ -18,7 +18,7 @@ def a_tasks_list_name():
 
 
 def an_owner_email():
-    return "12345"
+    return "wibble@wobble.com"
 
 
 def creating_a_tasks_list():
@@ -173,9 +173,17 @@ def removing_all_tasks():
 def sharing_tasks_list_with_a_user():
     tasks_list.share(an_email)
 
- 
+
 def unsharing_tasks_list_with_a_user():
     tasks_list.unshare(an_email)
+
+
+def sharing_tasks_list_with_owner():
+    tasks_list.share(an_owner_email())
+
+
+def unsharing_tasks_list_with_owner():
+    tasks_list.unshare(an_owner_email())
 
 
 def sharing_tasks_list_with_another_user():

@@ -170,3 +170,15 @@ def test_cannot_unshare_tasks_list_that_is_not_shared():
     Given(a_tasks_list)
     When(validating(unsharing_tasks_list_with_a_user))
     Then(informs("Tasks list not shared with user"))
+
+
+def test_owner_cannot_share_tasks_list_with_themselves():
+    Given(a_tasks_list)
+    When(validating(sharing_tasks_list_with_owner))
+    Then(informs("Tasks list cannot be shared with owner"))
+
+
+def test_owner_cannot_unshare_tasks_list_with_themselves():
+    Given(a_tasks_list)
+    When(validating(unsharing_tasks_list_with_owner))
+    Then(informs("Tasks list cannot be unshared with owner"))
