@@ -35,15 +35,11 @@ def get_token_auth_header() -> str:
     parts = auth.split()
 
     if parts[0].lower() != "bearer":
-        raise AuthError(
-            AUTHORIZATION_HEADER_KEY + " header must start with: Bearer"
-        )
+        raise AuthError(AUTHORIZATION_HEADER_KEY + " header must start with: Bearer")
     if len(parts) == 1:
         raise AuthError("Token not found")
     if len(parts) > 2:
-        raise AuthError(
-            AUTHORIZATION_HEADER_KEY + " header must be: Bearer token"
-        )
+        raise AuthError(AUTHORIZATION_HEADER_KEY + " header must be: Bearer token")
 
     token = parts[1]
     return token
