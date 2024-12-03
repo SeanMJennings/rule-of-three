@@ -71,3 +71,24 @@ def test_can_carry_task_in_tasks_list(mocker):
     And(a_tasks_list_full_of_tasks)
     When(carrying_a_task_in_tasks_list)
     Then(the_task_is_carried_in_the_tasks_list)
+
+
+def test_can_share_tasks_list(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_tasks_list)
+    When(sharing_the_tasks_list)
+    Then(the_tasks_list_is_shared)
+
+
+def test_can_unshare_tasks_list(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_shared_tasks_list)
+    When(unsharing_the_tasks_list)
+    Then(the_tasks_list_is_unshared)
+
+
+def test_a_sharee_unshares_themselves(mocker):
+    Given(an_app_with_a(mocker))
+    And(a_shared_tasks_list)
+    When(a_sharee_unsharing_themselves)
+    Then(the_tasks_list_is_unshared)

@@ -38,6 +38,18 @@ def valid_payload():
         "azp": "BvwjAUeEQSY0QGlDlJvs6JJHxPQsbRUw",
     }
 
+def valid_payload_for_a_sharee():
+    return {
+        "iss": issuer,
+        "sub": "BvwjAUeDP0Y0EERDlJvs6JJHxPQsbRUw@clients",
+        "email": "arghhhhh@wobble.com",
+        "aud": audience,
+        "iat": 1730377646,
+        "exp": 4070908800,  # expires in 2099
+        "gty": "client-credentials",
+        "azp": "BvwjAUeEQSY0QGlDlJvs6JJHxPQsbRUw",
+    }  
+
 
 def expired_payload():
     return {

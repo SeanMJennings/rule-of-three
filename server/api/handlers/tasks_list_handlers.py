@@ -23,7 +23,9 @@ class TasksListHandlerForGroups(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def get(self):
-        return success_response(self.tasks_list_service.get_all(get_user_email(request)))
+        return success_response(
+            self.tasks_list_service.get_all(get_user_email(request))
+        )
 
     def post(self):
         id = self.tasks_list_service.add(
@@ -81,6 +83,74 @@ class UpdateLastSelectedTimeHandler(MethodView):
 
     def patch(self, id):
         self.tasks_list_service.update_last_selected_time(id, get_user_email(request))
+        return no_content_response()
+
+
+class ShareTasksListHandler(MethodView):
+    init_every_request = False
+    decorators = [requires_auth]
+
+    @staticmethod
+    def route():
+        return "/tasks-lists/<id>/share"
+
+    @staticmethod
+    def name():
+        return "share_tasks_list_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def patch(self, id):
+        self.tasks_list_service.share(
+            id,
+            get_user_email(request),
+            get_request_body_property(request, "share_with"),
+        )
+        return no_content_response()
+
+
+class UnshareTasksListHandler(MethodView):
+    init_every_request = False
+    decorators = [requires_auth]
+
+    @staticmethod
+    def route():
+        return "/tasks-lists/<id>/unshare"
+
+    @staticmethod
+    def name():
+        return "unshare_tasks_list_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def patch(self, id):
+        self.tasks_list_service.unshare(
+            id,
+            get_user_email(request),
+            get_request_body_property(request, "unshare_with"),
+        )
+        return no_content_response()
+
+
+class UnshareSelfTasksListHandler(MethodView):
+    init_every_request = False
+    decorators = [requires_auth]
+
+    @staticmethod
+    def route():
+        return "/tasks-lists/<id>/unshare-self"
+
+    @staticmethod
+    def name():
+        return "unshare_self_tasks_list_handler"
+
+    def __init__(self, tasks_list_service: TasksListService):
+        self.tasks_list_service = tasks_list_service
+
+    def patch(self, id):
+        self.tasks_list_service.unshare_self(id, get_user_email(request))
         return no_content_response()
 
 
@@ -170,7 +240,9 @@ class CarryTaskHandler(MethodView):
         self.tasks_list_service = tasks_list_service
 
     def patch(self, tasks_list_id, task_id):
-        self.tasks_list_service.carry_task(tasks_list_id, get_user_email(request), task_id)
+        self.tasks_list_service.carry_task(
+            tasks_list_id, get_user_email(request), task_id
+        )
         return no_content_response()
 
 
@@ -183,6 +255,15 @@ def register_task_handlers(app, tasks_list_service):
     )
     update_last_selected_time_handler = UpdateLastSelectedTimeHandler.as_view(
         UpdateLastSelectedTimeHandler.name(), tasks_list_service
+    )
+    share_tasks_list_handler = ShareTasksListHandler.as_view(
+        ShareTasksListHandler.name(), tasks_list_service
+    )
+    unshare_tasks_list_handler = UnshareTasksListHandler.as_view(
+        UnshareTasksListHandler.name(), tasks_list_service
+    )
+    unshare_self_tasks_list_handler = UnshareSelfTasksListHandler.as_view(
+        UnshareSelfTasksListHandler.name(), tasks_list_service
     )
     add_tasks_handler = AddTasksHandler.as_view(
         AddTasksHandler.name(), tasks_list_service
@@ -201,6 +282,11 @@ def register_task_handlers(app, tasks_list_service):
     add_app_url(app, TasksListHandlerForItems.route(), tasks_list_handler_for_items)
     add_app_url(
         app, UpdateLastSelectedTimeHandler.route(), update_last_selected_time_handler
+    )
+    add_app_url(app, ShareTasksListHandler.route(), share_tasks_list_handler)
+    add_app_url(app, UnshareTasksListHandler.route(), unshare_tasks_list_handler)
+    add_app_url(
+        app, UnshareSelfTasksListHandler.route(), unshare_self_tasks_list_handler
     )
     add_app_url(app, AddTasksHandler.route(), add_tasks_handler)
     add_app_url(app, TickTaskHandler.route(), tick_task_handler)

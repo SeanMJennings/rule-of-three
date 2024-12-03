@@ -11,12 +11,13 @@ from api.cache import cache, cache_config
 from api.app import create_app
 from api.application.tasks_list_service import TasksListService
 from tests.database import setup_db, get_db_connection, clear_db
-from tests.handlers.mocking_utilities import the_headers
+from tests.handlers.mocking_utilities import the_headers, the_headers_for_a_sharee
 from tests.handlers.routing import *
 
 response = None
 client: FlaskClient = None
 tasks_list_id = None
+another_email = "arghhhhh@wobble.com"
 
 
 @pytest.fixture(autouse=True)
@@ -59,6 +60,11 @@ def listing_tasks_lists():
 
 def a_tasks_list():
     adding_a_tasks_list()
+
+
+def a_shared_tasks_list():
+    adding_a_tasks_list()
+    sharing_the_tasks_list()
 
 
 def a_tasks_list_with_tasks():
@@ -133,6 +139,32 @@ def carrying_a_task_in_tasks_list():
     task_id = json.loads(response.data)["id"]
     response = client.patch(
         carry_task_url(tasks_list_id, task_id), headers=the_headers()
+    )
+
+
+def sharing_the_tasks_list():
+    global response
+    response = client.patch(
+        tasks_list_url_share(tasks_list_id),
+        json={"share_with": another_email},
+        headers=the_headers(),
+    )
+
+
+def unsharing_the_tasks_list():
+    global response
+    response = client.patch(
+        tasks_list_url_unshare(tasks_list_id),
+        json={"unshare_with": another_email},
+        headers=the_headers(),
+    )
+
+
+def a_sharee_unsharing_themselves():
+    global response
+    response = client.patch(
+        tasks_list_url_unshare_self(tasks_list_id),
+        headers=the_headers_for_a_sharee(),
     )
 
 
@@ -220,3 +252,19 @@ def the_task_is_carried_in_the_tasks_list():
     assert response.status_code == HTTPStatus.OK
     assert json.loads(response.data)["tasks"][21]["is_carried"] is True
     assert json.loads(response.data)["tasks"][21]["page_count"] == 1
+
+
+def the_tasks_list_is_shared():
+    global response
+    assert response.status_code == HTTPStatus.NO_CONTENT
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
+    assert response.status_code == HTTPStatus.OK
+    assert json.loads(response.data)["shared_with"][0] == another_email
+
+
+def the_tasks_list_is_unshared():
+    global response
+    assert response.status_code == HTTPStatus.NO_CONTENT
+    response = client.get(tasks_list_url_with_id(tasks_list_id), headers=the_headers())
+    assert response.status_code == HTTPStatus.OK
+    assert len(json.loads(response.data)["shared_with"]) == 0

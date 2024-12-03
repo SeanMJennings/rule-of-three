@@ -18,6 +18,18 @@ def tasks_list_url_last_selected_time(id):
     return f"{tasks_list_url_with_id(id)}/last-selected-time"
 
 
+def tasks_list_url_share(id):
+    return f"{tasks_list_url_with_id(id)}/share"
+
+
+def tasks_list_url_unshare(id):
+    return f"{tasks_list_url_with_id(id)}/unshare"
+
+
+def tasks_list_url_unshare_self(id):
+    return f"{tasks_list_url_with_id(id)}/unshare-self"
+
+
 def task_url(tasks_list_id):
     return f"{tasks_list_url_with_id(tasks_list_id)}/task"
 

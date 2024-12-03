@@ -6,6 +6,7 @@ from tests.auth_zero_tokens import (
     get_jwks_with_wrong_key_id,
     rs256_token,
     valid_payload,
+    valid_payload_for_a_sharee,
 )
 
 test_mocker = None
@@ -17,13 +18,17 @@ def reset_mocks():
     global test_mocker, get_jwks_mock, headers
     test_mocker = None
     get_jwks_mock = None
-    headers = {
-        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())
-    }
+    headers = {AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload())}
 
 
 def the_headers():
     return headers
+
+
+def the_headers_for_a_sharee():
+    return {
+        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload_for_a_sharee())
+    }
 
 
 def an_app_with_a(the_mocker: pytest_mock.MockerFixture):
