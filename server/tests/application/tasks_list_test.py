@@ -146,3 +146,28 @@ def test_a_sharee_can_unshare_themselves():
     Given(a_shared_tasks_list)
     When(unsharing_self)
     Then(the_sharee_is_unshared)
+
+
+def test_a_sharee_can_see_their_list_and_a_shared_list():
+    Given(an_existing_tasks_list)
+    And(another_shared_tasks_list)
+    When(getting_all_tasks_lists)
+    Then(the_sharee_can_see_their_list_and_a_shared_list)
+
+
+def test_a_sharee_cannot_update_a_list_name():
+    Given(a_shared_tasks_list)
+    When(validating(a_sharee_renaming_a_tasks_list))
+    Then(informs("Tasks list not found"))
+
+
+def test_a_sharee_cannot_delete_a_list():
+    Given(a_shared_tasks_list)
+    When(validating(a_sharee_deleting_a_tasks_list))
+    Then(informs("Tasks list not found"))
+
+
+def test_a_sharee_can_add_a_task():
+    Given(a_shared_tasks_list)
+    When(a_sharee_adding_a_task)
+    Then(the_task_is_added_to_the_tasks_list)

@@ -24,8 +24,7 @@ class TasksListService:
         tasks_list = self.get(new_name, owner_email)
         if tasks_list is not None and tasks_list.id != id:
             raise ValidationException("Tasks list with name already exists")
-
-        tasks_list = self.get_by_id(id, owner_email)
+        tasks_list = self.get_by_id_for_owner(id, owner_email)
         self.__check_task_list_found(tasks_list)
         tasks_list.name = new_name
         self.__encoded_tasks_list(tasks_list)
@@ -40,7 +39,7 @@ class TasksListService:
         self.db.upsert_item(tasks_list.to_dict())
 
     def delete(self, id: str, owner_email: str):
-        tasks_list = self.get_by_id(id, owner_email)
+        tasks_list = self.get_by_id_for_owner(id, owner_email)
         self.__check_task_list_found(tasks_list)
         self.db.delete_item(
             tasks_list.id,
@@ -58,6 +57,17 @@ class TasksListService:
         )
         return self.__decoded_tasks_list(convert_to_domain(TasksList, item))
 
+    def get_by_id_for_owner(self, id: str, owner_email: str) -> TasksList | None:
+        item = self.db.query_items(
+            query="SELECT * FROM c WHERE c.id = @id and c.owner_email = @owner_email",
+            parameters=[
+                dict(name="@id", value=id),
+                dict(name="@owner_email", value=owner_email),
+            ],
+            enable_cross_partition_query=True,
+        )
+        return self.__decoded_tasks_list(convert_to_domain(TasksList, item))
+
     def get_by_id(self, id: str, email: str) -> TasksList | None:
         item = self.db.query_items(
             query="SELECT * FROM c WHERE c.id = @id and (c.owner_email = @email or ARRAY_CONTAINS(c.shared_with, @email))",
@@ -69,10 +79,10 @@ class TasksListService:
         )
         return self.__decoded_tasks_list(convert_to_domain(TasksList, item))
 
-    def get_all(self, owner_email: str) -> list[TasksList]:
+    def get_all(self, email: str) -> list[TasksList]:
         items = self.db.query_items(
-            query="SELECT * FROM c WHERE c.owner_email = @owner_email",
-            parameters=[dict(name="@owner_email", value=owner_email)],
+            query="SELECT * FROM c WHERE c.owner_email = @email or ARRAY_CONTAINS(c.shared_with, @email)",
+            parameters=[dict(name="@email", value=email)],
             enable_cross_partition_query=True,
         )
         encoded_lists = convert_to_domain_list(TasksList, items)
@@ -80,30 +90,30 @@ class TasksListService:
             self.__decoded_tasks_list(encoded_list) for encoded_list in encoded_lists
         )
 
-    def add_task(self, tasks_list_id: str, owner_email: str, task: str):
-        tasks_list = self.get_by_id(tasks_list_id, owner_email)
+    def add_task(self, tasks_list_id: str, email: str, task: str):
+        tasks_list = self.get_by_id(tasks_list_id, email)
         self.__check_task_list_found(tasks_list)
         the_task_id = tasks_list.add(task)
         self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
         return the_task_id
 
-    def tick_task(self, tasks_list_id: str, owner_email: str, task_id: str):
-        tasks_list = self.get_by_id(tasks_list_id, owner_email)
+    def tick_task(self, tasks_list_id: str, email: str, task_id: str):
+        tasks_list = self.get_by_id(tasks_list_id, email)
         self.__check_task_list_found(tasks_list)
         tasks_list.tick(task_id)
         self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
-    def remove_task(self, tasks_list_id: str, owner_email: str, task_id: str):
-        tasks_list = self.get_by_id(tasks_list_id, owner_email)
+    def remove_task(self, tasks_list_id: str, email: str, task_id: str):
+        tasks_list = self.get_by_id(tasks_list_id, email)
         self.__check_task_list_found(tasks_list)
         tasks_list.remove(task_id)
         self.__encoded_tasks_list(tasks_list)
         self.db.upsert_item(tasks_list.to_dict())
 
-    def carry_task(self, tasks_list_id: str, owner_email: str, task_id: str):
-        tasks_list = self.get_by_id(tasks_list_id, owner_email)
+    def carry_task(self, tasks_list_id: str, email: str, task_id: str):
+        tasks_list = self.get_by_id(tasks_list_id, email)
         self.__check_task_list_found(tasks_list)
         tasks_list.carry(task_id)
         self.__encoded_tasks_list(tasks_list)
