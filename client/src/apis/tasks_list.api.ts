@@ -37,6 +37,16 @@ export const updateLastSelectedTime = async (id: any) => {
     });
 }
 
+export const shareTasksList = async (id: any, email: any) => {
+    return patch(`/tasks-lists/${id}/share`, {email})
+        .then(() => {
+            return {
+                id,
+                email
+            }
+    });
+}
+
 export const addTask = async (tasksListId: any, content: any) => {
     return post(`/tasks-lists/${tasksListId}/task`, {content})
         .then((response) => {
@@ -79,7 +89,9 @@ const taskListApiMapper = (taskList: any[]) => {
         return {
             id: taskList.id,
             name: taskList.name,
-            last_selected_time: taskList.last_selected_time,
+            lastSelectedTime: taskList.last_selected_time,
+            ownerEmail: taskList.owner_email,
+            sharedWith: taskList.shared_with,
             tasks: taskList.tasks.map((task: any) => {
                 return {
                     id: task.id,
@@ -92,6 +104,6 @@ const taskListApiMapper = (taskList: any[]) => {
             })
         }
     }).sort((a,b) => {
-        return new Date(b.last_selected_time ?? '').getTime() - new Date(a.last_selected_time ?? '').getTime()
+        return new Date(b.lastSelectedTime ?? '').getTime() - new Date(a.lastSelectedTime ?? '').getTime()
     })
 }

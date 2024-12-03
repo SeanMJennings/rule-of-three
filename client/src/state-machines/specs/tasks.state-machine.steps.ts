@@ -74,8 +74,8 @@ export async function loads_a_task_list() {
 
 export async function loads_task_lists_in_order_of_last_selected_time() {
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", [
-        {id: task_list_id, name: task_list_name, tasks: [], last_selected_time: oldest_date.toISOString()},
-        {id: another_task_list_id, name: another_task_list_name, tasks: [], last_selected_time: newest_date.toISOString()}
+        {id: task_list_id, name: task_list_name, tasks: [], last_selected_time: oldest_date.toISOString(), owner_email: 'wibble@wobble.com', shared_with: ['hello@waffle.com']},
+        {id: another_task_list_id, name: another_task_list_name, tasks: [], last_selected_time: newest_date.toISOString(), owner_email: 'wibble@wobble.com', shared_with: ['hello@waffle.com']}
     ])
     tasks.send({type: "reset"})
     await waitForLoadingToFinish();
@@ -85,8 +85,8 @@ export async function loads_task_lists_in_order_of_last_selected_time() {
     expect(getName(tasks.getSnapshot().context)).toEqual(another_task_list_name);
     expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
     expect(tasks.getSnapshot().context.tasksLists).toEqual([
-        {id: another_task_list_id, name: another_task_list_name, tasks: [], last_selected_time: newest_date.toISOString()},
-        {id: task_list_id, name: task_list_name, tasks: [], last_selected_time: oldest_date.toISOString()},
+        {id: another_task_list_id, name: another_task_list_name, tasks: [], lastSelectedTime: newest_date.toISOString(), ownerEmail: 'wibble@wobble.com', sharedWith: ['hello@waffle.com']},
+        {id: task_list_id, name: task_list_name, tasks: [], lastSelectedTime: oldest_date.toISOString(), ownerEmail: 'wibble@wobble.com', sharedWith: ['hello@waffle.com']},
     ]);
 }
 
@@ -315,6 +315,30 @@ export async function notifies_when_failing_to_select_a_different_tasks_list() {
     tasks.send({type: "selectTasksList", id: another_task_list_id});
     await waitUntil(wait_for_update_last_selected_time)
     expect(the_error).toEqual({error: "Failed to select tasks list", type: "error", code: 422});
+}
+
+export async function shares_a_task_list() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    const wait_for_share_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/share`)
+    tasks.send({type: "shareTasksList", id: task_list_id});
+    await waitUntil(wait_for_share_tasks_list)
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
+}
+
+export async function notifies_when_failing_to_share_a_task_list() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    const wait_for_share_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/share`, { error: "Failed to share tasks list" }, false)
+    tasks.send({type: "shareTasksList", id: task_list_id});
+    await waitUntil(wait_for_share_tasks_list)
+    expect(the_error).toEqual({error: "Failed to share tasks list", type: "error", code: 422});
 }
 
 export async function adds_maximum_tasks_and_then_refuses_subsequent_tasks() {

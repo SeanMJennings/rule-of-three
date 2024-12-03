@@ -6,6 +6,7 @@
     updatingTheTasksList = "updatingTheTasksList",
     deletingTheTasksList = "deletingTheTasksList",
     selectingTheTasksList = "selectingTheTasksList",
+    sharingTheTasksList = "sharingTheTasksList",
     addingTasksLists = "addingTasksLists",
     assessingTasksList = "assessingTasksList",
 }

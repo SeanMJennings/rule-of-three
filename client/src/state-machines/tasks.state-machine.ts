@@ -12,7 +12,7 @@ import {
     carryTask,
     deleteTasksList,
     getTasksLists,
-    removeTask,
+    removeTask, shareTasksList,
     tickTask, updateLastSelectedTime,
     updateTasksList
 } from "@/apis/tasks_list.api";
@@ -165,6 +165,19 @@ export const tasksMachine = createMachine(
                     }
                 },
             },
+            sharingTheTasksList: {
+                invoke: {
+                    input: ({event}) => ({id: event.id, email: event.email}),
+                    src: fromPromise(async ({input: {id, email}}) => await shareTasksList(id, email)),
+                    onDone: {
+                        target: TasksListMachineStates.addingTasksLists,
+                    },
+                    onError: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
+                    }
+                },
+            },
             addingTasksLists: {
                 initial: TasksMachineStates.addingTasks,
                 on: {
@@ -179,6 +192,9 @@ export const tasksMachine = createMachine(
                     },
                     selectTasksList: {
                         target: TasksListMachineStates.selectingTheTasksList,
+                    },
+                    shareTasksList: {
+                        target: TasksListMachineStates.sharingTheTasksList,
                     },
                 },
                 always: {
@@ -330,6 +346,9 @@ function taskList() {
         id: event.output.id,
         name: event.output.name,
         tasks: [],
+        lastSelectedTime: event.output.lastSelectedTime,
+        ownerEmail: event.output.ownerEmail,
+        sharedWith: event.output.sharedWith,
     });
 }
 

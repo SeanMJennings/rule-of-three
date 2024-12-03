@@ -77,7 +77,7 @@ def renaming_a_tasks_list():
 
 
 def renaming_a_tasks_list_to_existing_name():
-    global tasks_list_service
+    global tasks_list_service, tasks_list_id
     tasks_list_service.update(tasks_list_id, owner_email, another_tasks_list_name())
 
 
@@ -119,14 +119,14 @@ def another_shared_tasks_list():
 
 
 def a_sharee_renaming_a_tasks_list():
-    global tasks_list_service
+    global tasks_list_service, tasks_list_id
     tasks_list_service.update(
         tasks_list_id, another_owner_email, "My Renamed Tasks List"
     )
 
 
 def a_sharee_deleting_a_tasks_list():
-    global tasks_list_service
+    global tasks_list_service, tasks_list_id
     tasks_list_service.delete(tasks_list_id, another_owner_email)
 
 

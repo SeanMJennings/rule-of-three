@@ -25,7 +25,9 @@ import {
     lets_user_tick_off_task_during_carry,
     notifies_when_failing_to_tick_off_a_task_during_carry,
     loads_task_lists_in_order_of_last_selected_time,
-    notifies_when_failing_to_select_a_different_tasks_list
+    notifies_when_failing_to_select_a_different_tasks_list,
+    shares_a_task_list,
+    notifies_when_failing_to_share_a_task_list
 } from '@/state-machines/specs/tasks.state-machine.steps'
 
 describe("Tasks state machine", () => {
@@ -42,6 +44,8 @@ describe("Tasks state machine", () => {
         it("notifies when updating as task list name", notifies_when_failing_to_update_a_task_list_name)
         it("selects a different tasks list", selects_a_different_tasks_list);
         it("notifies when failing to select a different tasks list", notifies_when_failing_to_select_a_different_tasks_list)
+        it("shares a task list", shares_a_task_list);
+        it("notifies when failing to share a task list", notifies_when_failing_to_share_a_task_list)
     });
     describe("Tasks", () => {
         it("adds a task", adds_a_task);

@@ -9,6 +9,7 @@ export const loading = (value: StateValue) => {
         || value === TasksListMachineStates.addingTasksLists
         || value === TasksListMachineStates.creatingTheTasksList
         || value === TasksListMachineStates.selectingTheTasksList
+        || value === TasksListMachineStates.sharingTheTasksList
         || value === TasksListMachineStates.updatingTheTasksList
         || value === TasksListMachineStates.deletingTheTasksList
         || _.isEqual(value, TasksMachineCombinedStates.addingTasksListTickingTheTask)
