@@ -6,13 +6,7 @@ export const getTasksLists = async () => {
 }
 
 export const addTasksList = async (name: any) => {
-    return post(`/tasks-lists`, {name})
-        .then((response) => {
-            return {
-                id: response.id,
-                name
-            }
-    });
+    return post(`/tasks-lists`, {name});
 }
 
 export const updateTasksList = async (id: any, name: any) => {

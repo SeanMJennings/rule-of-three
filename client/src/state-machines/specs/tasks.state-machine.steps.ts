@@ -24,7 +24,7 @@ let wait_for_create_tasks_list: () => boolean;
 beforeEach(() => {
     mockServer.reset();
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", [])
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
     mockServer.start();
     tasks = createActor(tasksMachine);
     tasks.start();
@@ -178,7 +178,7 @@ export async function adds_two_task_lists() {
     await waitUntil(wait_for_create_tasks_list)
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
         id: another_task_list_id,
-        name: another_task_list_name
+        name: another_task_list_name,
     })
     tasks.send({type: "addTasksList", name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
