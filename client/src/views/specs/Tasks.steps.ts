@@ -12,7 +12,7 @@ import {
     characterCountHidden,
     clickAddTaskListPlaceholder, closeDeleteTaskList,
     closeEditTaskListName,
-    closeErrorOverlay, closerShareTaskList,
+    closeErrorOverlay, closerShareTaskList, debug,
     deleteTaskList, deleteTaskListModalExists, editTaskListNameCharacterCount,
     editTaskListNameModalExists,
     errorOverlayExists,
@@ -23,8 +23,8 @@ import {
     removeTask,
     removeTaskHidden,
     renderTasksView,
-    selectOptionFromTaskListSingleSelect, shareTaskListExists,
-    submitNewTaskListName,
+    selectOptionFromTaskListSingleSelect, sharerExists, shareTaskListExists,
+    submitNewTaskListName, submitShareTaskList,
     taskCount,
     taskCountHidden,
     taskListCharacterCount,
@@ -45,7 +45,7 @@ import {
     tickTaskHidden,
     toggleTasksListInput,
     toggleTasksListSingleSelect,
-    typeNewTaskListName,
+    typeNewTaskListName, typeShareTaskList,
     typeTask,
     typeTaskListName,
     unmountTasksView
@@ -64,7 +64,6 @@ import {
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 import {login, mockAuth0, resetAuth0, userIsAuthenticated} from "@/testing/mock-auth0";
-import exp from "node:constants";
 
 const testTaskText = "Hello, world!";
 
@@ -568,18 +567,6 @@ export async function shows_correct_tasks_when_selecting_a_different_list() {
     
 }
 
-export async function allows_owner_to_share_a_task_list() {
-    await login();
-    renderTasksView();
-    await waitForLoadingSpinnerToDisappear();
-    await addATaskList();    
-    await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
-    await waitUntil(() => !addTaskListSubmitDisabled());
-    await toggleTasksListSingleSelect();
-    expect(await shareTaskListExists()).toBe(true);
-}
-
 export async function opens_a_modal_to_share_a_task_list() {
     await login();
     renderTasksView();
@@ -591,6 +578,25 @@ export async function opens_a_modal_to_share_a_task_list() {
     await toggleTasksListSingleSelect();
     await openShareTaskList();
     expect(pageText()).toContain("Share tasks list");
+}
+
+export async function  allows_owner_to_share_a_task_list() {
+    await login();
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    const wait_for_share_task_list = mockServer.patch(`/tasks-lists/${task_list_id}/share`, {share_with: another_email_to_share})
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    await openShareTaskList();
+    await typeShareTaskList(another_email_to_share);
+    await submitShareTaskList();
+    await waitUntil(wait_for_share_task_list);
+    await openShareTaskList();
+    await waitUntil(() => sharerExists(another_email_to_share));
+    expect(sharerExists(another_email_to_share)).toBe(true);
 }
 
 export async function closes_a_modal_to_share_a_task_list() {

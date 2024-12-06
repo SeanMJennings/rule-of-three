@@ -12,8 +12,8 @@ export const another_set_of_task_ids = Array.from({length: reducedTaskLimit}, ()
 export const newest_date = new Date()
 export const oldest_date = new Date("2021-01-01")
 export const owner_email  = "wibble@wobble.com"
-export const email_to_share = "'hello@waffle.com'"
-export const another_email_to_share = "'byebye@waffle.com'"
+export const email_to_share = "hello@waffle.com"
+export const another_email_to_share = "byebye@waffle.com"
 
 export const add_task_list_response = {
     id: task_list_id,

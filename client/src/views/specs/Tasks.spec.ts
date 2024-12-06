@@ -84,8 +84,8 @@ describe("Tasks", () => {
         it("shows correct tasks when selecting a different list", shows_correct_tasks_when_selecting_a_different_list);
     });
     describe("Sharing", () => {
-        it("allows owner to share a task list", allows_owner_to_share_a_task_list);
         it("opens a modal to share a task list", opens_a_modal_to_share_a_task_list);
+        it("allows owner to share a task list", allows_owner_to_share_a_task_list);
         it("closes a modal to share a task list", closes_a_modal_to_share_a_task_list);
         it("does not allow a sharer to share a task list", does_not_allow_a_sharer_to_share_a_task_list);
     })

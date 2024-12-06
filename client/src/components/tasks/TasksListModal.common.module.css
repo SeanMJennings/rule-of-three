@@ -1,6 +1,7 @@
 ﻿.body {
     padding: 20px;
 }
+
 .inputContainer {
     display: flex;
     flex-direction: row;

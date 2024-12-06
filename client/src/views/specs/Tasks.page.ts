@@ -253,8 +253,24 @@ export async function openShareTaskList() {
     return elements.openShareTaskList.trigger("click");
 }
 
+export function debug() {
+    console.log(page.html());
+}
+
+export async function typeShareTaskList(value: string) {
+    return elements.shareTaskListInput.setValue(value);
+}
+
+export async function submitShareTaskList() {
+    return elements.shareTaskListSubmit.trigger("click");
+}
+
 export async function closerShareTaskList() {
     return elements.closeModal.trigger("click");
+}
+
+export function sharerExists(email: string) {
+    return elements.sharer(email.replace('@', '').replace('.', '')).exists();
 }
 
 function mountTasksView() {
@@ -321,6 +337,15 @@ const elements = {
     },
     get editTaskListNameSubmit() {
         return page.find("#edit-task-list-name-submit");
+    },
+    get shareTaskListInput() {
+        return page.find("#share-task-list-input");
+    },
+    get shareTaskListSubmit() {
+        return page.find("#share-task-list-submit");
+    },
+    sharer(email: string) {
+        return page.find((('#' + email).replace('@', '').replace('.', '')));
     },
     get taskListSingleSelect() {
         return page.find("#task-list-single-select").element as HTMLSelectElement;

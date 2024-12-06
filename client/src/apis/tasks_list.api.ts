@@ -37,22 +37,22 @@ export const updateLastSelectedTime = async (id: any) => {
     });
 }
 
-export const shareTasksList = async (id: any, email: any) => {
-    return patch(`/tasks-lists/${id}/share`, {email})
+export const shareTasksList = async (id: any, share_with: any) => {
+    return patch(`/tasks-lists/${id}/share`, {share_with})
         .then(() => {
             return {
                 id,
-                email
+                email: share_with
             }
     });
 }
 
-export const unshareTasksList = async (id: any, email: any) => {
-    return patch(`/tasks-lists/${id}/unshare`, {email})
+export const unshareTasksList = async (id: any, unshare_with: any) => {
+    return patch(`/tasks-lists/${id}/unshare`, {unshare_with})
         .then(() => {
             return {
                 id,
-                email
+                email: unshare_with
             }
     });
 }

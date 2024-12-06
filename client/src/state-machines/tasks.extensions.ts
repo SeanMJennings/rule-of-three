@@ -80,6 +80,10 @@ export const tasksListNamingIsUpdating = function (value: StateValue) {
     return value === TasksListMachineStates.updatingTheTasksList;
 }
 
+export const tasksListSharerAreUpdating = function (value: StateValue) {
+    return value === TasksListMachineStates.sharingTheTasksList;
+}
+
 export const tasksListIsBeingDeleted = function (value: StateValue) {
     return value === TasksListMachineStates.deletingTheTasksList;
 }
@@ -103,6 +107,10 @@ export const canRemoveTask = function (task: Task): boolean {
 export const getTasks = function (context: context): Task[] {
     return context.tasksLists.find((list) => list.id === context.id)?.tasks ?? [];
 };
+
+export const getSharers = function (context: context): string[] {
+    return context.tasksLists.find((list) => list.id === context.id)?.sharedWith ?? [];
+}
 
 export const getName = function (context: context): string {
     return context.tasksLists.find((list) => list.id === context.id)?.name ?? '';
