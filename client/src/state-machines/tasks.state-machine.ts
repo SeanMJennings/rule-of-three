@@ -1,5 +1,5 @@
 ﻿import {type AnyEventObject, assign, createMachine, emit, fromPromise} from "xstate";
-import type {Task, TasksList} from '@/types/types'
+import type {TasksList} from '@/types/types'
 import {
     tasksAreFull,
     tasksAreReadyForNewPage,
@@ -17,6 +17,15 @@ import {
     updateTasksList
 } from "@/apis/tasks_list.api";
 import type {HttpError} from "@/common/http";
+import {
+    createdTaskList,
+    taskListWithCarriedTask,
+    taskListWithCreatedTask,
+    taskListWithEmailAdded,
+    taskListWithRemovedEmail, taskListWithRemovedTask,
+    taskListWithTickedTask,
+    taskListWithUpdatedName
+} from "@/state-machines/tasks.state-machine.extensions";
 
 export type TasksMachineContext = {
     id: string;
@@ -29,11 +38,11 @@ export type TasksMachineError = {
     code: number;
 };
 
-type TasksMachineNestedContext = {
+export type TasksMachineNestedContext = {
     context: TasksMachineContext;
 };
 
-type TasksMachineContextAndEvent = {context: TasksMachineContext, event: AnyEventObject};
+export type TasksMachineContextAndEvent = {context: TasksMachineContext, event: AnyEventObject};
 
 const assessingTasksExit = (context: TasksMachineNestedContext)=> {
     context.context.tasksLists.map((list) => {
@@ -358,89 +367,3 @@ export const tasksMachine = createMachine(
         },
     },
 );
-
-
-function createdTaskList() {
-    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.concat({
-        id: event.output.id,
-        name: event.output.name,
-        tasks: event.output.tasks,
-        lastSelectedTime: event.output.lastSelectedTime,
-        ownerEmail: event.output.ownerEmail,
-        sharedWith: event.output.sharedWith,
-    });
-}
-
-function taskListWithUpdatedName() {
-    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
-        if (list.id === event.output.id) {
-            list.name = event.output.name;
-        }
-        return list;
-    });
-}
-
-function taskListWithEmailAdded() {
-    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
-        if (list.id === event.output.id) {
-            list.sharedWith?.push(event.output.email);
-        }
-        return list;
-    });
-}
-
-function taskListWithRemovedEmail() {
-    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
-        if (list.id === event.output.id) {
-            list.sharedWith = list.sharedWith?.filter((email) => email !== event.output.email);
-        }
-        return list;
-    });
-}
-
-function taskListWithRemovedTask() {
-    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
-        if (list.id === context.id) {
-            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
-            task.removed = true;
-        }
-        return list;
-    });
-}
-
-function taskListWithTickedTask() {
-    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
-        if (list.id === context.id) {
-            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId) ?? ({} as Task);
-            task.ticked = true;
-        }
-        return list;
-    });
-}
-
-function taskListWithCreatedTask() {
-    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
-        if (list.id === context.id) {
-            list.tasks?.push({
-                id: event.output.id,
-                content: event.output.content,
-                carried: false,
-                removed: false,
-                page: 0,
-                ticked: false
-            });
-        }
-        return list;
-    });
-}
-
-function taskListWithCarriedTask() {
-    return ({ context, event } : {context: TasksMachineContext, event: AnyEventObject}) => context.tasksLists.map((list) => {
-        if (list.id === context.id) {
-            const task = context.tasksLists.find((tasksList) => tasksList.id === context.id)?.tasks.find((task) => task.id === event.output.taskId && task.page <= 1) ?? ({} as Task);
-            task.carried = true;
-            task.page += 1;
-        }
-        return list;
-    });
-}
