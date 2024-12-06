@@ -2,7 +2,7 @@
 import {tasksMachine, type TasksMachineError} from "@/state-machines/tasks.state-machine";
 import styles from "./Tasks.module.css";
 import TasksForm from "@/components/tasks/TasksForm.vue";
-import TasksList from "@/components/tasks/TasksList.vue";
+import TasksListForm from "@/components/tasks/TasksListForm.vue";
 import {loading, readyToAddTasks, selectedTaskListName} from "@/state-machines/tasks.extensions";
 import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from 'xstate'
 import {VueSpinner} from "vue3-spinners";
@@ -84,7 +84,7 @@ onUnmounted(() => {
     <div v-if="showLoading" :class="styles.spinnerContainer">
       <VueSpinner id="loadingSpinner" size="30" color="white" />
     </div>
-    <TasksList :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList" :sharingTaskList="sharingTaskList"/>
+    <TasksListForm :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList" :sharingTaskList="sharingTaskList"/>
     <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
   </div>
 </template>

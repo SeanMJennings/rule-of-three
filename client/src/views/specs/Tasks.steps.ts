@@ -131,6 +131,7 @@ export async function shows_task_list_single_select_when_there_is_one_list() {
 }
 
 export async function lets_user_delete_a_task_list() {
+    login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -147,6 +148,7 @@ export async function lets_user_delete_a_task_list() {
 }
 
 export async function lets_user_close_delete_task_list_modal() {
+    login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -161,6 +163,7 @@ export async function lets_user_close_delete_task_list_modal() {
 }
 
 export async function lets_user_rename_a_task_list() {
+    login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -179,6 +182,7 @@ export async function lets_user_rename_a_task_list() {
 }
 
 export async function limits_edit_task_list_name_input_to_50_characters() {
+    login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -191,6 +195,7 @@ export async function limits_edit_task_list_name_input_to_50_characters() {
 }
 
 export async function lets_user_close_edit_task_list_name_modal() {
+    login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -208,6 +213,7 @@ export async function lets_user_collapse_tasks_list_single_select() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
+    mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`, {})
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();

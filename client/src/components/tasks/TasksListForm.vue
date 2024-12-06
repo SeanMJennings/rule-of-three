@@ -1,5 +1,5 @@
 ﻿<script lang="ts" setup>
-import style from "./TasksList.module.css";
+import style from "./TasksListForm.module.css";
 import {onMounted, onUnmounted, reactive, watch} from 'vue'
 import {faCaretSquareDown, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from 'xstate'
