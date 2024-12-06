@@ -131,7 +131,7 @@ export async function shows_task_list_single_select_when_there_is_one_list() {
 }
 
 export async function lets_user_delete_a_task_list() {
-    login();
+    await login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -148,7 +148,7 @@ export async function lets_user_delete_a_task_list() {
 }
 
 export async function lets_user_close_delete_task_list_modal() {
-    login();
+    await login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -163,7 +163,7 @@ export async function lets_user_close_delete_task_list_modal() {
 }
 
 export async function lets_user_rename_a_task_list() {
-    login();
+    await login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -182,7 +182,7 @@ export async function lets_user_rename_a_task_list() {
 }
 
 export async function limits_edit_task_list_name_input_to_50_characters() {
-    login();
+    await login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -195,7 +195,7 @@ export async function limits_edit_task_list_name_input_to_50_characters() {
 }
 
 export async function lets_user_close_edit_task_list_name_modal() {
-    login();
+    await login();
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
