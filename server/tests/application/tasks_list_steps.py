@@ -108,7 +108,7 @@ def a_shared_tasks_list():
     sharing_tasks_list()
 
 
-def a_sharee_adding_a_task():
+def a_sharer_adding_a_task():
     global tasks_list_service, tasks_list
     tasks_list_service.add_task(tasks_list.id, another_owner_email, "My Task")
 
@@ -118,14 +118,14 @@ def another_shared_tasks_list():
     sharing_another_tasks_list()
 
 
-def a_sharee_renaming_a_tasks_list():
+def a_sharer_renaming_a_tasks_list():
     global tasks_list_service, tasks_list_id
     tasks_list_service.update(
         tasks_list_id, another_owner_email, "My Renamed Tasks List"
     )
 
 
-def a_sharee_deleting_a_tasks_list():
+def a_sharer_deleting_a_tasks_list():
     global tasks_list_service, tasks_list_id
     tasks_list_service.delete(tasks_list_id, another_owner_email)
 
@@ -311,14 +311,14 @@ def the_tasks_list_is_unshared():
     assert tasks_list.shared_with == []
 
 
-def the_sharee_is_unshared():
+def the_sharer_is_unshared():
     global tasks_list_service, tasks_list
     tasks_list = tasks_list_service.get(a_tasks_list_name(), owner_email)
     assert len(tasks_list.shared_with) == 0
     assert tasks_list.shared_with == []
 
 
-def the_sharee_can_see_their_list_and_a_shared_list():
+def the_sharer_can_see_their_list_and_a_shared_list():
     global tasks_list_service
     the_tasks_list = tasks_list_service.get_all(owner_email)
     assert len(the_tasks_list) == 2

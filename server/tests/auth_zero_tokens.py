@@ -39,7 +39,7 @@ def valid_payload():
     }
 
 
-def valid_payload_for_a_sharee():
+def valid_payload_for_a_sharer():
     return {
         "iss": issuer,
         "sub": "BvwjAUeDP0Y0EERDlJvs6JJHxPQsbRUw@clients",

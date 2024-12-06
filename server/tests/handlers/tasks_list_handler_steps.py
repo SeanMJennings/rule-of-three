@@ -11,7 +11,7 @@ from api.cache import cache, cache_config
 from api.app import create_app
 from api.application.tasks_list_service import TasksListService
 from tests.database import setup_db, get_db_connection, clear_db
-from tests.handlers.mocking_utilities import the_headers, the_headers_for_a_sharee
+from tests.handlers.mocking_utilities import the_headers, the_headers_for_a_sharer
 from tests.handlers.routing import *
 
 response = None
@@ -160,11 +160,11 @@ def unsharing_the_tasks_list():
     )
 
 
-def a_sharee_unsharing_themselves():
+def a_sharer_unsharing_themselves():
     global response
     response = client.patch(
         tasks_list_url_unshare_self(tasks_list_id),
-        headers=the_headers_for_a_sharee(),
+        headers=the_headers_for_a_sharer(),
     )
 
 

@@ -6,7 +6,7 @@ from tests.auth_zero_tokens import (
     get_jwks_with_wrong_key_id,
     rs256_token,
     valid_payload,
-    valid_payload_for_a_sharee,
+    valid_payload_for_a_sharer,
 )
 
 test_mocker = None
@@ -25,9 +25,9 @@ def the_headers():
     return headers
 
 
-def the_headers_for_a_sharee():
+def the_headers_for_a_sharer():
     return {
-        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload_for_a_sharee())
+        AUTHORIZATION_HEADER_KEY: "Bearer " + rs256_token(valid_payload_for_a_sharer())
     }
 
 

@@ -87,8 +87,8 @@ def test_can_unshare_tasks_list(mocker):
     Then(the_tasks_list_is_unshared)
 
 
-def test_a_sharee_unshares_themselves(mocker):
+def test_a_sharer_unshares_themselves(mocker):
     Given(an_app_with_a(mocker))
     And(a_shared_tasks_list)
-    When(a_sharee_unsharing_themselves)
+    When(a_sharer_unsharing_themselves)
     Then(the_tasks_list_is_unshared)
