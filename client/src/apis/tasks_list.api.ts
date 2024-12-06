@@ -57,6 +57,15 @@ export const unshareTasksList = async (id: any, unshare_with: any) => {
     });
 }
 
+export const unshareTasksListForSelf = async (id: any) => {
+    return patch(`/tasks-lists/${id}/unshare-self`, {})
+        .then(() => {
+            return {
+                id
+            }
+    });
+}
+
 export const addTask = async (tasksListId: any, content: any) => {
     return post(`/tasks-lists/${tasksListId}/task`, {content})
         .then((response) => {

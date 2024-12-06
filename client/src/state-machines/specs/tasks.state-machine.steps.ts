@@ -330,6 +330,31 @@ export async function notifies_when_failing_to_unshare_a_task_list() {
     expect(the_error).toEqual({error: "Failed to unshare tasks list", type: "error", code: 422});
 }
 
+export async function unshares_a_task_list_for_self() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    const wait_for_unshare_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/unshare-self`)
+    tasks.send({type: "unshareTasksListForSelf", id: task_list_id});
+    await waitUntil(wait_for_unshare_tasks_list)
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.readyToAddTasksLists);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([]));
+}
+
+export async function notifies_when_failing_to_unshare_a_task_list_for_self() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    const wait_for_unshare_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/unshare-self`, { error: "Failed to unshare tasks list for self" }, false)
+    tasks.send({type: "unshareTasksListForSelf", id: task_list_id});
+    await waitUntil(wait_for_unshare_tasks_list)
+    expect(the_error).toEqual({error: "Failed to unshare tasks list for self", type: "error", code: 422});
+}
+
 export async function adds_maximum_tasks_and_then_refuses_subsequent_tasks() {
     await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"});

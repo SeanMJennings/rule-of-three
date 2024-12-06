@@ -40,6 +40,10 @@ export function taskListWithRemovedEmail() {
     });
 }
 
+export function removeTaskList() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.filter((list) => list.id !== event.output.id);
+}
+
 export function taskListWithRemovedTask() {
     return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
         if (list.id === context.id) {

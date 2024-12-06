@@ -8,6 +8,7 @@
     selectingTheTasksList = "selectingTheTasksList",
     sharingTheTasksList = "sharingTheTasksList",
     unsharingTheTasksList = "unsharingTheTasksList",
+    unsharingTheTasksListForSelf = "unsharingTheTasksListForSelf",
     addingTasksLists = "addingTasksLists",
     assessingTasksList = "assessingTasksList",
 }

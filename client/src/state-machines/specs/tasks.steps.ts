@@ -13,6 +13,7 @@ const tasksListMachineStatesDictionary = [
     {key: TasksListMachineStates.selectingTheTasksList, value: true},
     {key: TasksListMachineStates.sharingTheTasksList, value: true},
     {key: TasksListMachineStates.unsharingTheTasksList, value: true},
+    {key: TasksListMachineStates.unsharingTheTasksListForSelf, value: true},
     {key: TasksListMachineStates.addingTasksLists, value: true},
     {key: TasksListMachineStates.assessingTasksList, value: false},
 ]

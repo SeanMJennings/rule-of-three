@@ -13,12 +13,12 @@ import {
     deleteTasksList,
     getTasksLists,
     removeTask, shareTasksList,
-    tickTask, unshareTasksList, updateLastSelectedTime,
+    tickTask, unshareTasksList, unshareTasksListForSelf, updateLastSelectedTime,
     updateTasksList
 } from "@/apis/tasks_list.api";
 import type {HttpError} from "@/common/http";
 import {
-    createdTaskList,
+    createdTaskList, removeTaskList,
     taskListWithCarriedTask,
     taskListWithCreatedTask,
     taskListWithEmailAdded,
@@ -202,6 +202,26 @@ export const tasksMachine = createMachine(
                     }
                 },
             },
+            unsharingTheTasksListForSelf: {
+                invoke: {
+                    input: ({event}) => ({id: event.id}),
+                    src: fromPromise(async ({input: {id}}) => await unshareTasksListForSelf(id)),
+                    onDone: {
+                        target: TasksListMachineStates.assessingTasksList,
+                        actions: assign({tasksLists: removeTaskList()}),
+                    },
+                    onError: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: emit(({event}) => {
+                            return {
+                                type: 'error',
+                                error: (event.error as HttpError).error,
+                                code: (event.error as HttpError).code
+                            }
+                        })
+                    }
+                }
+            },
             addingTasksLists: {
                 initial: TasksMachineStates.addingTasks,
                 on: {
@@ -222,6 +242,9 @@ export const tasksMachine = createMachine(
                     },
                     unshareTasksList: {
                         target: TasksListMachineStates.unsharingTheTasksList,
+                    },
+                    unshareTasksListForSelf: {
+                        target: TasksListMachineStates.unsharingTheTasksListForSelf,
                     },
                 },
                 always: {
