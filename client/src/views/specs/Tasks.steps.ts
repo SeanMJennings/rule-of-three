@@ -12,13 +12,13 @@ import {
     characterCountHidden,
     clickAddTaskListPlaceholder, closeDeleteTaskList,
     closeEditTaskListName,
-    closeErrorOverlay,
+    closeErrorOverlay, closerShareTaskList,
     deleteTaskList, deleteTaskListModalExists, editTaskListNameCharacterCount,
     editTaskListNameModalExists,
     errorOverlayExists,
     errorOverlayText,
     loadingSpinnerExists, openDeleteTaskList,
-    openEditTaskListName,
+    openEditTaskListName, openShareTaskList,
     pageText,
     removeTask,
     removeTaskHidden,
@@ -64,6 +64,7 @@ import {
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 import {login, mockAuth0, resetAuth0, userIsAuthenticated} from "@/testing/mock-auth0";
+import exp from "node:constants";
 
 const testTaskText = "Hello, world!";
 
@@ -577,6 +578,33 @@ export async function allows_owner_to_share_a_task_list() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     expect(await shareTaskListExists()).toBe(true);
+}
+
+export async function opens_a_modal_to_share_a_task_list() {
+    await login();
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    await openShareTaskList();
+    expect(pageText()).toContain("Share tasks list");
+}
+
+export async function closes_a_modal_to_share_a_task_list() {
+    await login();
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    await openShareTaskList();
+    await closerShareTaskList();
+    expect(pageText()).not.toContain("Share tasks list");
 }
 
 export async function does_not_allow_a_sharer_to_share_a_task_list() {

@@ -249,6 +249,14 @@ export async function shareTaskListExists() {
     return elements.openShareTaskList.exists();
 }
 
+export async function openShareTaskList() {
+    return elements.openShareTaskList.trigger("click");
+}
+
+export async function closerShareTaskList() {
+    return elements.closeModal.trigger("click");
+}
+
 function mountTasksView() {
     return mount(Tasks, {
         props: {

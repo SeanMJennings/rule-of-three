@@ -27,6 +27,7 @@ const props = defineProps<{
   actorRef: Actor<typeof tasksMachine>;
   editingTaskListName: (value: boolean) => void;
   deletingTaskList: (value: boolean) => void;
+  sharingTaskList: (value: boolean) => void;
 }>();
 
 const tasksListModel: TasksListModel = reactive({name: ""});
@@ -60,6 +61,10 @@ const openDeleteTaskList = () => {
 
 const openEditTaskListName = () => {
   props.editingTaskListName(true);
+};
+
+const openShareTaskList = () => {
+  props.sharingTaskList(true);
 };
 
 const disableAddTaskListButton = () => props.snapshot.value === TasksListMachineStates.creatingTheTasksList;
@@ -116,7 +121,7 @@ onUnmounted(() => {
         <div :class="style.selectInputButtons">
           <ButtonIcon the_id="open-edit-task-list-name" :icon="faEdit" v-on:click="openEditTaskListName()" title="Edit tasks list name"/>
           <ButtonIcon the_id="open-delete-task-list" :icon="faTrash" v-on:click="openDeleteTaskList()" title="Delete tasks list"/>
-          <ButtonIcon v-if="isOwner(auth0.user.value?.email, snapshot.context)" the_id="open-share-task-list" :icon="faShare" v-on:click="() => {}" title="Share tasks list"/>
+          <ButtonIcon v-if="isOwner(auth0.user.value?.email, snapshot.context)" the_id="open-share-task-list" :icon="faShare" v-on:click="openShareTaskList()" title="Share tasks list"/>
         </div>
       </div>
     </div>
