@@ -7,10 +7,7 @@ let page: VueWrapper;
 
 // @ts-ignore
 HTMLCanvasElement.prototype.getContext = () => {};
-export const task_list_id = crypto.randomUUID();
-export const another_task_list_id = crypto.randomUUID();
-export const task_list_name = "Task list name";
-export const another_task_list_name = "2nd Task list name";
+import {task_list_name, another_task_list_name} from "@/state-machines/specs/tasks.api-mocks";
 
 
 export function renderTasksView() {

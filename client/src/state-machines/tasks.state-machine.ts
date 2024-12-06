@@ -13,7 +13,7 @@ import {
     deleteTasksList,
     getTasksLists,
     removeTask, shareTasksList,
-    tickTask, updateLastSelectedTime,
+    tickTask, unshareTasksList, updateLastSelectedTime,
     updateTasksList
 } from "@/apis/tasks_list.api";
 import type {HttpError} from "@/common/http";
@@ -106,7 +106,7 @@ export const tasksMachine = createMachine(
                         target: TasksListMachineStates.addingTasksLists,
                         actions: assign({
                             id: ({context, event}) => (context.id = event.output.id),
-                            tasksLists: taskList(),
+                            tasksLists: createdTaskList(),
                         }),
                     },
                     onError: {
@@ -171,6 +171,21 @@ export const tasksMachine = createMachine(
                     src: fromPromise(async ({input: {id, email}}) => await shareTasksList(id, email)),
                     onDone: {
                         target: TasksListMachineStates.addingTasksLists,
+                        actions: assign({ tasksLists: taskListWithEmailAdded() }),
+                    },
+                    onError: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: emit(({ event }) => { return { type: 'error', error: (event.error as HttpError).error, code: (event.error as HttpError).code }})
+                    }
+                },
+            },
+            unsharingTheTasksList: {
+                invoke: {
+                    input: ({event}) => ({id: event.id, email: event.email}),
+                    src: fromPromise(async ({input: {id, email}}) => await unshareTasksList(id, email)),
+                    onDone: {
+                        target: TasksListMachineStates.addingTasksLists,
+                        actions: assign({ tasksLists: taskListWithRemovedEmail() }),
                     },
                     onError: {
                         target: TasksListMachineStates.addingTasksLists,
@@ -195,6 +210,9 @@ export const tasksMachine = createMachine(
                     },
                     shareTasksList: {
                         target: TasksListMachineStates.sharingTheTasksList,
+                    },
+                    unshareTasksList: {
+                        target: TasksListMachineStates.unsharingTheTasksList,
                     },
                 },
                 always: {
@@ -341,11 +359,12 @@ export const tasksMachine = createMachine(
     },
 );
 
-function taskList() {
+
+function createdTaskList() {
     return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.concat({
         id: event.output.id,
         name: event.output.name,
-        tasks: [],
+        tasks: event.output.tasks,
         lastSelectedTime: event.output.lastSelectedTime,
         ownerEmail: event.output.ownerEmail,
         sharedWith: event.output.sharedWith,
@@ -356,6 +375,24 @@ function taskListWithUpdatedName() {
     return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
         if (list.id === event.output.id) {
             list.name = event.output.name;
+        }
+        return list;
+    });
+}
+
+function taskListWithEmailAdded() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
+        if (list.id === event.output.id) {
+            list.sharedWith?.push(event.output.email);
+        }
+        return list;
+    });
+}
+
+function taskListWithRemovedEmail() {
+    return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
+        if (list.id === event.output.id) {
+            list.sharedWith = list.sharedWith?.filter((email) => email !== event.output.email);
         }
         return list;
     });
@@ -384,7 +421,7 @@ function taskListWithTickedTask() {
 function taskListWithCreatedTask() {
     return ({ context, event }: TasksMachineContextAndEvent) => context.tasksLists.map((list) => {
         if (list.id === context.id) {
-            list.tasks.push({
+            list.tasks?.push({
                 id: event.output.id,
                 content: event.output.content,
                 carried: false,

@@ -1,12 +1,12 @@
 ﻿import {del, get, patch, post} from '@/common/http'
-import type {TasksList} from "@/types/types";
+import type {Task, TasksList} from "@/types/types";
 
 export const getTasksLists = async () => {
     return get<TasksList[]>(`/tasks-lists`, taskListApiMapper);
 }
 
 export const addTasksList = async (name: any) => {
-    return post(`/tasks-lists`, {name});
+    return post(`/tasks-lists`, {name}).then((response) => mapApiTasksList(response));
 }
 
 export const updateTasksList = async (id: any, name: any) => {
@@ -39,6 +39,16 @@ export const updateLastSelectedTime = async (id: any) => {
 
 export const shareTasksList = async (id: any, email: any) => {
     return patch(`/tasks-lists/${id}/share`, {email})
+        .then(() => {
+            return {
+                id,
+                email
+            }
+    });
+}
+
+export const unshareTasksList = async (id: any, email: any) => {
+    return patch(`/tasks-lists/${id}/unshare`, {email})
         .then(() => {
             return {
                 id,
@@ -84,26 +94,56 @@ export const carryTask = async (tasksListId: any, taskId: any) => {
     });
 }
 
-const taskListApiMapper = (taskList: any[]) => {
-    return taskList.map((taskList) => {
-        return {
-            id: taskList.id,
-            name: taskList.name,
-            lastSelectedTime: taskList.last_selected_time,
-            ownerEmail: taskList.owner_email,
-            sharedWith: taskList.shared_with,
-            tasks: taskList.tasks.map((task: any) => {
-                return {
-                    id: task.id,
-                    content: task.content,
-                    carried: task.is_carried,
-                    removed: task.is_removed,
-                    ticked: task.is_ticked,
-                    page: task.page_count,
-                }
-            })
-        }
-    }).sort((a,b) => {
+export const mapApiTask = (task: apiTask): Task => {
+    return {
+        id: task.id,
+        content: task.content,
+        carried: task.is_carried,
+        removed: task.is_removed,
+        ticked: task.is_ticked,
+        page: task.page_count,
+    };
+};
+
+export const mapApiTasks = (theApiTasks: apiTask[]) => {
+    return theApiTasks.map(mapApiTask);
+}
+
+export const mapApiTasksList = (theApiTasksList: apiTasksList) => {
+    return {
+        id: theApiTasksList.id,
+        name: theApiTasksList.name,
+        lastSelectedTime: theApiTasksList.last_selected_time,
+        ownerEmail: theApiTasksList.owner_email,
+        sharedWith: theApiTasksList.shared_with,
+        tasks: mapApiTasks(theApiTasksList.tasks)
+    }
+}
+
+export const mapApiTasksLists = (theApiTasksLists: apiTasksList[]) => {
+    return theApiTasksLists.map(mapApiTasksList);
+}
+
+export type apiTask = {
+    id: string,
+    content: string,
+    is_carried: boolean,
+    is_removed: boolean,
+    is_ticked: boolean,
+    page_count: number,
+}
+
+export type apiTasksList = {
+    id: string,
+    name: string,
+    last_selected_time: string,
+    owner_email: string,
+    shared_with: string[],
+    tasks: apiTask[]
+}
+
+const taskListApiMapper = (taskLists: any[]) => {
+    return mapApiTasksLists(taskLists).sort((a,b) => {
         return new Date(b.lastSelectedTime ?? '').getTime() - new Date(a.lastSelectedTime ?? '').getTime()
     })
 }

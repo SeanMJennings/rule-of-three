@@ -27,7 +27,7 @@ import {
     loads_task_lists_in_order_of_last_selected_time,
     notifies_when_failing_to_select_a_different_tasks_list,
     shares_a_task_list,
-    notifies_when_failing_to_share_a_task_list
+    notifies_when_failing_to_share_a_task_list, unshares_a_task_list, notifies_when_failing_to_unshare_a_task_list
 } from '@/state-machines/specs/tasks.state-machine.steps'
 
 describe("Tasks state machine", () => {
@@ -46,6 +46,8 @@ describe("Tasks state machine", () => {
         it("notifies when failing to select a different tasks list", notifies_when_failing_to_select_a_different_tasks_list)
         it("shares a task list", shares_a_task_list);
         it("notifies when failing to share a task list", notifies_when_failing_to_share_a_task_list)
+        it("unshares a task list", unshares_a_task_list);
+        it("notifies when failing to unshare a task list", notifies_when_failing_to_unshare_a_task_list)
     });
     describe("Tasks", () => {
         it("adds a task", adds_a_task);

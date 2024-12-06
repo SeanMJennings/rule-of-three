@@ -27,7 +27,7 @@ import {
     list_character_count_limit_hidden_when_input_is_empty,
     only_shows_remove_tasks_for_tasks_carried_twice,
     renders_tasks,
-    selects_first_of_multiple_lists,
+    selects_newest_of_multiple_lists,
     shows_correct_tasks_when_selecting_a_different_list,
     shows_task_count_if_there_are_tasks,
     shows_task_list_single_select_when_there_is_one_list
@@ -52,7 +52,7 @@ describe("Tasks", () => {
         it("lets user close edit task list name modal", lets_user_close_edit_task_list_name_modal);
         it("lets user collapse tasks list single select", lets_user_collapse_tasks_list_single_select);
         it("lets user expand tasks list single select", lets_user_expand_tasks_list_single_select);
-        it("selects first of multiple lists", selects_first_of_multiple_lists);
+        it("selects newest of multiple lists", selects_newest_of_multiple_lists);
         it("displays overlay modal for validation errors", displays_overlay_modal_for_validation_errors);
         it("lets user close overlay modal for validation errors", lets_user_close_overlay_modal_for_validation_errors);
     });

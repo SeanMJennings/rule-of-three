@@ -5,26 +5,20 @@ import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machin
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 import {getName, getTasks} from "@/state-machines/tasks.extensions";
+import {mapApiTask, mapApiTasks, mapApiTasksList, mapApiTasksLists} from "@/apis/tasks_list.api";
+import {task_list_id, task_list_name, another_task_list_id, another_task_list_name, add_task_list_response, another_add_task_list_response, task_id, task_ids, another_email_to_share, another_set_of_task_ids, new_task_list_name, add_task_list_response_with_tasks, email_to_share} from "@/state-machines/specs/tasks.api-mocks";
 
 const mockServer = MockServer.New();
 let tasks = {} as Actor<typeof tasksMachine>;
-const task_list_id = crypto.randomUUID();
-const another_task_list_id = crypto.randomUUID();
-const task_id = crypto.randomUUID();
-const task_list_name = "Task list name";
-const new_task_list_name = "New task list name";
-const another_task_list_name = "2nd task list name";
-const task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
-const another_set_of_task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
-const newest_date = new Date()
-const oldest_date = new Date("2021-01-01")
+
+
 let wait_for_get_tasks_list: () => boolean;
 let wait_for_create_tasks_list: () => boolean;
 
 beforeEach(() => {
     mockServer.reset();
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", [])
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     mockServer.start();
     tasks = createActor(tasksMachine);
     tasks.start();
@@ -33,6 +27,19 @@ beforeEach(() => {
 afterEach(() => {
     tasks.send({type: "reset"})
 });
+
+function setupSingleGetTaskListWithTasksResponse() {
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [
+        add_task_list_response_with_tasks
+    ])
+}
+
+function setupMultipleGetTaskListResponse() {
+    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [
+        add_task_list_response,
+        another_add_task_list_response
+    ])
+}
 
 export async function notifies_when_failing_to_load_a_task_list() {
     wait_for_get_tasks_list = mockServer.get("/tasks-lists", {
@@ -47,36 +54,18 @@ export async function notifies_when_failing_to_load_a_task_list() {
 }
 
 export async function loads_a_task_list() {
-    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
-        {
-            id: task_id,
-            content: "Task content",
-            is_carried: false,
-            is_removed: false,
-            page_count: 0,
-            is_ticked: false
-        }]}])
+    setupSingleGetTaskListWithTasksResponse()
     tasks.send({type: "reset"})
     await waitForLoadingToFinish();
     await waitUntil(wait_for_get_tasks_list)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
     expect(getName(tasks.getSnapshot().context)).toEqual(task_list_name);
-    expect(getTasks(tasks.getSnapshot().context)).toEqual([{
-        id: task_id,
-        content: "Task content",
-        carried: false,
-        removed: false,
-        page: 0,
-        ticked: false
-    }]);
+    expect(getTasks(tasks.getSnapshot().context)).toEqual(mapApiTasks(add_task_list_response_with_tasks.tasks));
 }
 
 export async function loads_task_lists_in_order_of_last_selected_time() {
-    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [
-        {id: task_list_id, name: task_list_name, tasks: [], last_selected_time: oldest_date.toISOString(), owner_email: 'wibble@wobble.com', shared_with: ['hello@waffle.com']},
-        {id: another_task_list_id, name: another_task_list_name, tasks: [], last_selected_time: newest_date.toISOString(), owner_email: 'wibble@wobble.com', shared_with: ['hello@waffle.com']}
-    ])
+    setupMultipleGetTaskListResponse();
     tasks.send({type: "reset"})
     await waitForLoadingToFinish();
     await waitUntil(wait_for_get_tasks_list)
@@ -85,8 +74,8 @@ export async function loads_task_lists_in_order_of_last_selected_time() {
     expect(getName(tasks.getSnapshot().context)).toEqual(another_task_list_name);
     expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
     expect(tasks.getSnapshot().context.tasksLists).toEqual([
-        {id: another_task_list_id, name: another_task_list_name, tasks: [], lastSelectedTime: newest_date.toISOString(), ownerEmail: 'wibble@wobble.com', sharedWith: ['hello@waffle.com']},
-        {id: task_list_id, name: task_list_name, tasks: [], lastSelectedTime: oldest_date.toISOString(), ownerEmail: 'wibble@wobble.com', sharedWith: ['hello@waffle.com']},
+        mapApiTasksList(another_add_task_list_response),
+        mapApiTasksList(add_task_list_response)
     ]);
 }
 
@@ -116,15 +105,7 @@ export async function notifies_when_failing_to_add_a_task_list() {
 }
 
 export async function deletes_a_task_list() {
-    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
-        {
-            id: task_id,
-            content: "Task content",
-            is_carried: false,
-            is_removed: false,
-            page_count: 0,
-            is_ticked: false
-        }]}])
+    setupSingleGetTaskListWithTasksResponse()
     tasks.send({type: "reset"})
     await waitForLoadingToFinish();
     await waitUntil(wait_for_get_tasks_list)
@@ -137,15 +118,7 @@ export async function deletes_a_task_list() {
 }
 
 export async function notifies_when_failing_to_delete_a_task_list() {
-    wait_for_get_tasks_list = mockServer.get("/tasks-lists", [{id: task_list_id, name: task_list_name, tasks: [
-        {
-            id: task_id,
-            content: "Task content",
-            is_carried: false,
-            is_removed: false,
-            page_count: 0,
-            is_ticked: false
-        }]}])    
+    setupSingleGetTaskListWithTasksResponse()  
     let the_error = {};
     tasks.on("error", (e) => the_error = e);
     tasks.send({type: "reset"})
@@ -176,18 +149,11 @@ export async function adds_two_task_lists() {
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name,
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
     tasks.send({type: "addTasksList", name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
-    expect(tasks.getSnapshot().context.tasksLists).toEqual([{
-        id: task_list_id,
-        name: task_list_name,
-        tasks: []
-    }, {id: another_task_list_id, name: another_task_list_name, tasks: []}]);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([add_task_list_response, another_add_task_list_response]));
 }
 
 export async function updates_a_task_list_name() {
@@ -202,7 +168,10 @@ export async function updates_a_task_list_name() {
     expect(tasks.getSnapshot().context.id).toEqual(task_list_id);
     expect(getName(tasks.getSnapshot().context)).toEqual(new_task_list_name);
     expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
-    expect(tasks.getSnapshot().context.tasksLists).toEqual([{id: task_list_id, name: new_task_list_name, tasks: []}]);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([{
+        ...add_task_list_response,
+        name: new_task_list_name
+    }]));
 }
 
 export async function adds_a_task() {
@@ -213,14 +182,7 @@ export async function adds_a_task() {
     tasks.send({type: "readyToAddFirstTask"});
     await addTask(task_id);
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
-    expect(getTasks(tasks.getSnapshot().context)).toEqual([{
-        id: task_id,
-        content: "Task content",
-        carried: false,
-        removed: false,
-        page: 0,
-        ticked: false
-    }]);
+    expect(getTasks(tasks.getSnapshot().context)).toEqual(mapApiTasks(add_task_list_response_with_tasks.tasks));
 }
 
 export async function notifies_when_failing_to_add_a_task() {
@@ -229,7 +191,6 @@ export async function notifies_when_failing_to_add_a_task() {
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     tasks.send({type: "readyToAddFirstTask"});
-
     let the_error = {};
     tasks.on("error", (e) => the_error = e);
     const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, { error: "Failed to add a task" }, false);
@@ -263,14 +224,12 @@ export async function lets_user_tick_off_task() {
     await addTask(task_id);
     await tickTask(task_id);
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
-    expect(getTasks(tasks.getSnapshot().context)).toEqual([{
-        id: task_id,
-        content: "Task content",
-        carried: false,
-        removed: false,
-        page: 0,
-        ticked: true
-    }])
+    expect(getTasks(tasks.getSnapshot().context)).toEqual([
+        {
+            ...mapApiTask(add_task_list_response_with_tasks.tasks[0]),
+            ticked: true
+        }   
+    ])
 }
 
 export async function selects_a_different_tasks_list() {
@@ -278,10 +237,7 @@ export async function selects_a_different_tasks_list() {
     tasks.send({type: "readyToAddFirstTaskList"});
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
     tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     const wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`)
@@ -292,10 +248,10 @@ export async function selects_a_different_tasks_list() {
     expect(tasks.getSnapshot().context.id).toEqual(another_task_list_id);
     expect(getName(tasks.getSnapshot().context)).toEqual(another_task_list_name);
     expect(getTasks(tasks.getSnapshot().context)).toEqual([]);
-    expect(tasks.getSnapshot().context.tasksLists).toEqual([
-        {id: task_list_id, name: task_list_name, tasks: []},
-        {id: another_task_list_id, name: another_task_list_name, tasks: []},
-    ]);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([
+        add_task_list_response,
+        another_add_task_list_response
+    ]));
 }
 
 export async function notifies_when_failing_to_select_a_different_tasks_list() {
@@ -303,10 +259,7 @@ export async function notifies_when_failing_to_select_a_different_tasks_list() {
     tasks.send({type: "readyToAddFirstTaskList"})
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
     tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     let the_error = {};
@@ -323,9 +276,15 @@ export async function shares_a_task_list() {
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     const wait_for_share_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/share`)
-    tasks.send({type: "shareTasksList", id: task_list_id});
+    tasks.send({type: "shareTasksList", id: task_list_id, email: another_email_to_share});
     await waitUntil(wait_for_share_tasks_list)
     expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([
+        {
+            ...add_task_list_response,
+            shared_with: [email_to_share, another_email_to_share]
+        }
+    ]));
 }
 
 export async function notifies_when_failing_to_share_a_task_list() {
@@ -339,6 +298,36 @@ export async function notifies_when_failing_to_share_a_task_list() {
     tasks.send({type: "shareTasksList", id: task_list_id});
     await waitUntil(wait_for_share_tasks_list)
     expect(the_error).toEqual({error: "Failed to share tasks list", type: "error", code: 422});
+}
+
+export async function unshares_a_task_list() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    const wait_for_unshare_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/unshare`)
+    tasks.send({type: "unshareTasksList", id: task_list_id, email: email_to_share});
+    await waitUntil(wait_for_unshare_tasks_list)
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([
+        {
+            ...add_task_list_response,
+            shared_with: []
+        }
+    ]));
+}
+
+export async function notifies_when_failing_to_unshare_a_task_list() {
+    await waitForLoadingToFinish();
+    tasks.send({type: "readyToAddFirstTaskList"})
+    tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    let the_error = {};
+    tasks.on("error", (e) => the_error = e);
+    const wait_for_unshare_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/unshare`, { error: "Failed to unshare tasks list" }, false)
+    tasks.send({type: "unshareTasksList", id: task_list_id});
+    await waitUntil(wait_for_unshare_tasks_list)
+    expect(the_error).toEqual({error: "Failed to unshare tasks list", type: "error", code: 422});
 }
 
 export async function adds_maximum_tasks_and_then_refuses_subsequent_tasks() {
@@ -486,10 +475,7 @@ export async function selecting_a_different_tasks_list_retrieves_correct_tasks()
     tasks.send({type: "readyToAddFirstTask"});
     await add_all_tasks();
 
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
     tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     let wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`)

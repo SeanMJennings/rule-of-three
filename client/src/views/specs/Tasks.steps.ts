@@ -6,8 +6,6 @@ import {
     addTaskDisabled, addTaskInputText,
     addTaskListSubmitDisabled,
     addTaskVisible,
-    another_task_list_id,
-    another_task_list_name,
     carryTask,
     carryTaskHidden,
     characterCount,
@@ -27,8 +25,6 @@ import {
     renderTasksView,
     selectOptionFromTaskListSingleSelect,
     submitNewTaskListName,
-    task_list_id,
-    task_list_name,
     taskCount,
     taskCountHidden,
     taskListCharacterCount,
@@ -54,15 +50,25 @@ import {
     typeTaskListName,
     unmountTasksView
 } from './Tasks.page'
+import {
+    task_list_id,
+    task_list_name,
+    another_task_list_id,
+    another_task_list_name,
+    add_task_list_response,
+    another_add_task_list_response,
+    task_ids,
+    add_task_list_response_with_tasks,
+    another_add_task_list_response_with_tasks, anotherTestTaskText, task_id
+} from "@/state-machines/specs/tasks.api-mocks";
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
 
 const testTaskText = "Hello, world!";
-const anotherTestTaskText = "Goodbye, world!";
+
 const testTaskTextMoreThan150Chars =
     "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis_pa";
 const mockServer = MockServer.New();
-const task_ids = Array.from({length: reducedTaskLimit}, () => crypto.randomUUID());
 let wait_for_create_tasks_list: () => boolean;
 
 vi.mock("@lottiefiles/dotlottie-vue", () => {
@@ -72,7 +78,7 @@ vi.mock("@lottiefiles/dotlottie-vue", () => {
 beforeEach(() => {
     mockServer.reset();
     mockServer.get("/tasks-lists", [])
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name})
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     mockServer.start()
 });
 
@@ -107,10 +113,7 @@ export async function shows_task_list_single_select_when_there_is_one_list() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: task_list_id,
-        name: task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     expect(taskListSingleSelectHidden()).toBe(false);
@@ -124,10 +127,7 @@ export async function lets_user_delete_a_task_list() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: task_list_id,
-        name: task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     const wait_for_delete_tasks_list = mockServer.delete(`/tasks-lists/${task_list_id}`)
@@ -143,10 +143,7 @@ export async function lets_user_close_delete_task_list_modal() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: task_list_id,
-        name: task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     await openDeleteTaskList();
@@ -160,10 +157,7 @@ export async function lets_user_rename_a_task_list() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: task_list_id,
-        name: task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     const wait_for_rename_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}`, {name: another_task_list_name})
@@ -193,10 +187,7 @@ export async function lets_user_close_edit_task_list_name_modal() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: task_list_id,
-        name: task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     await openEditTaskListName()
@@ -209,10 +200,7 @@ export async function lets_user_collapse_tasks_list_single_select() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     await addAnotherTaskList();
@@ -228,10 +216,7 @@ export async function lets_user_expand_tasks_list_single_select() {
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
     await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
-        id: another_task_list_id,
-        name: another_task_list_name
-    })
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     await addAnotherTaskList();
@@ -243,16 +228,17 @@ export async function lets_user_expand_tasks_list_single_select() {
     expect(tasksListSingleSelectCaretPointsDown()).toBe(false);
 }
 
-export async function selects_first_of_multiple_lists() {
+export async function selects_newest_of_multiple_lists() {
     const wait_for_get_task_lists = mockServer.get("/tasks-lists", [
-        {id: task_list_id, name: task_list_name, tasks: []},
-        {id: another_task_list_id, name: another_task_list_name, tasks: []}
+        add_task_list_response,
+        another_add_task_list_response
     ])
+    mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`, {})
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists)
     await toggleTasksListSingleSelect();
-    expect(taskListSingleSelectChosenValue()).toBe(task_list_id);
+    expect(taskListSingleSelectChosenValue()).toBe(another_task_list_id);
 }
 
 export async function displays_overlay_modal_for_validation_errors() {
@@ -283,7 +269,7 @@ export async function lets_user_add_a_task_list() {
 }
 
 export async function disables_add_a_task_list_whilst_adding() {
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {id: task_list_id, name: task_list_name}, true, 1000)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response, true, 1000)
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await addATaskList();
@@ -320,7 +306,7 @@ export async function lets_user_collapse_tasks_list_input() {
 
 export async function ensures_add_and_select_tasks_list_are_closed_if_a_task_list_is_loaded() {
     const wait_for_get_task_lists = mockServer.get("/tasks-lists", [
-        {id: task_list_id, name: task_list_name, tasks: []}
+        add_task_list_response
     ])
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
@@ -557,34 +543,19 @@ export async function does_not_show_remove_or_carry_for_ticked_tasks() {
 
 export async function shows_correct_tasks_when_selecting_a_different_list() {
     const wait_for_get_task_lists = mockServer.get("/tasks-lists", [
-        {id: task_list_id, name: task_list_name, tasks: [
-            {
-                id: task_ids[0],
-                content: testTaskText,
-                is_ticked: false,
-                is_carried: false,
-                is_removed: false,
-                page_count: 0
-            }]},
-        {id: another_task_list_id, name: another_task_list_name, tasks: [
-            {
-                id: task_ids[1],
-                content: anotherTestTaskText,
-                is_ticked: false,
-                is_carried: false,
-                is_removed: false,
-                page_count: 0
-            }]}
+        add_task_list_response_with_tasks,
+        another_add_task_list_response_with_tasks
     ])
-    const wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`, {})
+    mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`, {})
+    const wait_for_update_last_selected_time = mockServer.patch(`/tasks-lists/${task_list_id}/last-selected-time`, {})
     renderTasksView();
     await waitForLoadingSpinnerToDisappear();
     await waitUntil(wait_for_get_task_lists);
     await toggleTasksListSingleSelect();
     await selectOptionFromTaskListSingleSelect(1);
     await waitUntil(wait_for_update_last_selected_time);
-    await waitUntil(() => !tickTaskHidden(task_ids[1]));
-    expect(taskTextShown(task_ids[1], anotherTestTaskText)).toBe(true);
+    await waitUntil(() => !tickTaskHidden(task_id));
+    expect(taskTextShown(task_id, "Task content")).toBe(true);
     
 }
 async function add_all_tasks_except_one() {

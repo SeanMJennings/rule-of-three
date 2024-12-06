@@ -7,6 +7,7 @@
     deletingTheTasksList = "deletingTheTasksList",
     selectingTheTasksList = "selectingTheTasksList",
     sharingTheTasksList = "sharingTheTasksList",
+    unsharingTheTasksList = "unsharingTheTasksList",
     addingTasksLists = "addingTasksLists",
     assessingTasksList = "assessingTasksList",
 }

@@ -57,7 +57,7 @@ export const carryingOrRemovingTasks = (value: StateValue) => {
 }
 
 export const tasksAreFull = function (context: { id: string, tasksLists: TasksList[]; }) {
-    const numberOfTasks = context.tasksLists.find((list) => list.id === context.id)?.tasks.length;
+    const numberOfTasks = context.tasksLists.find((list) => list.id === context.id)?.tasks?.length;
     if (numberOfTasks === undefined) {
         return false;
     }
