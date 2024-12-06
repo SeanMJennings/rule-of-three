@@ -3,12 +3,16 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 10px;
-    max-height: 70%;
+    max-height: 80%;
     overflow-y: auto;
     scrollbar-width: thin;
 }
 
 .sharer {
-    display: block;
+    display: flex;
     flex-grow: 1;
+    padding-right: 10px;
+    span {
+        flex-grow: 1;
+    }
 }

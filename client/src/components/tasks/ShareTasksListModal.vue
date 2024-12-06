@@ -4,7 +4,7 @@ import shareModalStyles from "./ShareTasksListModal.module.css";
 import type {EventFromLogic, SnapshotFrom} from "xstate";
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import Modal from "@/components/Modal.vue";
-import {faAdd} from "@fortawesome/free-solid-svg-icons";
+import {faAdd, faMinus} from "@fortawesome/free-solid-svg-icons";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import {ref, watch} from "vue";
 import {waitUntil} from "@/common/utilities";
@@ -26,6 +26,11 @@ const onSubmit = async () => {
   await waitUntil(() => !tasksListSharerAreUpdating(props.snapshot.value));
   props.onClose();
 }
+const onRemove = async (sharer: string) => {
+  props.send({type: "unshareTasksList", id: props.snapshot.context.id, email: sharer});
+  await waitUntil(() => !tasksListSharerAreUpdating(props.snapshot.value));
+  props.onClose();
+}
 
 </script>
 
@@ -37,7 +42,10 @@ const onSubmit = async () => {
         <ButtonIcon the_id="share-task-list-submit" :icon="faAdd" v-on:click="onSubmit" :class="modalStyles.icon" title="Add sharer"/>
       </div>
       <div :class="shareModalStyles.container">
-        <span v-for="sharer in getSharers(snapshot.context)" :id="sharer.replace('@', '').replace('.', '')" :key="sharer" :class="shareModalStyles.sharer">{{ sharer }}</span>
+        <div v-for="sharer in getSharers(snapshot.context)" :key="sharer" :class="shareModalStyles.sharer">
+          <span :id="sharer.replace('@', '').replace('.', '')">{{ sharer }}</span>
+          <ButtonIcon :the_id="'unshare-' + sharer.replace('@', '').replace('.', '')" :icon="faMinus" v-on:click="onRemove(sharer)" title="Unshare tasks list"/>
+        </div>
       </div>
     </div>
   </Modal>

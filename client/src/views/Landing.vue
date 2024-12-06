@@ -6,18 +6,19 @@ const auth0 = useAuth0();
 </script>
 
 <template>
-    <div :class="style.container">
-      <h2>A simple approach</h2>
-      <h2>to doing</h2>
-      <h2>or accepting</h2>
-      <br/>
-      <div :class="style.instructionContainer">
-        <span>1. Add up to 22 tasks to a list</span>
-        <span>2. Carry or remove tasks that were not ticked off</span>
-        <span>3. After two carries, tick or remove old tasks</span>
-      </div>
-      <div :class="style.linkContainer">
-        <RouterLink id="tasks-link" :class="style.link" v-show="auth0.isAuthenticated.value" to="/tasks">Go to Tasks</RouterLink>
-      </div>
+  <div :class="style.container">
+    <h2>A simple approach</h2>
+    <h2>to doing</h2>
+    <h2>or accepting</h2>
+    <br/>
+    <div :class="style.instructionContainer">
+      <span>1. Add up to 22 tasks to a list</span>
+      <span>2. Carry or remove tasks that were not ticked off</span>
+      <span>3. After two carries, tick or remove old tasks</span>
+      <span>Note: Tasks are stored encrypted for privacy</span>
     </div>
+    <div :class="style.linkContainer">
+      <RouterLink id="tasks-link" :class="style.link" v-show="auth0.isAuthenticated.value" to="/tasks">Go to Tasks</RouterLink>
+    </div>
+  </div>
 </template>

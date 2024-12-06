@@ -31,10 +31,6 @@ export const showCreateTasksList = (value: StateValue) => {
     return value === TasksMachineCombinedStates.empty;
 }
 
-export const notEmpty = (value: StateValue) => {
-    return value !== TasksMachineCombinedStates.empty;
-}
-
 export const notEmptyOrInitiallyLoading = (value: StateValue) => {
     return value !== TasksMachineCombinedStates.empty && value !== TasksListMachineStates.loading;
 }
@@ -81,7 +77,7 @@ export const tasksListNamingIsUpdating = function (value: StateValue) {
 }
 
 export const tasksListSharerAreUpdating = function (value: StateValue) {
-    return value === TasksListMachineStates.sharingTheTasksList;
+    return value === TasksListMachineStates.sharingTheTasksList || value === TasksListMachineStates.unsharingTheTasksList;
 }
 
 export const tasksListIsBeingDeleted = function (value: StateValue) {

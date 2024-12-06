@@ -1,7 +1,7 @@
 ﻿import {describe, it} from "vitest";
 import {
     adds_and_lists_a_task,
-    allows_owner_to_share_a_task_list,
+    allows_owner_to_share_a_task_list, allows_owner_to_unshare_a_task_list,
     asks_user_to_create_first_task_list,
     character_count_limit_hidden_when_input_is_empty,
     closes_a_modal_to_share_a_task_list,
@@ -86,6 +86,7 @@ describe("Tasks", () => {
     describe("Sharing", () => {
         it("opens a modal to share a task list", opens_a_modal_to_share_a_task_list);
         it("allows owner to share a task list", allows_owner_to_share_a_task_list);
+        it("allows owner to unshare a task list", allows_owner_to_unshare_a_task_list);
         it("closes a modal to share a task list", closes_a_modal_to_share_a_task_list);
         it("does not allow a sharer to share a task list", does_not_allow_a_sharer_to_share_a_task_list);
     })

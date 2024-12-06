@@ -253,10 +253,6 @@ export async function openShareTaskList() {
     return elements.openShareTaskList.trigger("click");
 }
 
-export function debug() {
-    console.log(page.html());
-}
-
 export async function typeShareTaskList(value: string) {
     return elements.shareTaskListInput.setValue(value);
 }
@@ -264,6 +260,11 @@ export async function typeShareTaskList(value: string) {
 export async function submitShareTaskList() {
     return elements.shareTaskListSubmit.trigger("click");
 }
+
+export async function unshareTaskList(email: string) {
+    return elements.unshareEmail(email.replace('@', '').replace('.', '')).trigger("click");
+}
+    
 
 export async function closerShareTaskList() {
     return elements.closeModal.trigger("click");
@@ -346,6 +347,9 @@ const elements = {
     },
     sharer(email: string) {
         return page.find((('#' + email).replace('@', '').replace('.', '')));
+    },
+    unshareEmail(email: string) {
+        return page.find((('#unshare-' + email).replace('@', '').replace('.', '')));
     },
     get taskListSingleSelect() {
         return page.find("#task-list-single-select").element as HTMLSelectElement;
