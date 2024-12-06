@@ -174,6 +174,10 @@ def sharing_tasks_list_with_a_user():
     tasks_list.share(an_email)
 
 
+def sharing_tasks_list_with_invalid_email():
+    tasks_list.share("invalid_email")
+
+
 def unsharing_tasks_list_with_a_user():
     tasks_list.unshare(an_email)
 

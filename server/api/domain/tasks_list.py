@@ -1,4 +1,5 @@
 ﻿import datetime
+import re
 import uuid
 from api.domain.task import Task
 
@@ -108,6 +109,8 @@ class TasksList:
             raise Exception("Tasks list already shared with user")
         if email == self.owner_email:
             raise Exception("Tasks list cannot be shared with owner")
+        if re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email) is None:
+            raise Exception("Invalid email address")
         self.shared_with.append(email)
 
     def unshare(self, email: str):

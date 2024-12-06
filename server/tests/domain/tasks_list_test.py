@@ -145,6 +145,12 @@ def test_can_share_tasks_list_with_another_user():
     Then(the_tasks_list_is_shared_to_a_user)
 
 
+def test_cannot_share_invalid_email():
+    Given(a_tasks_list)
+    When(validating(sharing_tasks_list_with_invalid_email))
+    Then(informs("Invalid email address"))
+
+
 def test_can_share_tasks_list_with_multiple_users():
     Given(a_tasks_list)
     When(sharing_tasks_list_with_a_user)
