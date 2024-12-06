@@ -111,3 +111,7 @@ export const getSharers = function (context: context): string[] {
 export const getName = function (context: context): string {
     return context.tasksLists.find((list) => list.id === context.id)?.name ?? '';
 }
+
+export const sharerExists = function (context: context, email: string): boolean {
+    return context.tasksLists.find((list) => list.id === context.id)?.sharedWith.includes(email) ?? false;
+}

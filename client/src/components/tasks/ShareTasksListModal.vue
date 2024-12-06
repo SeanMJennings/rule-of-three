@@ -8,7 +8,7 @@ import {faAdd, faMinus} from "@fortawesome/free-solid-svg-icons";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import {ref, watch} from "vue";
 import {waitUntil} from "@/common/utilities";
-import {getSharers, tasksListSharerAreUpdating} from "@/state-machines/tasks.extensions";
+import {getSharers, sharerExists, tasksListSharerAreUpdating} from "@/state-machines/tasks.extensions";
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
@@ -20,6 +20,10 @@ const the_email = ref("");
 watch(the_email, (oldValue) => {
   the_email.value = oldValue;
 });
+
+const emailIsValid = (email: string) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !sharerExists(props.snapshot.context, email);
+}
 
 const onSubmit = async () => {
   props.send({type: "shareTasksList", id: props.snapshot.context.id, email: the_email.value});
@@ -39,7 +43,7 @@ const onRemove = async (sharer: string) => {
     <div :class="modalStyles.body">
       <div :class="modalStyles.inputContainer">
         <input id="share-task-list-input" v-model="the_email" :class="modalStyles.input" type="text"/>
-        <ButtonIcon the_id="share-task-list-submit" :icon="faAdd" v-on:click="onSubmit" :class="modalStyles.icon" title="Add sharer"/>
+        <ButtonIcon the_id="share-task-list-submit" :icon="faAdd" v-on:click="onSubmit" :class="modalStyles.icon" title="Add sharer" :disabled="!emailIsValid(the_email)"/>
       </div>
       <div :class="shareModalStyles.container">
         <div v-for="sharer in getSharers(snapshot.context)" :key="sharer" :class="shareModalStyles.sharer">

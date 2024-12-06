@@ -261,6 +261,10 @@ export async function submitShareTaskList() {
     return elements.shareTaskListSubmit.trigger("click");
 }
 
+export function submitShareTaskListDisabled() {
+    return (elements.shareTaskListSubmit.element as HTMLButtonElement).disabled;
+}
+
 export async function unshareTaskList(email: string) {
     return elements.unshareEmail(email.replace('@', '').replace('.', '')).trigger("click");
 }

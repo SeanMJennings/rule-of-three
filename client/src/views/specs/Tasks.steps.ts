@@ -24,7 +24,7 @@ import {
     removeTaskHidden,
     renderTasksView,
     selectOptionFromTaskListSingleSelect, sharerExists, shareTaskListExists,
-    submitNewTaskListName, submitShareTaskList,
+    submitNewTaskListName, submitShareTaskList, submitShareTaskListDisabled,
     taskCount,
     taskCountHidden,
     taskListCharacterCount,
@@ -567,19 +567,6 @@ export async function shows_correct_tasks_when_selecting_a_different_list() {
     
 }
 
-export async function opens_a_modal_to_share_a_task_list() {
-    await login();
-    renderTasksView();
-    await waitForLoadingSpinnerToDisappear();
-    await addATaskList();    
-    await waitUntil(wait_for_create_tasks_list)
-    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
-    await waitUntil(() => !addTaskListSubmitDisabled());
-    await toggleTasksListSingleSelect();
-    await openShareTaskList();
-    expect(pageText()).toContain("Share tasks list");
-}
-
 export async function  allows_owner_to_share_a_task_list() {
     await login();
     renderTasksView();
@@ -650,6 +637,40 @@ export async function does_not_allow_a_sharer_to_share_a_task_list() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     expect(await shareTaskListExists()).toBe(false);
+}
+
+export async function only_allows_valid_email() {
+    await login();
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    await openShareTaskList();
+    await typeShareTaskList("wibble");
+    expect(submitShareTaskListDisabled()).toBe(true);
+}
+
+export async function does_not_allow_same_email_twice() {
+    await login();
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    const wait_for_share_task_list = mockServer.patch(`/tasks-lists/${task_list_id}/share`, {share_with: another_email_to_share})
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    await openShareTaskList();
+    await typeShareTaskList(another_email_to_share);
+    await submitShareTaskList();
+    await waitUntil(wait_for_share_task_list);
+    await openShareTaskList();
+    await waitUntil(() => sharerExists(another_email_to_share));
+    await typeShareTaskList(another_email_to_share);
+    expect(submitShareTaskListDisabled()).toBe(true);
 }
 
 async function add_all_tasks_except_one() {
