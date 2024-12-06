@@ -16,6 +16,12 @@
     font-size: 21px;
 }
 
+.disabled {
+    path {
+        fill: var(--color-icon-fill-disabled);
+    }
+}
+
 .overlay {
     display: flex;
     flex-direction: column;

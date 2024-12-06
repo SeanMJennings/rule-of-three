@@ -43,7 +43,7 @@ const onRemove = async (sharer: string) => {
     <div :class="modalStyles.body">
       <div :class="modalStyles.inputContainer">
         <input id="share-task-list-input" v-model="the_email" :class="modalStyles.input" type="text"/>
-        <ButtonIcon the_id="share-task-list-submit" :icon="faAdd" v-on:click="onSubmit" :class="modalStyles.icon" title="Add sharer" :disabled="!emailIsValid(the_email)"/>
+        <ButtonIcon the_id="share-task-list-submit" :icon="faAdd" v-on:click="onSubmit" :class="`${!emailIsValid(the_email) ? modalStyles.disabled : ''} ${modalStyles.icon}`" title="Add sharer" :disabled="!emailIsValid(the_email)" />
       </div>
       <div :class="shareModalStyles.container">
         <div v-for="sharer in getSharers(snapshot.context)" :key="sharer" :class="shareModalStyles.sharer">
