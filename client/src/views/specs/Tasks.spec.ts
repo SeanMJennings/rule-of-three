@@ -1,6 +1,6 @@
 ﻿import {describe, it} from "vitest";
 import {
-    adds_and_lists_a_task,
+    adds_and_lists_a_task, allows_owner_to_share_a_task_list,
     asks_user_to_create_first_task_list,
     character_count_limit_hidden_when_input_is_empty, disables_add_a_task_list_whilst_adding,
     disables_add_task_button_when_input_is_empty, disables_add_task_button_whilst_adding,
@@ -8,7 +8,7 @@ import {
     displays_list_character_count_limit,
     displays_loading_spinner_until_task_lists_are_loaded,
     displays_overlay_modal_for_validation_errors,
-    displays_page_number_of_tasks,
+    displays_page_number_of_tasks, does_not_allow_a_sharer_to_share_a_task_list,
     does_not_show_remove_or_carry_for_ticked_tasks,
     ensures_add_and_select_tasks_list_are_closed_if_a_task_list_is_loaded,
     lets_user_add_a_task_list,
@@ -74,4 +74,8 @@ describe("Tasks", () => {
         it("only shows remove tasks for tasks carried twice", only_shows_remove_tasks_for_tasks_carried_twice, 10000);
         it("shows correct tasks when selecting a different list", shows_correct_tasks_when_selecting_a_different_list);
     });
+    describe("Sharing", () => {
+        it("allows owner to share a task list", allows_owner_to_share_a_task_list);
+        it("does not allow a sharer to share a task list", does_not_allow_a_sharer_to_share_a_task_list);
+    })
 });

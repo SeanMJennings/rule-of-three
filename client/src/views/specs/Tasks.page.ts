@@ -245,6 +245,10 @@ export function removeTaskHidden(taskId: string | number) {
     return !elements.taskRemove(taskId).exists();
 }
 
+export async function shareTaskListExists() {
+    return elements.openShareTaskList.exists();
+}
+
 function mountTasksView() {
     return mount(Tasks, {
         props: {
@@ -291,6 +295,9 @@ const elements = {
     },
     get openDeleteTaskList() {
         return page.find("#open-delete-task-list");
+    },
+    get openShareTaskList() {
+        return page.find("#open-share-task-list");
     },
     get closeModal() {
         return page.find("#overlay-close");

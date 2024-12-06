@@ -6,16 +6,19 @@ import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from '
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {TasksListMachineStates} from "@/state-machines/tasks.states";
 import type {Id} from "@/types/types";
-import {faEdit, faPlusCircle, faTrash, faTasks} from '@fortawesome/free-solid-svg-icons'
+import {faEdit, faPlusCircle, faTrash, faTasks, faShare} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
 import {
-  notEmpty,
+  isOwner,
   notEmptyOrInitiallyLoading,
   readyToAddTasks,
   showCreateTasksList
 } from "@/state-machines/tasks.extensions";
+import {useAuth0} from "@auth0/auth0-vue";
 let subscription: Subscription;
+
+const auth0 = useAuth0();
 
 type TasksListModel = { name: string };
 const props = defineProps<{
@@ -113,6 +116,7 @@ onUnmounted(() => {
         <div :class="style.selectInputButtons">
           <ButtonIcon the_id="open-edit-task-list-name" :icon="faEdit" v-on:click="openEditTaskListName()" title="Edit tasks list name"/>
           <ButtonIcon the_id="open-delete-task-list" :icon="faTrash" v-on:click="openDeleteTaskList()" title="Delete tasks list"/>
+          <ButtonIcon v-if="isOwner(auth0.user.value?.email, snapshot.context)" the_id="open-share-task-list" :icon="faShare" v-on:click="() => {}" title="Share tasks list"/>
         </div>
       </div>
     </div>

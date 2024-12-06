@@ -23,7 +23,7 @@ import {
     removeTask,
     removeTaskHidden,
     renderTasksView,
-    selectOptionFromTaskListSingleSelect,
+    selectOptionFromTaskListSingleSelect, shareTaskListExists,
     submitNewTaskListName,
     taskCount,
     taskCountHidden,
@@ -59,10 +59,11 @@ import {
     another_add_task_list_response,
     task_ids,
     add_task_list_response_with_tasks,
-    another_add_task_list_response_with_tasks, anotherTestTaskText, task_id
+    another_add_task_list_response_with_tasks, task_id, another_email_to_share
 } from "@/state-machines/specs/tasks.api-mocks";
 import {MockServer} from "@/testing/mock-server";
 import {reducedTaskLimit, waitUntil} from "@/testing/utilities";
+import {login, mockAuth0, resetAuth0, userIsAuthenticated} from "@/testing/mock-auth0";
 
 const testTaskText = "Hello, world!";
 
@@ -75,10 +76,17 @@ vi.mock("@lottiefiles/dotlottie-vue", () => {
     return {DotLottieVue: {template: "<div>I am a fake!</div>"}};
 });
 
+vi.mock('@auth0/auth0-vue', () => ({
+    useAuth0: () => mockAuth0,
+    authGuard: () => userIsAuthenticated()
+}));
+
 beforeEach(() => {
     mockServer.reset();
     mockServer.get("/tasks-lists", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    resetAuth0();
+    window.token = undefined;
     mockServer.start()
 });
 
@@ -558,6 +566,33 @@ export async function shows_correct_tasks_when_selecting_a_different_list() {
     expect(taskTextShown(task_id, "Task content")).toBe(true);
     
 }
+
+export async function allows_owner_to_share_a_task_list() {
+    await login();
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    expect(await shareTaskListExists()).toBe(true);
+}
+
+export async function does_not_allow_a_sharer_to_share_a_task_list() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        ...add_task_list_response,
+        owner_email: another_email_to_share
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    expect(await shareTaskListExists()).toBe(false);
+}
+
 async function add_all_tasks_except_one() {
     for (const task_id of task_ids) {
         const wait_for_add_task = mockServer.post(`/tasks-lists/${task_list_id}/task`, {id: task_id})

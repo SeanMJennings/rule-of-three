@@ -1,11 +1,13 @@
 ﻿import type {User} from "@auth0/auth0-spa-js";
 import {type Ref, ref} from "vue";
 import {vi} from "vitest";
+import {owner_email} from "@/state-machines/specs/tasks.api-mocks";
 vi.mock('@auth0/auth0-vue');
 
 const a_user: User = {
     sub: "123",
-    name: "Mr wibble"
+    name: "Mr wibble",
+    email: owner_email
 }
 const no_user = undefined as any as User | undefined;
 const user = ref(no_user);
@@ -44,4 +46,8 @@ export const resetAuth0 = () => {
 
 export const change_token = (new_token: string | undefined) => {
     token.value = {__raw: new_token};
+}
+
+export const login = async () => {
+    await mockAuth0.loginWithPopup();
 }

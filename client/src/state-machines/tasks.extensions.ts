@@ -2,7 +2,10 @@
 import type {StateValue} from "xstate";
 import {TasksListMachineStates, TasksMachineCombinedStates} from "@/state-machines/tasks.states";
 import * as _ from "lodash";
+
+type context = { id: string, tasksLists: TasksList[]; }
 export const taskLimit = Number(import.meta.env.TASK_LIMIT || 22);
+export const isOwner = (email: string | undefined, context: context) => selectedTaskListOwner(context) === email;
 
 export const loading = (value: StateValue) => {
     return value === TasksListMachineStates.loading 
@@ -57,7 +60,7 @@ export const carryingOrRemovingTasks = (value: StateValue) => {
         || _.isEqual(value, TasksMachineCombinedStates.addingTasksListsTickingTheTaskDuringChoosing);
 }
 
-export const tasksAreFull = function (context: { id: string, tasksLists: TasksList[]; }) {
+export const tasksAreFull = function (context: context) {
     const numberOfTasks = context.tasksLists.find((list) => list.id === context.id)?.tasks?.length;
     if (numberOfTasks === undefined) {
         return false;
@@ -65,8 +68,12 @@ export const tasksAreFull = function (context: { id: string, tasksLists: TasksLi
     return numberOfTasks >= taskLimit;
 };
 
-export const selectedTaskListName = function (context: { id: string, tasksLists: TasksList[]; }) {
+export const selectedTaskListName = function (context: context) {
     return context.tasksLists.find((list) => list.id === context.id)?.name;
+}
+
+export const selectedTaskListOwner = function (context: context) {
+    return context.tasksLists.find((list) => list.id === context.id)?.ownerEmail;
 }
 
 export const tasksListNamingIsUpdating = function (value: StateValue) {
@@ -77,7 +84,7 @@ export const tasksListIsBeingDeleted = function (value: StateValue) {
     return value === TasksListMachineStates.deletingTheTasksList;
 }
     
-export const tasksHaveBeenCarried = function (context: { id: string, tasksLists: TasksList[]; }): boolean {
+export const tasksHaveBeenCarried = function (context: context): boolean {
     return context.tasksLists.find((list) => list.id === context.id)?.tasks.filter((n) => !n.carried && !n.ticked && !n.removed).length === 0;
 };
 
@@ -93,10 +100,10 @@ export const canRemoveTask = function (task: Task): boolean {
     return !task.carried && !task.ticked && !task.removed
 }
 
-export const getTasks = function (context: { id: string, tasksLists: TasksList[]; }): Task[] {
+export const getTasks = function (context: context): Task[] {
     return context.tasksLists.find((list) => list.id === context.id)?.tasks ?? [];
 };
 
-export const getName = function (context: { id: string, tasksLists: TasksList[]; }): string {
+export const getName = function (context: context): string {
     return context.tasksLists.find((list) => list.id === context.id)?.name ?? '';
 }
