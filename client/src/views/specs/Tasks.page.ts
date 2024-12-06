@@ -51,8 +51,16 @@ export function openEditTaskListName() {
     return elements.openEditTaskListName.trigger("click");
 }
 
+export function openEditTaskListNameDisabled() {
+    return (elements.openEditTaskListName.element as HTMLButtonElement).disabled;
+}
+
 export function openDeleteTaskList() {
     return elements.openDeleteTaskList.trigger("click");
+}
+
+export function openDeleteTaskListDisabled() {
+    return (elements.openDeleteTaskList.element as HTMLButtonElement).disabled;
 }
 
 export function closeDeleteTaskList() {

@@ -119,8 +119,8 @@ onUnmounted(() => {
           </option>
         </select>
         <div :class="style.selectInputButtons">
-          <ButtonIcon the_id="open-edit-task-list-name" :icon="faEdit" v-on:click="openEditTaskListName()" title="Edit tasks list name"/>
-          <ButtonIcon the_id="open-delete-task-list" :icon="faTrash" v-on:click="openDeleteTaskList()" title="Delete tasks list"/>
+          <ButtonIcon the_id="open-edit-task-list-name" :disabled="!isOwner(auth0.user.value?.email, props.snapshot.context)" :class="`${!isOwner(auth0.user.value?.email, props.snapshot.context) ? commonStyle.disabled : ''}`" :icon="faEdit" v-on:click="openEditTaskListName()" title="Edit tasks list name"/>
+          <ButtonIcon the_id="open-delete-task-list"  :disabled="!isOwner(auth0.user.value?.email, props.snapshot.context)" :class="`${!isOwner(auth0.user.value?.email, props.snapshot.context) ? commonStyle.disabled : ''}`" :icon="faTrash" v-on:click="openDeleteTaskList()" title="Delete tasks list"/>
           <ButtonIcon v-if="isOwner(auth0.user.value?.email, snapshot.context)" the_id="open-share-task-list" :icon="faShare" v-on:click="openShareTaskList()" title="Share tasks list"/>
         </div>
       </div>

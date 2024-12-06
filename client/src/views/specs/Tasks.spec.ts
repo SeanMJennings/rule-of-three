@@ -1,7 +1,8 @@
 ﻿import {describe, it} from "vitest";
 import {
     adds_and_lists_a_task,
-    allows_owner_to_share_a_task_list, allows_owner_to_unshare_a_task_list,
+    allows_owner_to_share_a_task_list,
+    allows_owner_to_unshare_a_task_list,
     asks_user_to_create_first_task_list,
     character_count_limit_hidden_when_input_is_empty,
     closes_a_modal_to_share_a_task_list,
@@ -13,7 +14,10 @@ import {
     displays_loading_spinner_until_task_lists_are_loaded,
     displays_overlay_modal_for_validation_errors,
     displays_page_number_of_tasks,
-    does_not_allow_a_sharer_to_share_a_task_list, does_not_allow_same_email_twice,
+    does_not_allow_a_sharer_to_delete_a_task_list,
+    does_not_allow_a_sharer_to_edit_a_task_list_name,
+    does_not_allow_a_sharer_to_share_a_task_list,
+    does_not_allow_same_email_twice,
     does_not_show_remove_or_carry_for_ticked_tasks,
     ensures_add_and_select_tasks_list_are_closed_if_a_task_list_is_loaded,
     lets_user_add_a_task_list,
@@ -32,7 +36,8 @@ import {
     lets_user_tick_tasks_during_choosing,
     limits_edit_task_list_name_input_to_50_characters,
     limits_task_length_to_150_characters,
-    list_character_count_limit_hidden_when_input_is_empty, only_allows_valid_email,
+    list_character_count_limit_hidden_when_input_is_empty,
+    only_allows_valid_email,
     only_shows_remove_tasks_for_tasks_carried_twice,
     renders_tasks,
     selects_newest_of_multiple_lists,
@@ -89,5 +94,7 @@ describe("Tasks", () => {
         it("does not allow a sharer to share a task list", does_not_allow_a_sharer_to_share_a_task_list);
         it("only allows valid email", only_allows_valid_email);
         it("does not allow same email twice", does_not_allow_same_email_twice);
+        it("does not allow sharer to delete a task list", does_not_allow_a_sharer_to_delete_a_task_list);
+        it("does not allow sharer to edit a task list name", does_not_allow_a_sharer_to_edit_a_task_list_name);
     })
 });

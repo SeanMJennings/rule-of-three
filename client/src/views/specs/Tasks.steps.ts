@@ -17,8 +17,8 @@ import {
     editTaskListNameModalExists,
     errorOverlayExists,
     errorOverlayText,
-    loadingSpinnerExists, openDeleteTaskList,
-    openEditTaskListName, openShareTaskList,
+    loadingSpinnerExists, openDeleteTaskList, openDeleteTaskListDisabled,
+    openEditTaskListName, openEditTaskListNameDisabled, openShareTaskList,
     pageText,
     removeTask,
     removeTaskHidden,
@@ -637,6 +637,34 @@ export async function does_not_allow_a_sharer_to_share_a_task_list() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     expect(await shareTaskListExists()).toBe(false);
+}
+
+export async function does_not_allow_a_sharer_to_delete_a_task_list() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        ...add_task_list_response,
+        owner_email: another_email_to_share
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    expect(openDeleteTaskListDisabled()).toBe(true);
+}
+
+export async function does_not_allow_a_sharer_to_edit_a_task_list_name() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        ...add_task_list_response,
+        owner_email: another_email_to_share
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    expect(openEditTaskListNameDisabled()).toBe(true);
 }
 
 export async function only_allows_valid_email() {
