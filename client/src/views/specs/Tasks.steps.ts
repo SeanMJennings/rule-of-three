@@ -103,6 +103,8 @@ beforeEach(() => {
     mockServer.reset();
     mockServer.get("/tasks-lists", [])
     wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
+    mockServer.patch(`/tasks-lists/${task_list_id}/last-selected-time`, {})
+    mockServer.patch(`/tasks-lists/${another_task_list_id}/last-selected-time`, {})
     resetAuth0();
     window.token = undefined;
     mockServer.start()
