@@ -107,7 +107,7 @@ onUnmounted(() => {
       <label :class="commonStyle.label" for="add-task-list-input">Add Tasks List</label>
       <div :class="commonStyle.inputContainer">
         <input id="add-task-list-input" v-model="tasksListModel.name" :class="commonStyle.input" type="text"/>
-        <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :class="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.addIcon}`" the_id="add-task-list-submit" v-on:click="addTaskList()" title="Add tasks list"/>
+        <ButtonIcon :disabled="disableAddTaskListButton()" :icon="faPlusSquare" :class="`${disabled() ? commonStyle.disabled : ''} ${commonStyle.icon}`" the_id="add-task-list-submit" v-on:click="addTaskList()" title="Add tasks list"/>
       </div>
       <span id="tasks-list-character-count" :class="commonStyle.characterCount">{{tasksListModel.name.length > 0 ? tasksListModel.name.length + "/50" : "" }}</span>
     </div>
@@ -127,7 +127,7 @@ onUnmounted(() => {
           <ButtonIcon the_id="open-edit-task-list-name" :disabled="!isOwner(auth0.user.value?.email, props.snapshot.context)" :class="`${!isOwner(auth0.user.value?.email, props.snapshot.context) ? commonStyle.disabled : ''}`" :icon="faEdit" v-on:click="openEditTaskListName()" title="Edit tasks list name"/>
           <ButtonIcon the_id="open-delete-task-list"  :disabled="!isOwner(auth0.user.value?.email, props.snapshot.context)" :class="`${!isOwner(auth0.user.value?.email, props.snapshot.context) ? commonStyle.disabled : ''}`" :icon="faTrash" v-on:click="openDeleteTaskList()" title="Delete tasks list"/>
           <ButtonIcon v-if="isOwner(auth0.user.value?.email, snapshot.context)" the_id="open-share-task-list" :icon="faShare" v-on:click="openShareTaskList()" title="Share tasks list"/>
-          <ButtonIcon v-if="!isOwner(auth0.user.value?.email, snapshot.context)" the_id="open-unshare-self" :icon="faRemove" v-on:click="openUnshareTaskList()" title="Unshare tasks list for self"/>
+          <ButtonIcon v-if="!isOwner(auth0.user.value?.email, snapshot.context)" the_id="open-unshare-self" :icon="faRemove" v-on:click="openUnshareTaskList()" :class="commonStyle.icon" title="Unshare tasks list for self"/>
         </div>
       </div>
     </div>
