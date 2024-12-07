@@ -6,7 +6,15 @@ import {Actor, type EventFromLogic, type SnapshotFrom, type Subscription} from '
 import {tasksMachine} from "@/state-machines/tasks.state-machine";
 import {TasksListMachineStates} from "@/state-machines/tasks.states";
 import type {Id} from "@/types/types";
-import {faEdit, faPlusCircle, faTrash, faTasks, faShare, faRemove} from '@fortawesome/free-solid-svg-icons'
+import {
+  faEdit,
+  faPlusCircle,
+  faTrash,
+  faTasks,
+  faShare,
+  faRemove,
+  faCaretSquareUp
+} from '@fortawesome/free-solid-svg-icons'
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import commonStyle from './Tasks.common.module.css'
 import {
@@ -101,7 +109,7 @@ onUnmounted(() => {
     </div>
     <div v-if="notEmptyOrInitiallyLoading(snapshot.value)" :class="commonStyle.header" v-on:click="toggleTasksList()">
       <ButtonIcon :class="commonStyle.button" :icon="faPlusCircle" title="" :disabled="true"/>
-      <ButtonIcon :icon="faCaretSquareDown" :class="`${tasksListInputCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-input-caret" title="Add tasks lists"/>
+      <ButtonIcon :icon="tasksListInputCollapsedModel.collapsed ? faCaretSquareDown : faCaretSquareUp" :class="style.caret" :the_id="`tasks-list-input-caret-${tasksListInputCollapsedModel.collapsed ? 'down' : 'up'}`" title="Add tasks lists"/>
     </div>
     <div v-if="notEmptyOrInitiallyLoading(snapshot.value) && !tasksListInputCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="add-task-list-input">Add Tasks List</label>
@@ -113,7 +121,7 @@ onUnmounted(() => {
     </div>
     <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0" :class="commonStyle.header" v-on:click="toggleTasksSelect()">
       <ButtonIcon :class="commonStyle.button" :icon="faTasks" title="" :disabled="true"/>
-      <ButtonIcon :icon="faCaretSquareDown" :class="`${tasksListSelectCollapsedModel.collapsed ? '' : 'fa-rotate-180'} ${style.caret}`" the_id="tasks-list-select-caret" title="Select tasks list"/>
+      <ButtonIcon :icon="tasksListSelectCollapsedModel.collapsed ? faCaretSquareDown : faCaretSquareUp" :class="style.caret" :the_id="`tasks-list-select-caret-${tasksListSelectCollapsedModel.collapsed ? 'down' : 'up'}`" title="Select tasks list"/>
     </div>
     <div v-if="readyToAddTasks(snapshot.value) && snapshot.context.tasksLists.length > 0 && !tasksListSelectCollapsedModel.collapsed" :class="commonStyle.formSection">
       <label :class="commonStyle.label" for="task-list-single-select">Select Tasks List</label>

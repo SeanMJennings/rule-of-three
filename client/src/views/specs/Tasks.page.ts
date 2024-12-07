@@ -32,15 +32,15 @@ export function clickAddTaskListPlaceholder() {
 }
 
 export function clickTasksListCaret() {
-    return elements.tasksListCaret.trigger("click");
+    return elements.tasksListCaretUp.exists() ? elements.tasksListCaretUp.trigger("click") : elements.tasksListCaretDown.trigger("click");
 }
 
 export function tasksListCaretExists() {
-    return elements.tasksListCaret.exists();
+    return elements.tasksListCaretDown.exists();
 }
 
 export function clickTasksListSingleSelectCaret() {
-    return elements.tasksListSelectCaret.trigger("click");
+    return elements.tasksListSelectCaretDown.exists() ? elements.tasksListSelectCaretDown.trigger("click") : elements.tasksListSelectCaretUp.trigger("click");
 }
 
 export function typeTaskListName(value: string) {
@@ -162,15 +162,15 @@ export function tasksListSingleSelectCollapsed() {
 }
 
 export function tasksListSingleSelectCaretPointsDown() {
-    return !elements.tasksListSelectCaret.classes().includes("fa-rotate-180");
+    return elements.tasksListSelectCaretDown.exists()
 }
 
 export function tasksListInputCaretPointsDown() {
-    return !elements.tasksListCaret.classes().includes("fa-rotate-180");
+    return elements.tasksListCaretDown.exists()
 }
 
 export function tasksListInputCaretPointsUp() {
-    return !tasksListInputCaretPointsDown();
+    return elements.tasksListCaretUp.exists()
 }
 
 export function taskCountHidden() {
@@ -318,11 +318,17 @@ const elements = {
     get addTaskListPlaceholder() {
         return page.find("#add-task-list-placeholder");
     },
-    get tasksListCaret() {
-        return page.find("#tasks-list-input-caret");
+    get tasksListCaretDown() {
+        return page.find("#tasks-list-input-caret-down");
     },
-    get tasksListSelectCaret() {
-        return page.find("#tasks-list-select-caret");
+    get tasksListCaretUp() {
+        return page.find("#tasks-list-input-caret-up");
+    },
+    get tasksListSelectCaretDown() {
+        return page.find("#tasks-list-select-caret-down");
+    },
+    get tasksListSelectCaretUp() {
+        return page.find("#tasks-list-select-caret-up");
     },
     get addTaskListInput() {
         return page.find("#add-task-list-input");
