@@ -77,8 +77,10 @@ export const tasksListNamingIsUpdating = function (value: StateValue) {
     return value === TasksListMachineStates.updatingTheTasksList;
 }
 
-export const tasksListSharerAreUpdating = function (value: StateValue) {
-    return value === TasksListMachineStates.sharingTheTasksList || value === TasksListMachineStates.unsharingTheTasksList;
+export const tasksListSharerIsUpdating = function (value: StateValue) {
+    return value === TasksListMachineStates.sharingTheTasksList 
+        || value === TasksListMachineStates.unsharingTheTasksList 
+        || value === TasksListMachineStates.unsharingTheTasksListForSelf;
 }
 
 export const tasksListIsBeingDeleted = function (value: StateValue) {

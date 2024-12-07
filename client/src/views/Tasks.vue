@@ -11,6 +11,7 @@ import ErrorModal from "@/components/ErrorModal.vue";
 import EditTasksListNameModal from "@/components/tasks/EditTasksListNameModal.vue";
 import DeleteTasksListModal from "@/components/tasks/DeleteTasksListModal.vue";
 import ShareTasksListModal from "@/components/tasks/ShareTasksListModal.vue";
+import UnshareTasksListForSelfModal from "@/components/tasks/UnshareTasksListForSelfModal.vue";
 let subscription: Subscription;
 let timeout: NodeJS.Timeout;
 let errorSubscription: Subscription;
@@ -29,6 +30,7 @@ const showErrorModal = ref(false)
 const showEditTasksListNameModal = ref(false)
 const showDeleteTasksListModal = ref(false)
 const showShareTasksListModal = ref(false)
+const showUnshareTasksListForSelfModal = ref(false)
 const theError = ref("")
 const code = ref(0)
 
@@ -48,6 +50,10 @@ const deletingTaskList = (value: boolean) => {
 
 const sharingTaskList = (value: boolean) => {
   showShareTasksListModal.value = value;
+}
+
+const unsharingTaskListForSelf = (value: boolean) => {
+  showUnshareTasksListForSelfModal.value = value;
 }
 
 const getTasksListName = () => {
@@ -80,11 +86,12 @@ onUnmounted(() => {
     <EditTasksListNameModal v-if="showEditTasksListNameModal" :on-close="() => editingTaskListName(false)" :send="send" :snapshot="snapshot" :name="getTasksListName()" />
     <DeleteTasksListModal v-if="showDeleteTasksListModal" :on-close="() => deletingTaskList(false)" :send="send" :snapshot="snapshot"  />
     <ShareTasksListModal v-if="showShareTasksListModal" :on-close="() => sharingTaskList(false)" :send="send" :snapshot="snapshot"  />
+    <UnshareTasksListForSelfModal v-if="showUnshareTasksListForSelfModal" :on-close="() => unsharingTaskListForSelf(false)" :send="send" :snapshot="snapshot"  />
   <div :class="styles.container">
     <div v-if="showLoading" :class="styles.spinnerContainer">
       <VueSpinner id="loadingSpinner" size="30" color="white" />
     </div>
-    <TasksListForm :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList" :sharingTaskList="sharingTaskList"/>
+    <TasksListForm :actorRef="actorRef" :send="send" :snapshot="snapshot" :editingTaskListName="editingTaskListName" :deletingTaskList="deletingTaskList" :sharingTaskList="sharingTaskList" :unsharingTaskListForSelf="unsharingTaskListForSelf"/>
     <TasksForm v-if="readyToAddTasks(snapshot.value)" :send="send" :snapshot="snapshot"/>
   </div>
 </template>

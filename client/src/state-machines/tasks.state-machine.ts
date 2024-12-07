@@ -18,7 +18,7 @@ import {
 } from "@/apis/tasks_list.api";
 import type {HttpError} from "@/common/http";
 import {
-    createdTaskList, removeTaskList,
+    createdTaskList, removeTaskList, selectNextId,
     taskListWithCarriedTask,
     taskListWithCreatedTask,
     taskListWithEmailAdded,
@@ -208,7 +208,7 @@ export const tasksMachine = createMachine(
                     src: fromPromise(async ({input: {id}}) => await unshareTasksListForSelf(id)),
                     onDone: {
                         target: TasksListMachineStates.assessingTasksList,
-                        actions: assign({tasksLists: removeTaskList()}),
+                        actions: assign({id: selectNextId(), tasksLists: removeTaskList()}),
                     },
                     onError: {
                         target: TasksListMachineStates.addingTasksLists,

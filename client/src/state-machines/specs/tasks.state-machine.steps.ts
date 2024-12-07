@@ -333,13 +333,18 @@ export async function notifies_when_failing_to_unshare_a_task_list() {
 export async function unshares_a_task_list_for_self() {
     await waitForLoadingToFinish();
     tasks.send({type: "readyToAddFirstTaskList"})
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", another_add_task_list_response)
+    tasks.send({type: "addTasksList", id: another_task_list_id, name: another_task_list_name});
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", add_task_list_response)
     tasks.send({type: "addTasksList", id: task_list_id, name: task_list_name});
     await waitUntil(wait_for_create_tasks_list)
     const wait_for_unshare_tasks_list = mockServer.patch(`/tasks-lists/${task_list_id}/unshare-self`)
     tasks.send({type: "unshareTasksListForSelf", id: task_list_id});
     await waitUntil(wait_for_unshare_tasks_list)
-    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.readyToAddTasksLists);
-    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([]));
+    expect(tasks.getSnapshot().value).toEqual(TasksMachineCombinedStates.addingTasksListsAddingTasks);
+    expect(tasks.getSnapshot().context.id).toEqual(another_task_list_id);
+    expect(tasks.getSnapshot().context.tasksLists).toEqual(mapApiTasksLists([another_add_task_list_response]));
 }
 
 export async function notifies_when_failing_to_unshare_a_task_list_for_self() {

@@ -261,6 +261,18 @@ export async function openShareTaskList() {
     return elements.openShareTaskList.trigger("click");
 }
 
+export async function openUnshareTaskListForSelf() {
+    return elements.openUnshareTaskListForSelf.trigger("click");
+}
+
+export function openUnshareTaskListForSelfExists() {
+    return elements.openUnshareTaskListForSelf.exists();
+}
+
+export async function submitUnshareTaskListForSelf() {
+    return elements.submitUnshareTaskListForSelf.trigger("click");
+}
+
 export async function typeShareTaskList(value: string) {
     return elements.shareTaskListInput.setValue(value);
 }
@@ -335,6 +347,12 @@ const elements = {
     },
     get openShareTaskList() {
         return page.find("#open-share-task-list");
+    },
+    get openUnshareTaskListForSelf() {
+        return page.find("#open-unshare-self");
+    },
+    get submitUnshareTaskListForSelf() {
+        return page.find("#unshare-self-submit");
     },
     get closeModal() {
         return page.find("#overlay-close");

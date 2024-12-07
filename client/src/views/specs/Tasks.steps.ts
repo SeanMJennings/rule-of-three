@@ -3,28 +3,44 @@ import {
     addAnotherTaskList,
     addATaskList,
     addTask,
-    addTaskDisabled, addTaskInputText,
+    addTaskDisabled,
+    addTaskInputText,
     addTaskListSubmitDisabled,
     addTaskVisible,
     carryTask,
     carryTaskHidden,
     characterCount,
     characterCountHidden,
-    clickAddTaskListPlaceholder, closeDeleteTaskList,
+    clickAddTaskListPlaceholder,
+    closeDeleteTaskList,
     closeEditTaskListName,
-    closeErrorOverlay, closerShareTaskList,
-    deleteTaskList, deleteTaskListModalExists, editTaskListNameCharacterCount,
+    closeErrorOverlay,
+    closerShareTaskList,
+    deleteTaskList,
+    deleteTaskListModalExists,
+    editTaskListNameCharacterCount,
     editTaskListNameModalExists,
     errorOverlayExists,
     errorOverlayText,
-    loadingSpinnerExists, openDeleteTaskList, openDeleteTaskListDisabled,
-    openEditTaskListName, openEditTaskListNameDisabled, openShareTaskList,
+    loadingSpinnerExists,
+    openDeleteTaskList,
+    openDeleteTaskListDisabled,
+    openEditTaskListName,
+    openEditTaskListNameDisabled,
+    openShareTaskList,
+    openUnshareTaskListForSelf,
+    openUnshareTaskListForSelfExists,
     pageText,
     removeTask,
     removeTaskHidden,
     renderTasksView,
-    selectOptionFromTaskListSingleSelect, sharerExists, shareTaskListExists,
-    submitNewTaskListName, submitShareTaskList, submitShareTaskListDisabled,
+    selectOptionFromTaskListSingleSelect,
+    sharerExists,
+    shareTaskListExists,
+    submitNewTaskListName,
+    submitShareTaskList,
+    submitShareTaskListDisabled,
+    submitUnshareTaskListForSelf,
     taskCount,
     taskCountHidden,
     taskListCharacterCount,
@@ -45,10 +61,12 @@ import {
     tickTaskHidden,
     toggleTasksListInput,
     toggleTasksListSingleSelect,
-    typeNewTaskListName, typeShareTaskList,
+    typeNewTaskListName,
+    typeShareTaskList,
     typeTask,
     typeTaskListName,
-    unmountTasksView, unshareTaskList
+    unmountTasksView,
+    unshareTaskList
 } from './Tasks.page'
 import {
     task_list_id,
@@ -643,6 +661,40 @@ export async function does_not_allow_a_sharer_to_share_a_task_list() {
     await waitUntil(() => !addTaskListSubmitDisabled());
     await toggleTasksListSingleSelect();
     expect(await shareTaskListExists()).toBe(false);
+}
+
+export async function allows_a_sharer_to_unshare_themselves() {
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        ...add_task_list_response,
+        owner_email: another_email_to_share
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    const unshareTaskListForSelf = mockServer.patch(`/tasks-lists/${task_list_id}/unshare-self`, {})
+    await openUnshareTaskListForSelf();
+    await submitUnshareTaskListForSelf();
+    await waitUntil(unshareTaskListForSelf);
+    await waitUntil(() => taskListSingleSelectHidden());
+    expect(pageText()).toContain("Add Tasks List");
+}
+
+export async function does_not_allow_a_sharer_to_unshare_themselves() {
+    await login();
+    renderTasksView();
+    await waitForLoadingSpinnerToDisappear();
+    await addATaskList();    
+    await waitUntil(wait_for_create_tasks_list)
+    wait_for_create_tasks_list = mockServer.post("/tasks-lists", {
+        ...add_task_list_response,
+        owner_email: another_email_to_share
+    })
+    await waitUntil(() => !addTaskListSubmitDisabled());
+    await toggleTasksListSingleSelect();
+    expect(openUnshareTaskListForSelfExists()).toBe(false);
 }
 
 export async function does_not_allow_a_sharer_to_delete_a_task_list() {

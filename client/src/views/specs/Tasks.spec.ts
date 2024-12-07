@@ -1,6 +1,6 @@
 ﻿import {describe, it} from "vitest";
 import {
-    adds_and_lists_a_task,
+    adds_and_lists_a_task, allows_a_sharer_to_unshare_themselves,
     allows_owner_to_share_a_task_list,
     allows_owner_to_unshare_a_task_list,
     asks_user_to_create_first_task_list,
@@ -16,7 +16,7 @@ import {
     displays_page_number_of_tasks,
     does_not_allow_a_sharer_to_delete_a_task_list,
     does_not_allow_a_sharer_to_edit_a_task_list_name,
-    does_not_allow_a_sharer_to_share_a_task_list,
+    does_not_allow_a_sharer_to_share_a_task_list, does_not_allow_a_sharer_to_unshare_themselves,
     does_not_allow_same_email_twice,
     does_not_show_remove_or_carry_for_ticked_tasks,
     ensures_add_and_select_tasks_list_are_closed_if_a_task_list_is_loaded,
@@ -92,6 +92,8 @@ describe("Tasks", () => {
         it("allows owner to unshare a task list", allows_owner_to_unshare_a_task_list);
         it("closes a modal to share a task list", closes_a_modal_to_share_a_task_list);
         it("does not allow a sharer to share a task list", does_not_allow_a_sharer_to_share_a_task_list);
+        it("allows a sharer to unshare themselves", allows_a_sharer_to_unshare_themselves);
+        it("does not allow an owner to unshare themselves", does_not_allow_a_sharer_to_unshare_themselves);
         it("only allows valid email", only_allows_valid_email);
         it("does not allow same email twice", does_not_allow_same_email_twice);
         it("does not allow sharer to delete a task list", does_not_allow_a_sharer_to_delete_a_task_list);

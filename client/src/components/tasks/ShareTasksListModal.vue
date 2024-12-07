@@ -8,7 +8,7 @@ import {faAdd, faMinus} from "@fortawesome/free-solid-svg-icons";
 import ButtonIcon from "@/components/ButtonIcon.vue";
 import {ref, watch} from "vue";
 import {waitUntil} from "@/common/utilities";
-import {getSharers, sharerExists, tasksListSharerAreUpdating} from "@/state-machines/tasks.extensions";
+import {getSharers, sharerExists, tasksListSharerIsUpdating} from "@/state-machines/tasks.extensions";
 
 const props = defineProps<{
   snapshot: SnapshotFrom<typeof tasksMachine>;
@@ -27,12 +27,12 @@ const emailIsValid = (email: string) => {
 
 const onSubmit = async () => {
   props.send({type: "shareTasksList", id: props.snapshot.context.id, email: the_email.value});
-  await waitUntil(() => !tasksListSharerAreUpdating(props.snapshot.value));
+  await waitUntil(() => !tasksListSharerIsUpdating(props.snapshot.value));
   props.onClose();
 }
 const onRemove = async (sharer: string) => {
   props.send({type: "unshareTasksList", id: props.snapshot.context.id, email: sharer});
-  await waitUntil(() => !tasksListSharerAreUpdating(props.snapshot.value));
+  await waitUntil(() => !tasksListSharerIsUpdating(props.snapshot.value));
   props.onClose();
 }
 
