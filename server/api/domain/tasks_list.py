@@ -105,6 +105,7 @@ class TasksList:
         raise Exception("Task not found")
 
     def share(self, email: str):
+        email = email.lower()
         if email in self.shared_with:
             raise Exception("Tasks list already shared with user")
         if email == self.owner_email:

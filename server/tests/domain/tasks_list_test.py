@@ -161,7 +161,7 @@ def test_can_share_tasks_list_with_multiple_users():
 def test_cannot_share_tasks_list_twice_with_same_user():
     Given(a_tasks_list)
     When(sharing_tasks_list_with_a_user)
-    And(validating(sharing_tasks_list_with_a_user))
+    And(validating(sharing_tasks_list_with_the_same_user_uppercased))
     Then(informs("Tasks list already shared with user"))
 
 

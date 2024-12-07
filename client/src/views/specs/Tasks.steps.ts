@@ -755,7 +755,7 @@ export async function does_not_allow_same_email_twice() {
     await waitUntil(wait_for_share_task_list);
     await openShareTaskList();
     await waitUntil(() => sharerExists(another_email_to_share));
-    await typeShareTaskList(another_email_to_share);
+    await typeShareTaskList(another_email_to_share.toUpperCase());
     expect(submitShareTaskListDisabled()).toBe(true);
 }
 

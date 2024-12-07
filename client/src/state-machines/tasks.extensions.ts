@@ -116,5 +116,5 @@ export const getName = function (context: context): string {
 }
 
 export const sharerExists = function (context: context, email: string): boolean {
-    return context.tasksLists.find((list) => list.id === context.id)?.sharedWith.includes(email) ?? false;
+    return context.tasksLists.find((list) => list.id === context.id)?.sharedWith.includes(email.toLowerCase()) ?? false;
 }
