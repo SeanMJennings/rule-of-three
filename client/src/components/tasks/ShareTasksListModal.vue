@@ -48,7 +48,7 @@ const onRemove = async (sharer: string) => {
       <div :class="shareModalStyles.container">
         <div v-for="sharer in getSharers(snapshot.context)" :key="sharer" :class="shareModalStyles.sharer">
           <span :id="sharer.replace('@', '').replace('.', '')">{{ sharer }}</span>
-          <ButtonIcon :the_id="'unshare-' + sharer.replace('@', '').replace('.', '')" :icon="faMinus" v-on:click="onRemove(sharer)" title="Unshare tasks list"/>
+          <ButtonIcon :the_id="'unshare-' + sharer.replace('@', '').replace('.', '')" :icon="faMinus" v-on:click="onRemove(sharer)" :class="shareModalStyles.unshare" title="Unshare tasks list"/>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@
     max-height: 80%;
     overflow-y: auto;
     scrollbar-width: thin;
+    scrollbar-color: var(--vt-c-divider-dark-1) var(--vt-c-black);
 }
 
 .sharer {
@@ -14,5 +15,12 @@
     padding-right: 10px;
     span {
         flex-grow: 1;
+    }
+}
+
+.unshare {
+    margin-right: 10px;
+    @media (max-width: 640px) {
+        margin-right: 20px;
     }
 }
