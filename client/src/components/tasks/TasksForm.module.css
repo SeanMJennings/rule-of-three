@@ -1,12 +1,9 @@
-﻿.outerContainer {
-    margin: 0 auto;
-    max-width: 800px;
-}
-
-.container {
+﻿.container {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    margin: 0 auto;
+    max-width: 800px;
 }
 
 .addTask {
@@ -22,6 +19,8 @@
     overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: var(--vt-c-divider-dark-1) var(--vt-c-black);
+    margin: 0 auto;
+    max-width: 800px;
 }
 
 .placeholder {

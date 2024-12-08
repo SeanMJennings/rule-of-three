@@ -53,7 +53,6 @@ const remove = (id: string | number) => {
     <ButtonIcon :class="commonStyle.button" :icon="faCheck" title="" :disabled="true"/>
   </div>
   <TasksCounter :max-tasks=taskLimit :task-count="getTasks(snapshot.context).length"/>
-  <div :class="styles.outerContainer">
     <div :class="styles.container">
       <div v-if="showAddTask(snapshot.value)" id="add-task" :class="styles.addTask">
         <label :class="commonStyle.label" for="add-task-input">Add a Task</label>
@@ -76,5 +75,4 @@ const remove = (id: string | number) => {
             :show-tick-action="showTickTasks(snapshot.value) && !task.ticked && !task.carried && !task.removed"
       />
     </div>
-  </div>
 </template>
