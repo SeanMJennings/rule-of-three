@@ -1,4 +1,9 @@
-﻿.container {
+﻿.outerContainer {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.container {
     display: flex;
     align-items: center;
     justify-content: flex-start;
