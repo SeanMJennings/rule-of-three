@@ -20,7 +20,4 @@
 
 .unshare {
     margin-right: 10px;
-    @media (max-width: 640px) {
-        margin-right: 20px;
-    }
 }
