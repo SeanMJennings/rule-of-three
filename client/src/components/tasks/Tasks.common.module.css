@@ -44,7 +44,8 @@
     align-items: center;
     justify-content: center;
     background-color: var(--color-background-mute);
-    height: 40px;
+    height: 30px;
+    min-height: 30px;
     border-bottom: solid 1px var(--color-border);
     cursor: pointer;
 }
