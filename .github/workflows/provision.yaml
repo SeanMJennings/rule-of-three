@@ -52,44 +52,44 @@ jobs:
 #          azcliversion: latest
 #          inlineScript: |
 #            az staticwebapp hostname set --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.STATIC_WEB_APP_NAME }} --hostname www.${{ vars.DOMAIN }} --no-wait
-      - name: Create a storage account for function app
+#      - name: Create a storage account for function app
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az storage account create \
+#            --name ${{ secrets.STORAGE_ACCOUNT_NAME }} \
+#            --location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
+#            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#            --sku "Standard_LRS" \
+#            --kind "StorageV2" \
+#            --https-only true \
+#            --min-tls-version "TLS1_2"   
+      - name: Create a function app
         uses: azure/cli@v2
         with:
           azcliversion: latest
           inlineScript: |
-            az storage account create \
-            --name ${{ secrets.STORAGE_ACCOUNT_NAME }} \
-            --location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
+            az functionapp create \
+            --name ${{ secrets.FUNCTION_APP_NAME }} \
+            --storage-account ${{ secrets.STORAGE_ACCOUNT_NAME }} \
+            --consumption-plan-location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
             --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --sku "Standard_LRS" \
-            --kind "StorageV2" \
+            --os-type "Linux" \
+            --runtime "python" \
+            --runtime-version "3.11" \
+            --functions-version "4" \
             --https-only true \
-            --min-tls-version "TLS1_2"   
-#      - name: Create a function app
-#        uses: azure/cli@v2
-#        with:
-#          azcliversion: latest
-#          inlineScript: |
-#            az functionapp create \
-#            --name ${{ secrets.FUNCTION_APP_NAME }} \
-#            --storage-account ${{ secrets.STORAGE_ACCOUNT_NAME }} \
-#            --consumption-plan-location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
-#            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-#            --os-type "Linux" \
-#            --runtime "python" \
-#            --runtime-version "3.11" \
-#            --functions-version "4" \
-#            --https-only true \
-#            --disable-app-insights
-#      - name: Add cors for Azure portal to function app
-#        uses: azure/cli@v2
-#        with:
-#          azcliversion: latest
-#          inlineScript: |
-#            az functionapp cors add \
-#            --name ${{ secrets.FUNCTION_APP_NAME }} \
-#            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-#            --allowed-origins https://portal.azure.com
+            --disable-app-insights
+      - name: Add cors for Azure portal to function app
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az functionapp cors add \
+            --name ${{ secrets.FUNCTION_APP_NAME }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --allowed-origins https://portal.azure.com
 #      - name: Create Cosmos DB
 #        uses: azure/cli@v2
 #        with:
