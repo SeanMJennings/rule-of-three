@@ -15,43 +15,43 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Register subscription for Domain Registration
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: az provider register --namespace Microsoft.DomainRegistration      
-      - name: Register DNS zone for domain
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: az network dns zone create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ vars.DOMAIN }}
-      - name: Create CNAME record set
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: az network dns record-set cname create --name www --resource-group ${{ secrets.RESOURCE_GROUP }} --zone-name ${{ vars.DOMAIN }}
-      - name: Create a resource group
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az group create -g ${{ secrets.RESOURCE_GROUP }} -l ${{ secrets.RESOURCE_GROUP_LOCATION }}
-      - name: Create a static web app 
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az staticwebapp create \
-                --name ${{ secrets.STATIC_WEB_APP_NAME }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --location ${{ secrets.STATIC_WEB_APP_LOCATION }} \
-                --sku Standard
-      - name: Add custom domain to static web app
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az staticwebapp hostname set --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.STATIC_WEB_APP_NAME }} --hostname www.${{ vars.DOMAIN }} --no-wait
+#      - name: Register subscription for Domain Registration
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: az provider register --namespace Microsoft.DomainRegistration      
+#      - name: Register DNS zone for domain
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: az network dns zone create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ vars.DOMAIN }}
+#      - name: Create CNAME record set
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: az network dns record-set cname create --name www --resource-group ${{ secrets.RESOURCE_GROUP }} --zone-name ${{ vars.DOMAIN }}
+#      - name: Create a resource group
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az group create -g ${{ secrets.RESOURCE_GROUP }} -l ${{ secrets.RESOURCE_GROUP_LOCATION }}
+#      - name: Create a static web app 
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az staticwebapp create \
+#                --name ${{ secrets.STATIC_WEB_APP_NAME }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --location ${{ secrets.STATIC_WEB_APP_LOCATION }} \
+#                --sku Standard
+#      - name: Add custom domain to static web app
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az staticwebapp hostname set --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.STATIC_WEB_APP_NAME }} --hostname www.${{ vars.DOMAIN }} --no-wait
       - name: Create a storage account for function app
         uses: azure/cli@v2
         with:
@@ -65,60 +65,60 @@ jobs:
             --kind "StorageV2" \
             --https-only true \
             --min-tls-version "TLS1_2"   
-      - name: Create a function app
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az functionapp create \
-            --name ${{ secrets.FUNCTION_APP_NAME }} \
-            --storage-account ${{ secrets.STORAGE_ACCOUNT_NAME }} \
-            --consumption-plan-location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --os-type "Linux" \
-            --runtime "python" \
-            --runtime-version "3.11" \
-            --functions-version "4" \
-            --https-only true \
-            --disable-app-insights
-      - name: Add cors for Azure portal to function app
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az functionapp cors add \
-            --name ${{ secrets.FUNCTION_APP_NAME }} \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --allowed-origins https://portal.azure.com
-      - name: Create Cosmos DB
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az cosmosdb create \
-                --name ${{ secrets.COSMOS_NAME }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --kind GlobalDocumentDB \
-                --enable-free-tier true            
-            az cosmosdb sql database create \
-                --account-name ${{ secrets.COSMOS_NAME }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --name ${{ secrets.COSMOS_DATABASE }}
-            az cosmosdb sql container create \
-                --account-name ${{ secrets.COSMOS_NAME }} \
-                --database-name ${{ secrets.COSMOS_DATABASE }} \
-                --name ${{ secrets.COSMOS_CONTAINER }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --partition-key-path ${{ secrets.COSMOS_PARTITION_KEY_PATH }}
-            az cosmosdb sql container throughput migrate \
-                --account-name ${{ secrets.COSMOS_NAME }} \
-                --database-name ${{ secrets.COSMOS_DATABASE }} \
-                --name ${{ secrets.COSMOS_CONTAINER }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --throughput-type manual
-            az cosmosdb sql container throughput update \
-                --account-name ${{ secrets.COSMOS_NAME }} \
-                --database-name ${{ secrets.COSMOS_DATABASE }} \
-                --name ${{ secrets.COSMOS_CONTAINER }} \
-                --resource-group ${{ secrets.RESOURCE_GROUP }} \
-                --throughput 400
+#      - name: Create a function app
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az functionapp create \
+#            --name ${{ secrets.FUNCTION_APP_NAME }} \
+#            --storage-account ${{ secrets.STORAGE_ACCOUNT_NAME }} \
+#            --consumption-plan-location ${{ secrets.RESOURCE_GROUP_LOCATION }} \
+#            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#            --os-type "Linux" \
+#            --runtime "python" \
+#            --runtime-version "3.11" \
+#            --functions-version "4" \
+#            --https-only true \
+#            --disable-app-insights
+#      - name: Add cors for Azure portal to function app
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az functionapp cors add \
+#            --name ${{ secrets.FUNCTION_APP_NAME }} \
+#            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#            --allowed-origins https://portal.azure.com
+#      - name: Create Cosmos DB
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az cosmosdb create \
+#                --name ${{ secrets.COSMOS_NAME }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --kind GlobalDocumentDB \
+#                --enable-free-tier true            
+#            az cosmosdb sql database create \
+#                --account-name ${{ secrets.COSMOS_NAME }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --name ${{ secrets.COSMOS_DATABASE }}
+#            az cosmosdb sql container create \
+#                --account-name ${{ secrets.COSMOS_NAME }} \
+#                --database-name ${{ secrets.COSMOS_DATABASE }} \
+#                --name ${{ secrets.COSMOS_CONTAINER }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --partition-key-path ${{ secrets.COSMOS_PARTITION_KEY_PATH }}
+#            az cosmosdb sql container throughput migrate \
+#                --account-name ${{ secrets.COSMOS_NAME }} \
+#                --database-name ${{ secrets.COSMOS_DATABASE }} \
+#                --name ${{ secrets.COSMOS_CONTAINER }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --throughput-type manual
+#            az cosmosdb sql container throughput update \
+#                --account-name ${{ secrets.COSMOS_NAME }} \
+#                --database-name ${{ secrets.COSMOS_DATABASE }} \
+#                --name ${{ secrets.COSMOS_CONTAINER }} \
+#                --resource-group ${{ secrets.RESOURCE_GROUP }} \
+#                --throughput 400
