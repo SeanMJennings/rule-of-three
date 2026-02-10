@@ -177,14 +177,12 @@ def the_tasks_list_is_added():
 
 
 def the_tasks_lists_are_listed_empty():
-    global response
     assert response.status_code == HTTPStatus.OK
     response_data = json.loads(response.data)
     assert len(response_data) == 0
 
 
 def the_tasks_lists_are_listed():
-    global response
     assert response.status_code == HTTPStatus.OK
     response_data = json.loads(response.data)
     assert len(response_data) == 2

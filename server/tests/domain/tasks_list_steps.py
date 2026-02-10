@@ -28,7 +28,6 @@ def creating_a_tasks_list():
 
 
 def updating_last_selected_time():
-    global tasks_list
     datetime.datetime = NewDateTimeNow
     tasks_list.update_last_selected_time()
 
@@ -53,12 +52,10 @@ def a_tasks_list_with_20_tasks():
 
 
 def adding_a_task_to_tasks_list(task_text):
-    global tasks_list
     tasks_list.add(task_text)
 
 
 def ticking_a_task():
-    global tasks_list
     if len(tasks_list.tasks) == 0:
         tasks_list.tick("wibble")
     else:
@@ -66,23 +63,19 @@ def ticking_a_task():
 
 
 def ticking_the_first_task():
-    global tasks_list
     tasks_list.tick(tasks_list.tasks[0].id)
 
 
 def adding_two_tasks():
-    global tasks_list
     tasks_list.add("wibble")
     tasks_list.add("wobble")
 
 
 def carrying_the_first_task():
-    global tasks_list
     tasks_list.carry(tasks_list.tasks[0].id)
 
 
 def removing_the_first_task():
-    global tasks_list
     tasks_list.remove(tasks_list.tasks[0].id)
 
 
@@ -157,7 +150,6 @@ def ticking_the_last_task():
 
 
 def tasks_have_been_carried_twice():
-    global tasks_list
     for task in tasks_list.tasks:
         tasks_list.carry(task.id)
     for task in tasks_list.tasks:
@@ -165,7 +157,6 @@ def tasks_have_been_carried_twice():
 
 
 def removing_all_tasks():
-    global tasks_list
     for task in tasks_list.tasks:
         tasks_list.remove(task.id)
 

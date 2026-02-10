@@ -26,7 +26,6 @@ headers = None
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
-    global client
     an_app()
     reset_mocks()
     cache.clear()
@@ -99,7 +98,7 @@ def a_reset_cache():
 
 
 def making_the_request():
-    global response, client
+    global response
     response = client.get(nonsense_url(), headers=headers)
 
 

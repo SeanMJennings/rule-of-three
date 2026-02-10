@@ -17,7 +17,6 @@ fake_task_list_service = None
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
-    global client
     yield
     client.__exit__(None, None, None)
 
@@ -47,7 +46,7 @@ def an_error():
 
 
 def catching_the_error():
-    global response, client
+    global response
     response = client.post(tasks_url(), json={"name": "wobble"}, headers=the_headers())
 
 
