@@ -174,6 +174,8 @@ jobs:
             SWA_DEFAULT_HOST_NAME=$(az staticwebapp show --name ${{ secrets.STATIC_WEB_APP_NAME }}  --query "defaultHostname")
             SWA_DEFAULT_HOST_NAME_CLEAN=${SWA_DEFAULT_HOST_NAME:1:-1}
             az network dns record-set cname set-record --cname $SWA_DEFAULT_HOST_NAME_CLEAN --record-set-name www --resource-group ${{ secrets.RESOURCE_GROUP }} --zone-name ${{ vars.DOMAIN }}
+      - name: Clear Azure CLI MSAL cache
+        run: rm -f ~/.azure/msal_http_cache.bin
       - name: Deploy Azure function app
         uses: Azure/functions-action@v1
         with:
