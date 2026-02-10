@@ -3,17 +3,15 @@ import base64
 from tests.datetime import NewDateTimeNow, the_updated_datetime
 import datetime
 import pytest
-from azure.cosmos import ContainerProxy
 from api.application.tasks_list_service import TasksListService
-from api.domain.tasks_list import TasksList
 from tests.database import setup_db, get_db_connection, clear_db
 
-db: ContainerProxy
-tasks_list_service: TasksListService
-tasks_list: TasksList
-tasks_lists: list[TasksList]
-another_tasks_list: TasksList
-tasks_list_id: str
+db = None
+tasks_list_service = None
+tasks_list = None
+tasks_lists = None
+another_tasks_list = None
+tasks_list_id = None
 owner_email = "wibble@wobble.com"
 another_owner_email = "wabble@wubble.com"
 
