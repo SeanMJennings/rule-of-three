@@ -179,9 +179,12 @@ jobs:
         with:
           app-name: ${{ secrets.FUNCTION_APP_NAME }}
           package: ${{ env.SERVER_OUTPUT_FOLDER }}
+      - name: Clear MSAL HTTP cache
+        run: rm -f ~/.azure/msal_http_cache.bin
       - name: Link static web app to function
         uses: azure/cli@v2
         with:
+          azcliversion: 2.47.0
           inlineScript: |
             FUNCTION_APP_ID=$(az functionapp list -o tsv --query "[?name=='${{ secrets.FUNCTION_APP_NAME }}'].id")
             az staticwebapp functions link -n ${{ secrets.STATIC_WEB_APP_NAME }} -g ${{ secrets.RESOURCE_GROUP }} --function-resource-id $FUNCTION_APP_ID
