@@ -174,8 +174,6 @@ jobs:
             SWA_DEFAULT_HOST_NAME=$(az staticwebapp show --name ${{ secrets.STATIC_WEB_APP_NAME }}  --query "defaultHostname")
             SWA_DEFAULT_HOST_NAME_CLEAN=${SWA_DEFAULT_HOST_NAME:1:-1}
             az network dns record-set cname set-record --cname $SWA_DEFAULT_HOST_NAME_CLEAN --record-set-name www --resource-group ${{ secrets.RESOURCE_GROUP }} --zone-name ${{ vars.DOMAIN }}
-      - name: Clear Azure CLI MSAL cache
-        run: rm -f ~/.azure/msal_http_cache.bin
       - name: Deploy Azure function app
         uses: Azure/functions-action@v1
         with:
@@ -184,7 +182,6 @@ jobs:
       - name: Link static web app to function
         uses: azure/cli@v2
         with:
-          azcliversion: 2.47.0 # needed for staticwebapp functions link to work due to bug
           inlineScript: |
             FUNCTION_APP_ID=$(az functionapp list -o tsv --query "[?name=='${{ secrets.FUNCTION_APP_NAME }}'].id")
             az staticwebapp functions link -n ${{ secrets.STATIC_WEB_APP_NAME }} -g ${{ secrets.RESOURCE_GROUP }} --function-resource-id $FUNCTION_APP_ID
